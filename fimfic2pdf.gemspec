@@ -28,8 +28,10 @@ Gem::Specification.new do |s|
     'bug_tracker_uri' => 'https://github.com/creideiki/fimfic2pdf/issues'
   }
 
+  s.add_runtime_dependency('httparty', '~> 0.20')
   s.add_runtime_dependency('nokogiri', '~> 1.12')
   s.add_runtime_dependency('ruby-progressbar', '~> 1.11')
+  s.add_runtime_dependency('rubyzip', '~> 2.3')
 
   s.add_development_dependency('bundler', '~> 2.2')
   s.add_development_dependency('rubocop', '~> 1.7')

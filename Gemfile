@@ -4,8 +4,10 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'httparty'
 gem 'nokogiri'
 gem 'ruby-progressbar'
+gem 'rubyzip'
 
 group :development do
   gem 'bundler'
