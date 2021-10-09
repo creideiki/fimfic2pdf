@@ -1,0 +1,25 @@
+inherit_from: .rubocop_todo.yml
+require: rubocop-rake
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.0
+
+Style/HashSyntax:
+  EnforcedStyle: no_mixed_keys
+
+Style/SymbolArray:
+  EnforcedStyle: brackets
+
+Style/AndOr:
+  Enabled: false
+
+Style/Not:
+  Enabled: false
+
+Style/NegatedIf:
+  Enabled: false
+
+Metrics/AbcSize:
+  CountRepeatedAttributes: false
+  Max: 20
