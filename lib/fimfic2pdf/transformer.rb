@@ -126,16 +126,19 @@ module FimFic2PDF
     def transform
       @logger.debug 'Transforming story'
 
-      @conf['story']['chapters'].each do |chapter|
-        @logger.debug "Transforming chapter: #{chapter['title']}"
-        doc = File.open(chapter['html']) { |f| Nokogiri::HTML(f) }
-        unless chapter['tex']
-          chapter['tex'] = @dir + File::SEPARATOR +
-                           File.basename(chapter['html'], '.html') + '.tex'
-        end
-        File.open(chapter['tex'], 'wb') do |tex|
-          tex.write("\\chapter{#{chapter['title']}}\n\n")
-          doc.xpath('/html/body/p').map { |p| visit_p(p, tex) }
+      File.open(@dir + File::SEPARATOR + 'chapters.tex', 'wb') do |chapters|
+        @conf['story']['chapters'].each do |chapter|
+          @logger.debug "Transforming chapter: #{chapter['title']}"
+          doc = File.open(chapter['html']) { |f| Nokogiri::HTML(f) }
+          unless chapter['tex']
+            chapter['tex'] = @dir + File::SEPARATOR +
+                             File.basename(chapter['html'], '.html') + '.tex'
+          end
+          File.open(chapter['tex'], 'wb') do |tex|
+            tex.write("\\chapter{#{chapter['title']}}\n\n")
+            doc.xpath('/html/body/p').map { |p| visit_p(p, tex) }
+          end
+          chapters.write "\\input{#{File.basename(chapter['tex'], '.tex')}}\n"
         end
       end
     end
