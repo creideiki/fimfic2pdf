@@ -23,3 +23,31 @@ Style/NegatedIf:
 Metrics/AbcSize:
   CountRepeatedAttributes: false
   Max: 20
+  IgnoredMethods:
+  - parse_metadata
+  - transform
+  - visit_span
+
+Metrics/ClassLength:
+  CountAsOne:
+  - array
+  - hash
+  - heredoc
+  Max: 200
+
+Metrics/CyclomaticComplexity:
+  IgnoredMethods:
+  - visit_span
+
+Metrics/MethodLength:
+  CountAsOne:
+  - array
+  - hash
+  - heredoc
+  Max: 30
+
+Style/StringConcatenation:
+  Mode: conservative
+
+Layout/DotPosition:
+  EnforcedStyle: trailing

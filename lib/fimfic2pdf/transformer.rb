@@ -19,7 +19,7 @@ module FimFic2PDF
     end
 
     def parse_metadata
-      @logger.debug "Reading story metadata"
+      @logger.debug 'Reading story metadata'
       unless @conf['story']['title'] and @conf['story']['author']
         @logger.debug "Not already parsed, reading from file #{@conf['story']['metadata']}"
         doc = File.open(@conf['story']['metadata']) { |f| Nokogiri::HTML(f) }
@@ -29,14 +29,14 @@ module FimFic2PDF
       @logger.debug "Title: #{@conf['story']['title']}"
       @logger.debug "Author: #{@conf['story']['author']}"
 
-      @logger.debug "Reading chapter metadata"
+      @logger.debug 'Reading chapter metadata'
       @conf['story']['chapters'].each do |chapter|
-        unless chapter['title']
-          @logger.debug "Not already parsed, reading from file #{chapter['html']}"
-          doc = File.open(chapter['html']) { |f| Nokogiri::HTML(f) }
-          chapter['title'] = doc.at_xpath('/html/head/title').text
-          @logger.debug "Chapter read: #{chapter['title']}"
-        end
+        next if chapter['title']
+
+        @logger.debug "Not already parsed, reading from file #{chapter['html']}"
+        doc = File.open(chapter['html']) { |f| Nokogiri::HTML(f) }
+        chapter['title'] = doc.at_xpath('/html/head/title').text
+        @logger.debug "Chapter read: #{chapter['title']}"
       end
     end
 
@@ -45,11 +45,10 @@ module FimFic2PDF
       when Nokogiri::XML::Node::TEXT_NODE
         visit_text(node, file)
       when Nokogiri::XML::Node::ELEMENT_NODE
-        if self.respond_to? "visit_#{node.name}"
-          self.send("visit_#{node.name}", node, file)
-        else
-          raise "Unsupported HTML element #{node.name}"
-        end
+        raise "Unsupported HTML element #{node.name}" unless
+          respond_to? "visit_#{node.name}"
+
+        send("visit_#{node.name}", node, file)
       else
         raise "Unsupported node type #{node.type}"
       end
@@ -69,6 +68,7 @@ module FimFic2PDF
       file.write "\n"
     end
 
+    # rubocop:disable Style/StringConcatenation
     def visit_span(node, file)
       opening = ''
       ending = ''
@@ -100,6 +100,7 @@ module FimFic2PDF
       node.children.each.map { |c| visit(c, file) }
       file.write ending
     end
+    # rubocop:enable Style/StringConcatenation
 
     def visit_i(node, file)
       file.write '\textit{'
@@ -130,10 +131,8 @@ module FimFic2PDF
         @conf['story']['chapters'].each do |chapter|
           @logger.debug "Transforming chapter: #{chapter['title']}"
           doc = File.open(chapter['html']) { |f| Nokogiri::HTML(f) }
-          unless chapter['tex']
-            chapter['tex'] = @dir + File::SEPARATOR +
+          chapter['tex'] ||= @dir + File::SEPARATOR +
                              File.basename(chapter['html'], '.html') + '.tex'
-          end
           File.open(chapter['tex'], 'wb') do |tex|
             tex.write("\\chapter{#{chapter['title']}}\n\n")
             doc.xpath('/html/body/p').map { |p| visit_p(p, tex) }

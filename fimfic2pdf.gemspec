@@ -34,6 +34,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency('rubyzip', '~> 2.3')
 
   s.add_development_dependency('bundler', '~> 2.2')
-  s.add_development_dependency('rubocop', '~> 1.7')
+  s.add_development_dependency('rubocop', '~> 1.22')
   s.add_development_dependency('rubocop-rake', '~> 0.6')
 end

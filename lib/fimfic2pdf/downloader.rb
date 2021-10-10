@@ -49,7 +49,7 @@ module FimFic2PDF
 
     def generate_config
       chapters = Dir.glob(@dir + File::SEPARATOR + 'chapter-*.html').
-                   sort_by { |f| File.basename(f).split('-')[1].to_i }
+                 sort_by { |f| File.basename(f).split('-')[1].to_i }
       @conf = {
         'story' => {
           'id' => @story_id,
