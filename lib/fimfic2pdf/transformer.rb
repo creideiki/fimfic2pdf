@@ -59,7 +59,7 @@ module FimFic2PDF
       if /^-+$/.match node.text
         file.write '\vspace{2ex}\hrule\vspace{2ex}'
       else
-        file.write node.text
+        file.write node.text.gsub(/#/, '\#')
       end
     end
 
@@ -74,6 +74,9 @@ module FimFic2PDF
       ending = ''
       node.attributes['style'].value.split(';').each do |style|
         case style
+        when 'font-size:1.5em'
+          opening += '\begin{Large}'
+          ending = '\end{Large}' + ending
         when 'font-size:0.875em'
           opening += '\begin{small}'
           ending = '\end{small}' + ending
@@ -86,6 +89,9 @@ module FimFic2PDF
         when 'font-weight:bold'
           opening += '\textbf{'
           ending = '}' + ending
+        when 'text-decoration:underline'
+          opening += '\underline{'
+          ending = '}' + ending
         else
           raise "Unsupported span style #{style}"
         end
@@ -97,6 +103,22 @@ module FimFic2PDF
 
     def visit_i(node, file)
       file.write '\textit{'
+      node.children.each.map { |c| visit(c, file) }
+      file.write '}'
+    end
+
+    def visit_b(node, file)
+      file.write '\textbf{'
+      node.children.each.map { |c| visit(c, file) }
+      file.write '}'
+    end
+
+    def visit_br(_node, file)
+      file.write "\n\n"
+    end
+
+    def visit_u(node, file)
+      file.write '\underline{'
       node.children.each.map { |c| visit(c, file) }
       file.write '}'
     end
