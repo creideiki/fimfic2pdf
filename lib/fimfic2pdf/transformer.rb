@@ -96,9 +96,9 @@ module FimFic2PDF
     end
 
     def visit_i(node, file)
-      file.write ' \textit{'
+      file.write '\textit{'
       node.children.each.map { |c| visit(c, file) }
-      file.write '} '
+      file.write '}'
     end
 
     def transform
