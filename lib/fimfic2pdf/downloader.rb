@@ -48,14 +48,15 @@ module FimFic2PDF
     end
 
     def generate_config
+      chapters = Dir.glob(@dir + File::SEPARATOR + 'chapter-*.html').
+                   sort_by { |f| File.basename(f).split('-')[1].to_i }
       @conf = {
         'story' => {
           'id' => @story_id,
           'url' => @url,
           'epub' => @filename,
           'metadata' => @dir + File::SEPARATOR + 'title.html',
-          'chapters' =>
-          Dir.glob(@dir + File::SEPARATOR + 'chapter-*.html').map do |file|
+          'chapters' => chapters.map do |file|
             { 'html' => file }
           end
         }
