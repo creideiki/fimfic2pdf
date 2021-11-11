@@ -12,7 +12,7 @@ module FimFic2PDF
 
     def initialize(story_id)
       @story_id = story_id
-      @logger = Logger.new($stderr)
+      @logger = Logger.new($stderr, progname: 'Downloader')
       @logger.debug "Preparing to download story #{@story_id}"
       @url = "https://www.fimfiction.net/story/download/#{@story_id}/epub"
       @dir = story_id.to_s

@@ -11,7 +11,7 @@ module FimFic2PDF
 
     def initialize(story_id)
       @story_id = story_id
-      @logger = Logger.new($stderr)
+      @logger = Logger.new($stderr, progname: 'Transformer')
       @logger.debug "Preparing to transform story #{@story_id}"
       @dir = story_id.to_s
       @config_file = @dir + File::SEPARATOR + 'config.yaml'

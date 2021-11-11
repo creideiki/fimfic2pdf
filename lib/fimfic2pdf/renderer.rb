@@ -11,7 +11,7 @@ module FimFic2PDF
 
     def initialize(story_id)
       @story_id = story_id
-      @logger = Logger.new($stderr)
+      @logger = Logger.new($stderr, progname: 'Renderer')
       @logger.debug "Preparing to render story #{@story_id}"
       @dir = story_id.to_s
       @config_file = @dir + File::SEPARATOR + 'config.yaml'
@@ -27,7 +27,8 @@ module FimFic2PDF
       res = system('xelatex', 'book.tex', :chdir => @dir)
       raise "Error running second render pass: #{$CHILD_STATUS}" unless res
 
-      @logger.info 'Rendering completed'
+      @logger.debug 'Rendering completed'
+      @logger.info "Finished PDF: #{@dir + File::SEPARATOR + 'book.pdf'}"
     end
   end
 end
