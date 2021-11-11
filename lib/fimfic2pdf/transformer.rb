@@ -4,6 +4,8 @@ require 'logger'
 require 'nokogiri'
 require 'yaml'
 
+require 'fimfic2pdf/template'
+
 module FimFic2PDF
   # Transforms HTML documents to LaTeX
   class Transformer
@@ -139,6 +141,14 @@ module FimFic2PDF
           end
           chapters.write "\\input{#{File.basename(chapter['tex'], '.tex')}}\n"
         end
+      end
+    end
+
+    def write_book
+      @logger.debug 'Writing top-level LaTeX file'
+      tmpl = FimFic2PDF::Template.new
+      File.open(@dir + File::SEPARATOR + 'book.tex', 'wb') do |f|
+        f.write tmpl.to_s
       end
     end
 
