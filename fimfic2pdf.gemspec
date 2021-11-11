@@ -17,9 +17,9 @@ Gem::Specification.new do |s|
   s.files = Dir.glob('{lib}/**/*', File::FNM_DOTMATCH)
   s.bindir = 'exe'
   s.executables = ['fimfic2pdf']
-  s.extra_rdoc_files = ['LICENSE.txt', 'README.md']
+  s.extra_rdoc_files = ['COPYING']
   s.homepage = 'https://github.com/creideiki/fimfic2pdf/'
-  s.licenses = ['GPLv3']
+  s.licenses = ['GPL-3.0']
   s.summary = 'Formats FimFiction stories as PDF.'
 
   s.metadata = {
