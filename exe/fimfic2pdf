@@ -1,0 +1,58 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'optparse'
+
+require 'fimfic2pdf/downloader'
+require 'fimfic2pdf/renderer'
+require 'fimfic2pdf/transformer'
+require 'fimfic2pdf/version'
+
+parser = OptionParser.new
+options = {}
+
+parser.banner = 'Usage: fimfic2pdf [options]'
+parser.separator ''
+
+# rubocop:disable Layout/LineLength
+parser.on('-i ID', '--id ID', 'story ID', Integer) { |id| options[:id] = id }
+parser.on('-f', '--[no-]skip-fetch', 'skip fetch (download) step') { |f| options[:skip_fetch] = f }
+parser.on('-u', '--[no-]skip-unpack', 'skip unpack step') { |u| options[:skip_unpack] = u }
+parser.on('-g', '--[no-]skip-write-download-config', 'skip write download configuration step') { |g| options[:skip_write_download_config] = g }
+parser.on('-p', '--[no-]skip-parse-metadata', 'skip parse metadata step') { |p| options[:skip_parse_metadata] = p }
+parser.on('-t', '--[no-]skip-transform', 'skip transform (generate LaTeX) step') { |t| options[:skip_transform] = t }
+parser.on('-b', '--[no-]skip-write-book', 'skip write book (top-level LaTeX file) step') { |b| options[:skip_write_book] = b }
+parser.on('-w', '--[no-]skip-write-config', 'skip write transform config step') { |w| options[:skip_write_transform_config] = w }
+parser.on('-r', '--[no-]skip-render', 'skip render PDF step') { |r| options[:skip_render] = r }
+# rubocop:enable Layout/LineLength
+
+parser.on_tail
+parser.on_tail('-V', '--version', 'display version information') do
+  puts "FimFic2PDF #{FimFic2PDF::VERSION}"
+  exit 0
+end
+parser.on_tail('-h', '--help', 'display usage information') { abort parser.to_s }
+
+begin
+  parser.parse! ARGV
+rescue OptionParser::ParseError => e
+  if e.args.empty?
+    abort parser.to_s
+  else
+    abort "#{e}\n\n#{parser}"
+  end
+end
+
+downloader = FimFic2PDF::Downloader.new options[:id]
+downloader.fetch unless options[:skip_fetch]
+downloader.unpack unless options[:skip_unpack]
+downloader.write_config unless options[:skip_write_download_config]
+
+transformer = FimFic2PDF::Transformer.new options[:id]
+transformer.parse_metadata unless options[:skip_parse_metadata]
+transformer.transform unless options[:skip_transform]
+transformer.write_book unless options[:skip_write_book]
+transformer.write_config unless options[:skip_write_transform_config]
+
+renderer = FimFic2PDF::Renderer.new options[:id]
+renderer.render unless options[:skip_render]
