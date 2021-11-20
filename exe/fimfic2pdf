@@ -11,7 +11,7 @@ require 'fimfic2pdf/version'
 parser = OptionParser.new
 options = {}
 
-parser.banner = 'Usage: fimfic2pdf [options]'
+parser.banner = 'Usage: fimfic2pdf -i ID [options]'
 parser.separator ''
 
 # rubocop:disable Layout/LineLength
@@ -41,6 +41,12 @@ rescue OptionParser::ParseError => e
   else
     abort "#{e}\n\n#{parser}"
   end
+end
+
+unless options.include? :id
+  puts 'No story ID specified.'
+  puts ''
+  abort parser.to_s
 end
 
 downloader = FimFic2PDF::Downloader.new options[:id]
