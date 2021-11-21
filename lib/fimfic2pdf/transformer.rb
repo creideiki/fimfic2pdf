@@ -19,7 +19,7 @@ module FimFic2PDF
       @dir = story_id.to_s
       @config_file = @dir + File::SEPARATOR + 'config.yaml'
       @conf = YAML.safe_load_file(@config_file)
-      @markers = []
+      @replacements = {}
     end
 
     def parse_metadata
@@ -159,18 +159,29 @@ module FimFic2PDF
     end
 
     def write_footnote(node, file)
-      file.write '\footnote{'
-
       footnote = StringIO.new
+      footnote.write '\footnote{'
       node.children.each.map { |c| visit(c, footnote) }
+      footnote.write '}'
 
-      marker = /^\*[[:space:]]*/.match footnote.string
-      if marker
-        @markers.append marker[0]
-        footnote.string = footnote.string[marker.end(0)..]
+      marker = /\*[[:space:]]*/.match footnote.string
+      if not marker
+        file.write footnote.string
+        return
       end
-      file.write footnote.string
-      file.write '}'
+
+      # There was a footnote marker. Look at the previous node, find
+      # the footnote marker there, and remove it.
+
+      previous = StringIO.new
+      visit(node.previous, previous)
+
+      if previous.string.include? marker[0]
+        referent = previous.string.gsub(marker[0], footnote.string.gsub(marker[0], ''))
+        @replacements[previous.string] = referent
+      else
+        file.write footnote.string.gsub(marker[0], '')
+      end
     end
 
     def visit_figure(node, file)
@@ -199,8 +210,8 @@ module FimFic2PDF
             tex.write("\\chapter{#{chapter['title']}}\n\n")
             build = StringIO.new
             visit_body(doc.xpath('/html/body'), build)
-            @markers.each do |marker|
-              build.string.gsub!(marker, '')
+            @replacements.each do |src, dst|
+              build.string.gsub!(src, dst)
             end
             tex.write build.string
           end
