@@ -2,6 +2,7 @@
 
 require 'logger'
 require 'nokogiri'
+require 'stringio'
 require 'yaml'
 
 require 'fimfic2pdf/template'
@@ -18,6 +19,7 @@ module FimFic2PDF
       @dir = story_id.to_s
       @config_file = @dir + File::SEPARATOR + 'config.yaml'
       @conf = YAML.safe_load_file(@config_file)
+      @markers = []
     end
 
     def parse_metadata
@@ -54,6 +56,28 @@ module FimFic2PDF
       else
         raise "Unsupported node type #{node.type}"
       end
+    end
+
+    def visit_body(node, file)
+      child = node.children[0]
+      if child.type != Nokogiri::XML::Node::TEXT_NODE or
+         child.text != "\n\t\t"
+        raise "Unknown body format: pre-title is #{child.inspect}"
+      end
+
+      child = node.children[1]
+      if child.type != Nokogiri::XML::Node::ELEMENT_NODE or
+         child.name != 'h1'
+        raise "Unknown body format: title is #{child.inspect}"
+      end
+
+      child = node.children[2]
+      if child.type != Nokogiri::XML::Node::TEXT_NODE or
+         child.text != "\n\n\n"
+        raise "Unknown body format: post-title is #{child.inspect}"
+      end
+
+      node.children[3..].map { |c| visit(c, file) }
     end
 
     def visit_text(node, file)
@@ -134,6 +158,34 @@ module FimFic2PDF
       file.write '}'
     end
 
+    def write_footnote(node, file)
+      file.write '\footnote{'
+
+      footnote = StringIO.new
+      node.children.each.map { |c| visit(c, footnote) }
+
+      marker = /^\*[[:space:]]*/.match footnote.string
+      if marker
+        @markers.append marker[0]
+        footnote.string = footnote.string[marker.end(0)..]
+      end
+      file.write footnote.string
+      file.write '}'
+    end
+
+    def visit_figure(node, file)
+      case node.attributes['class'].value
+      when 'bbcode-figure-right'
+        write_footnote(node, file)
+      else
+        raise "Unsupported figure class #{node.attributes['class'].value}"
+      end
+    end
+
+    def visit_a(node, file)
+      node.children.each.map { |c| visit(c, file) }
+    end
+
     def transform
       @logger.debug 'Transforming story'
 
@@ -145,7 +197,12 @@ module FimFic2PDF
                              File.basename(chapter['html'], '.html') + '.tex'
           File.open(chapter['tex'], 'wb') do |tex|
             tex.write("\\chapter{#{chapter['title']}}\n\n")
-            doc.xpath('/html/body/p').map { |p| visit_p(p, tex) }
+            build = StringIO.new
+            visit_body(doc.xpath('/html/body'), build)
+            @markers.each do |marker|
+              build.string.gsub!(marker, '')
+            end
+            tex.write build.string
           end
           chapters.write "\\input{#{File.basename(chapter['tex'], '.tex')}}\n"
         end
