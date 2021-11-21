@@ -60,7 +60,15 @@ module FimFic2PDF
       if /^-+$/.match node.text
         file.write '\vspace{2ex}\hrule\vspace{2ex}'
       else
-        file.write node.text.gsub(/#/, '\#')
+        file.write(
+          node.text.
+            gsub(/#/, '\#').
+            gsub('“', '``').
+            gsub('”', "''").
+            gsub('‘', '`').
+            gsub('’', "'").
+            gsub('…', '...')
+        )
       end
     end
 
