@@ -27,6 +27,7 @@ Metrics/AbcSize:
   - parse_metadata
   - transform
   - visit_span
+  - visit_body
 
 Metrics/ClassLength:
   CountAsOne:
@@ -38,6 +39,7 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   IgnoredMethods:
   - visit_span
+  - visit_body
 
 Metrics/MethodLength:
   CountAsOne:
