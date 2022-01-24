@@ -197,6 +197,12 @@ module FimFic2PDF
       node.children.each.map { |c| visit(c, file) }
     end
 
+    def visit_sup(node, file)
+      file.write '\textsuperscript{\small '
+      node.children.each.map { |c| visit(c, file) }
+      file.write '}'
+    end
+
     def transform
       @logger.debug 'Transforming story'
 
