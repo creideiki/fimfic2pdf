@@ -81,6 +81,8 @@ module FimFic2PDF
 
 \raggedbottom
 
+\emergencystretch 3em
+
 \begin{document}
 
 \frontmatter
