@@ -203,6 +203,10 @@ module FimFic2PDF
       file.write '}'
     end
 
+    def visit_hr(_node, file)
+      file.write "\n", '\par\noindent\rule{\textwidth}{0.5pt}', "\n"
+    end
+
     def transform
       @logger.debug 'Transforming story'
 
