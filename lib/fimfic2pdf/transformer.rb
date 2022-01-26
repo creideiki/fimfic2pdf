@@ -134,6 +134,12 @@ module FimFic2PDF
         when 'text-decoration:underline'
           opening += '\underline{'
           ending = '}' + ending
+        when 'text-decoration:line-through'
+          opening += '\sout{'
+          ending = '}' + ending
+        when 'text-decoration:underline line-through'
+          opening += '\underline{\sout{'
+          ending = '}}' + ending
         else
           raise "Unsupported span style #{style}"
         end

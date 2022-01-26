@@ -83,6 +83,8 @@ module FimFic2PDF
 
 \emergencystretch 3em
 
+\usepackage[normalem]{ulem}
+
 \begin{document}
 
 \frontmatter
