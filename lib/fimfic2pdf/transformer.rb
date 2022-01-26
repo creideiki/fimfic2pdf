@@ -221,6 +221,25 @@ module FimFic2PDF
       file.write "\n", '\end{quotation}', "\n"
     end
 
+    # rubocop:disable Style/StringConcatenation
+    def visit_div(node, file)
+      opening = ''
+      ending = ''
+      node.attributes['style'].value.split(';').each do |style|
+        case style
+        when 'text-align:center'
+          opening += '\begin{center}'
+          ending = '\end{center}' + ending
+        else
+          raise "Unsupported div style #{style}"
+        end
+      end
+      file.write opening
+      node.children.each.map { |c| visit(c, file) }
+      file.write ending
+    end
+    # rubocop:enable Style/StringConcatenation
+
     def transform
       @logger.debug 'Transforming story'
 
