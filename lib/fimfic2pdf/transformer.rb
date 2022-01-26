@@ -140,6 +140,18 @@ module FimFic2PDF
         when 'text-decoration:underline line-through'
           opening += '\underline{\sout{'
           ending = '}}' + ending
+        when /^color:#([[:digit:]]+)$/
+          colour = Regexp.last_match(1)
+          case colour.size
+          when 6
+            # Already in the correct format
+          when 3
+            colour = colour.chars.map { |c| c * 2 }.join
+          else
+            raise "Unsupported colour format: #{colour}"
+          end
+          opening += '\textcolor[HTML]{' + colour + '}{'
+          ending += '}'
         else
           raise "Unsupported span style #{style}"
         end

@@ -85,6 +85,8 @@ module FimFic2PDF
 
 \usepackage[normalem]{ulem}
 
+\usepackage{xcolor}
+
 \begin{document}
 
 \frontmatter
