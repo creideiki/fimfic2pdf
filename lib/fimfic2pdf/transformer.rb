@@ -110,6 +110,9 @@ module FimFic2PDF
       ending = ''
       node.attributes['style'].value.split(';').each do |style|
         case style
+        when 'font-size:2em'
+          opening += '\begin{LARGE}'
+          ending = '\end{LARGE}' + ending
         when 'font-size:1.5em'
           opening += '\begin{Large}'
           ending = '\end{Large}' + ending
@@ -119,6 +122,9 @@ module FimFic2PDF
         when 'font-size:0.75em'
           opening += '\begin{footnotesize}'
           ending = '\end{footnotesize}' + ending
+        when 'font-size:0.5em'
+          opening += '\begin{scriptsize}'
+          ending = '\end{scriptsize}' + ending
         when 'font-style:italic'
           opening += '\textit{'
           ending = '}' + ending
