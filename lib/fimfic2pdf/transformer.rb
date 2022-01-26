@@ -215,6 +215,12 @@ module FimFic2PDF
       file.write "\n", '\par\noindent\rule{\textwidth}{0.5pt}', "\n"
     end
 
+    def visit_blockquote(node, file)
+      file.write "\n", '\begin{quotation}', "\n"
+      node.children.each.map { |c| visit(c, file) }
+      file.write "\n", '\end{quotation}', "\n"
+    end
+
     def transform
       @logger.debug 'Transforming story'
 
