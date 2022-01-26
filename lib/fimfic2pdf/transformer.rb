@@ -91,7 +91,9 @@ module FimFic2PDF
             gsub('”', "''").
             gsub('‘', '`').
             gsub('’', "'").
-            gsub('…', '...')
+            gsub('…', '...').
+            gsub('%', '\%').
+            gsub('&', '\\\&')
         )
       end
     end
