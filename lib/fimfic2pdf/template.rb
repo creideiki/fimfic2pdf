@@ -45,9 +45,9 @@ module FimFic2PDF
 % page number and chapter name on left side of footer for even pages
 \lfoot[\small{\thepage}]
 
-\usepackage[T1]{fontenc}
-\usepackage{tgtermes}    % body font
-\usepackage{tgheros}     % sans-serif font
+% Fonts
+\usepackage{xltxtra}  % Enable OpenType fonts
+\setmainfont{Linux Libertine}  % Hopefully a reasonable and widely available default serif font
 
 %\usepackage{tocloft}  % to typeset table of contents
 
