@@ -20,6 +20,7 @@ module FimFic2PDF
       @config_file = @dir + File::SEPARATOR + 'config.yaml'
       @conf = YAML.safe_load_file(@config_file)
       @replacements = {}
+      @in_blockquote = false
     end
 
     def parse_metadata
@@ -138,8 +139,13 @@ module FimFic2PDF
           opening += '\sout{'
           ending = '}' + ending
         when 'text-decoration:underline line-through'
-          opening += '\underline{\sout{'
-          ending = '}}' + ending
+          if @in_blockquote
+            opening += '\sout{'
+            ending = '}' + ending
+          else
+            opening += '\underline{\sout{'
+            ending = '}}' + ending
+          end
         when /^color:#([[:digit:]]+)$/
           colour = Regexp.last_match(1)
           case colour.size
@@ -179,9 +185,9 @@ module FimFic2PDF
     end
 
     def visit_u(node, file)
-      file.write '\underline{'
+      file.write '\underline{' unless @in_blockquote
       node.children.each.map { |c| visit(c, file) }
-      file.write '}'
+      file.write '}' unless @in_blockquote
     end
 
     def write_footnote(node, file)
@@ -234,9 +240,12 @@ module FimFic2PDF
     end
 
     def visit_blockquote(node, file)
+      previous_blockquote = @in_blockquote
+      @in_blockquote = true
       file.write "\n", '\begin{quotation}', "\n"
       node.children.each.map { |c| visit(c, file) }
       file.write "\n", '\end{quotation}', "\n"
+      @in_blockquote = previous_blockquote
     end
 
     # rubocop:disable Style/StringConcatenation
