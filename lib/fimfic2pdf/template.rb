@@ -49,7 +49,10 @@ module FimFic2PDF
 \usepackage{xltxtra}  % Enable OpenType fonts
 \setmainfont{Linux Libertine}  % Hopefully a reasonable and widely available default serif font
 
-%\usepackage{tocloft}  % to typeset table of contents
+% Table of contents
+\usepackage{tocloft}  % to typeset table of contents
+\setlength{\cftbeforechapskip}{0em}  % No extra space between chapters
+%\renewcommand{\cftchapdotsep}{\cftdotsep}  % Print dotted line between chapter title and page number
 
 %\renewcommand{\cftchapfont}{\sffamily}     % set TOC entries to sserif
 %\renewcommand{\cftchappagefont}{\sffamily} % set TOC page numbers to sserif
