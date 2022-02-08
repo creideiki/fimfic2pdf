@@ -270,6 +270,18 @@ module FimFic2PDF
     end
     # rubocop:enable Style/StringConcatenation
 
+    def visit_h1(node, file)
+      file.write "\n", '\begin{LARGE}'
+      node.children.each.map { |c| visit(c, file) }
+      file.write '\end{LARGE}', "\n"
+    end
+
+    def visit_h2(node, file)
+      file.write "\n", '\begin{Large}'
+      node.children.each.map { |c| visit(c, file) }
+      file.write '\end{Large}', "\n"
+    end
+
     def transform
       @logger.debug 'Transforming story'
 
