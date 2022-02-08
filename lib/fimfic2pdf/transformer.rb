@@ -158,6 +158,9 @@ module FimFic2PDF
           end
           opening += '\textcolor[HTML]{' + colour + '}{'
           ending += '}'
+        when 'font-variant-caps:small-caps'
+          opening += '\textsc{'
+          ending = '}' + ending
         else
           raise "Unsupported span style #{style}"
         end
