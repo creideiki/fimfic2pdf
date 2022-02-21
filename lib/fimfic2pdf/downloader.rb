@@ -22,7 +22,10 @@ module FimFic2PDF
 
     def fetch
       @logger.debug "Fetching EPUB from #{@url}"
-      response = HTTParty.get(@url)
+      response = HTTParty.get(@url,
+                              headers: {
+                                'User-Agent' => "FimFic2PDF/#{FimFic2PDF::VERSION}"
+                              })
       raise "Failed to download #{@url}: #{response.code} #{response.message}" unless response.code == 200
 
       name = response.headers['content-disposition'].split('"')[1]
