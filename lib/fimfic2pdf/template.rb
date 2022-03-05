@@ -64,15 +64,8 @@ module FimFic2PDF
 \setcounter{tocdepth}{0} % sets what level of header is shown in the TOC
 \setcounter{secnumdepth}{1} % sets what level of subsect. are numbered
 
-%\usepackage[titlesec]{lwarp} % to format chapter title pages
-
-% format chapter title pages
-%\titleformat{\chapter}
-%  [display] % shape/type of title
-%  {\sffamily}
-%  {\large \thechapter }
-%  [\thispagestyle{plain} % suppress page numbers
-%]% end of what comes after title
+\usepackage[center]{titlesec} % to format chapter title pages
+\assignpagestyle{\chapter}{fancy} % use the same footer on title pages as on body pages
 
 \usepackage{microtype}
 
