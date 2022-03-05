@@ -105,7 +105,7 @@ module FimFic2PDF
       file.write "\n"
     end
 
-    # rubocop:disable Style/StringConcatenation
+    # rubocop:disable Style/StringConcatenation, Metrics/BlockLength
     def visit_span(node, file)
       opening = ''
       ending = ''
@@ -169,7 +169,7 @@ module FimFic2PDF
       node.children.each.map { |c| visit(c, file) }
       file.write ending
     end
-    # rubocop:enable Style/StringConcatenation
+    # rubocop:enable Style/StringConcatenation, Metrics/BlockLength
 
     def visit_i(node, file)
       file.write '\textit{'

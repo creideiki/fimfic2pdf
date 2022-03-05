@@ -28,18 +28,23 @@ Metrics/AbcSize:
   - transform
   - visit_span
   - visit_body
+  - write_footnote
 
 Metrics/ClassLength:
   CountAsOne:
   - array
   - hash
   - heredoc
-  Max: 200
+  Max: 300
 
 Metrics/CyclomaticComplexity:
   IgnoredMethods:
   - visit_span
   - visit_body
+
+Metrics/PerceivedComplexity:
+  IgnoredMethods:
+  - visit_span
 
 Metrics/MethodLength:
   CountAsOne:
@@ -47,6 +52,8 @@ Metrics/MethodLength:
   - hash
   - heredoc
   Max: 30
+  IgnoredMethods:
+  - visit_span
 
 Style/StringConcatenation:
   Mode: conservative
