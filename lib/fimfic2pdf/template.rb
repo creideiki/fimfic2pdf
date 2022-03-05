@@ -51,6 +51,7 @@ module FimFic2PDF
 
 % Table of contents
 \usepackage{tocloft}  % to typeset table of contents
+\usepackage{hyperref} % clickable links
 \setlength{\cftbeforechapskip}{0em}  % No extra space between chapters
 %\renewcommand{\cftchapdotsep}{\cftdotsep}  % Print dotted line between chapter title and page number
 
