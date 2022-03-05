@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'logger'
 require 'optparse'
 
 require 'fimfic2pdf/downloader'
@@ -8,22 +9,25 @@ require 'fimfic2pdf/renderer'
 require 'fimfic2pdf/transformer'
 require 'fimfic2pdf/version'
 
+logger = Logger.new($stderr, progname: 'Driver')
+
 parser = OptionParser.new
 options = {}
 
-parser.banner = 'Usage: fimfic2pdf -i ID [options]'
+parser.banner = 'Usage: fimfic2pdf -i ID [options]
+
+Saves files in a working directory named ./<ID>/.
+
+When run multiple times:
+* By default, only re-renders the PDF, including any manual changes to the LaTeX code.
+* To re-parse the HTML and re-transform to LaTeX, losing any manual changes, use the "-t" flag.
+* To re-download the EPUB file and start over, remove the ./<ID>/ directory.
+'
 parser.separator ''
 
 # rubocop:disable Layout/LineLength
 parser.on('-i ID', '--id ID', 'story ID', Integer) { |id| options[:id] = id }
-parser.on('-f', '--[no-]skip-fetch', 'skip fetch (download) step') { |f| options[:skip_fetch] = f }
-parser.on('-u', '--[no-]skip-unpack', 'skip unpack step') { |u| options[:skip_unpack] = u }
-parser.on('-g', '--[no-]skip-write-download-config', 'skip write download configuration step') { |g| options[:skip_write_download_config] = g }
-parser.on('-p', '--[no-]skip-parse-metadata', 'skip parse metadata step') { |p| options[:skip_parse_metadata] = p }
-parser.on('-t', '--[no-]skip-transform', 'skip transform (generate LaTeX) step') { |t| options[:skip_transform] = t }
-parser.on('-b', '--[no-]skip-write-book', 'skip write book (top-level LaTeX file) step') { |b| options[:skip_write_book] = b }
-parser.on('-w', '--[no-]skip-write-config', 'skip write transform config step') { |w| options[:skip_write_transform_config] = w }
-parser.on('-r', '--[no-]skip-render', 'skip render PDF step') { |r| options[:skip_render] = r }
+parser.on('-t', '--retransform', 'force re-parsing of the HTML and transforming to LaTeX') { |f| options[:force_retransform] = f }
 # rubocop:enable Layout/LineLength
 
 parser.on_tail
@@ -49,16 +53,26 @@ unless options.include? :id
   abort parser.to_s
 end
 
-downloader = FimFic2PDF::Downloader.new options[:id]
-downloader.fetch unless options[:skip_fetch]
-downloader.unpack unless options[:skip_unpack]
-downloader.write_config unless options[:skip_write_download_config]
+if File.directory? options[:id].to_s
+  logger.info "Working directory #{options[:id]} already exists, not downloading EPUB"
+else
+  downloader = FimFic2PDF::Downloader.new options[:id]
+  downloader.fetch
+  downloader.unpack
+  downloader.write_config
+  options[:transform] = true
+end
 
-transformer = FimFic2PDF::Transformer.new options[:id]
-transformer.parse_metadata unless options[:skip_parse_metadata]
-transformer.transform unless options[:skip_transform]
-transformer.write_book unless options[:skip_write_book]
-transformer.write_config unless options[:skip_write_transform_config]
+if options[:force_retransform] or options[:transform]
+  logger.info 'Forcing reparse and retransform from HTML to LaTeX due to "-t" flag' if options[:force_retransform]
+  transformer = FimFic2PDF::Transformer.new options[:id]
+  transformer.parse_metadata
+  transformer.transform
+  transformer.write_book
+  transformer.write_config
+else
+  logger.info 'Not transforming, using existing LaTeX code'
+end
 
 renderer = FimFic2PDF::Renderer.new options[:id]
-renderer.render unless options[:skip_render]
+renderer.render

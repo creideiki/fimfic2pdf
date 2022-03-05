@@ -15,7 +15,7 @@ module FimFic2PDF
       @logger = Logger.new($stderr, progname: 'Downloader')
       @logger.debug "Preparing to download story #{@story_id}"
       @url = "https://www.fimfiction.net/story/download/#{@story_id}/epub"
-      @dir = story_id.to_s
+      @dir = @story_id.to_s
       @logger.debug "Creating working directory #{@dir}"
       Dir.mkdir @dir unless File.directory? @dir
     end
