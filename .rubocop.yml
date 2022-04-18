@@ -25,17 +25,20 @@ Metrics/AbcSize:
   Max: 20
   IgnoredMethods:
   - parse_metadata
-  - transform
+  - render
+  - transform_volume
+  - validate_volumes
   - visit_span
   - visit_body
   - write_footnote
+  - write_volume
 
 Metrics/ClassLength:
   CountAsOne:
   - array
   - hash
   - heredoc
-  Max: 300
+  Max: 400
 
 Metrics/CyclomaticComplexity:
   IgnoredMethods:
