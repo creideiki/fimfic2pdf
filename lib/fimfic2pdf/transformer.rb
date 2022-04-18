@@ -12,15 +12,53 @@ module FimFic2PDF
   class Transformer
     attr_accessor :conf
 
-    def initialize(story_id)
+    def initialize(story_id, volumes) # rubocop:disable Metrics/AbcSize
       @story_id = story_id
       @logger = Logger.new($stderr, progname: 'Transformer')
       @logger.debug "Preparing to transform story #{@story_id}"
       @dir = story_id.to_s
       @config_file = @dir + File::SEPARATOR + 'config.yaml'
       @conf = YAML.safe_load_file(@config_file)
+      @volumes =
+        if volumes
+          volumes.map do |chapters|
+            first, last = chapters.split '-'
+            { 'first' => first.to_i, 'last' => last.to_i }
+          end
+        else
+          [{ 'first' => @conf['story']['chapters'][0]['number'],
+             'last'  => @conf['story']['chapters'][-1]['number'] }]
+        end
+      @volumes.each_with_index do |v, n|
+        v['number'] = n + 1
+        v['filename'] = @dir + File::SEPARATOR + # rubocop:disable Style/StringConcatenation
+                        'vol' + (n + 1).to_s + '.tex'
+      end
+      @logger.info "Splitting into #{@volumes.size} volumes:"
+      @volumes.each_with_index { |v, n| @logger.info "Volume #{n + 1}: Chapters #{v['first']} - #{v['last']}" }
+      @conf['story']['volumes'] = @volumes
       @replacements = {}
       @in_blockquote = false
+    end
+
+    def validate_volumes
+      chapter_usage = Array.new(@conf['story']['chapters'].size, 0)
+      @volumes.each do |vol|
+        vol['first'].upto(vol['last']) do |chapter|
+          chapter_usage[chapter - 1] += 1
+        end
+      end
+      do_abort = false
+      chapter_usage.each_with_index do |usage, num|
+        if usage.zero?
+          @logger.error "Chapter #{num + 1} is not assigned to any volume"
+          do_abort = true
+        elsif usage > 1
+          @logger.error "Chapter #{num + 1} is assigned to more than one volume"
+          do_abort = true
+        end
+      end
+      exit 1 if do_abort
     end
 
     def parse_metadata
@@ -282,11 +320,15 @@ module FimFic2PDF
       file.write '\end{Large}', "\n"
     end
 
-    def transform
-      @logger.debug 'Transforming story'
+    def transform_volume(num)
+      volume = @volumes[num]
+      @logger.debug "Transforming volume #{num + 1}, chapters #{volume['first']} - #{volume['last']}"
 
-      File.open(@dir + File::SEPARATOR + 'chapters.tex', 'wb') do |chapters|
-        @conf['story']['chapters'].each do |chapter|
+      vol_str = 'vol' + (num + 1).to_s + '-' # rubocop:disable Style/StringConcatenation
+
+      File.open(@dir + File::SEPARATOR + vol_str + 'chapters.tex', 'wb') do |chapters|
+        @conf['story']['volumes'][num]['first'].upto(@conf['story']['volumes'][num]['last']) do |chapter_num|
+          chapter = @conf['story']['chapters'][chapter_num - 1]
           @logger.debug "Transforming chapter: #{chapter['number']} - #{chapter['title']}"
           doc = File.open(chapter['html']) { |f| Nokogiri::HTML(f) }
           chapter['tex'] ||= @dir + File::SEPARATOR +
@@ -305,12 +347,29 @@ module FimFic2PDF
       end
     end
 
-    def write_book
-      @logger.debug 'Writing top-level LaTeX file'
+    def transform
+      @logger.debug 'Transforming story'
+
+      @volumes.each_index { |num| transform_volume num }
+    end
+
+    def write_volume(num)
+      @logger.debug "Writing LaTeX file for volume #{num + 1}"
+
       tmpl = FimFic2PDF::Template.new
-      File.open(@dir + File::SEPARATOR + 'book.tex', 'wb') do |f|
-        f.write tmpl.to_s
+      File.open(@volumes[num]['filename'], 'wb') do |f|
+        f.write tmpl.style
+        f.write tmpl.header
+        f.write "\n\\setcounter{chapter}{#{@conf['story']['volumes'][num]['first'].to_i - 1}}\n"
+        f.write tmpl.chapters(num)
+        f.write tmpl.footer
       end
+    end
+
+    def write_story
+      @logger.debug 'Writing top-level LaTeX files'
+
+      @volumes.each_index { |num| write_volume num }
     end
 
     def write_config

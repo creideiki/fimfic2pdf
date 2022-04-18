@@ -22,11 +22,19 @@ When run multiple times:
 * By default, only re-renders the PDF, including any manual changes to the LaTeX code.
 * To re-parse the HTML and re-transform to LaTeX, losing any manual changes, use the "-t" flag.
 * To re-download the EPUB file and start over, remove the ./<ID>/ directory.
+
+By default, produces a single PDF with all chapters. For splitting into mutiple volumes,
+give the range of chapters for each volume, e.g.:
+   --volumes 1-10,11-20
+yields two volumes, containing chapters 1-10 and 11-20, respectively.
+Each chapter must be used in exactly one volume.
+To change the volume split, "-t" must be specified, which loses any manual changes.
 '
 parser.separator ''
 
 # rubocop:disable Layout/LineLength
 parser.on('-i ID', '--id ID', 'story ID', Integer) { |id| options[:id] = id }
+parser.on('-v CHAPTERS,CHAPTERS', '--volumes CHAPTERS,CHAPTERS', 'split story into multiple volumes', Array) { |volumes| options[:volumes] = volumes }
 parser.on('-t', '--retransform', 'force re-parsing of the HTML and transforming to LaTeX') { |f| options[:force_retransform] = f }
 # rubocop:enable Layout/LineLength
 
@@ -65,14 +73,15 @@ end
 
 if options[:force_retransform] or options[:transform]
   logger.info 'Forcing reparse and retransform from HTML to LaTeX due to "-t" flag' if options[:force_retransform]
-  transformer = FimFic2PDF::Transformer.new options[:id]
+  transformer = FimFic2PDF::Transformer.new(options[:id], options[:volumes])
+  transformer.validate_volumes
   transformer.parse_metadata
   transformer.transform
-  transformer.write_book
+  transformer.write_story
   transformer.write_config
 else
   logger.info 'Not transforming, using existing LaTeX code'
 end
 
 renderer = FimFic2PDF::Renderer.new options[:id]
-renderer.render
+renderer.render_story

@@ -18,17 +18,45 @@ module FimFic2PDF
       @conf = YAML.safe_load_file(@config_file)
     end
 
-    def render
+    def render_volume(num)
+      @logger.debug "Rendering volume #{num + 1}"
+
       @logger.debug 'Running first render pass'
-      res = system('xelatex', 'book.tex', :chdir => @dir)
+      res = system('xelatex', "vol#{num + 1}.tex", :chdir => @dir)
       raise "Error running first render pass: #{$CHILD_STATUS}" unless res
 
       @logger.debug 'Running second render pass'
-      res = system('xelatex', 'book.tex', :chdir => @dir)
+      res = system('xelatex', "vol#{num + 1}.tex", :chdir => @dir)
       raise "Error running second render pass: #{$CHILD_STATUS}" unless res
 
       @logger.debug 'Rendering completed'
-      @logger.info "Finished PDF: #{@dir + File::SEPARATOR + 'book.pdf'}"
     end
+
+    # rubocop:disable Style/CombinableLoops
+    def render_story # rubocop:disable Metrics/AbcSize
+      @conf['story']['volumes'].each_index { |num| render_volume num }
+
+      @conf['story']['volumes'].each_index do |num|
+        @logger.info "Finished PDF: #{@dir}#{File::SEPARATOR}vol#{num + 1}.pdf"
+      end
+
+      @conf['story']['volumes'].each_index do |num|
+        pages = 0
+        File.open(@dir + File::SEPARATOR + "vol#{num + 1}.aux") do |f|
+          page_number_regexp = /abspage@last\{(?<pages>[[:digit:]]+)}$/
+          f.each_line do |line|
+            page_number_regexp.match(line) do |m|
+              pages = m['pages'].to_i
+            end
+          end
+        end
+
+        @logger.debug "Volume #{num + 1} has #{pages} pages."
+        if pages >= 400
+          @logger.info "Volume #{num + 1} has #{pages} pages. Consider splitting it into multiple volumes for printing."
+        end
+      end
+    end
+    # rubocop:enable Style/CombinableLoops
   end
 end

@@ -4,7 +4,7 @@ module FimFic2PDF
   # The top-level book LaTeX template
   class Template
     # rubocop:disable Layout/HeredocIndentation
-    def to_s
+    def style
       <<'TEMPLATE'
 % https://amyrhoda.wordpress.com/2012/05/25/latex-to-lulu-the-making-of-aosa-geometry-and-headers-and-footers/
 
@@ -86,7 +86,11 @@ module FimFic2PDF
 \usepackage[normalem]{ulem}
 
 \usepackage{xcolor}
+TEMPLATE
+    end
 
+    def header
+      <<'TEMPLATE'
 \begin{document}
 
 \frontmatter
@@ -97,7 +101,15 @@ module FimFic2PDF
 
 \mainmatter
 
-\include{chapters}
+TEMPLATE
+    end
+
+    def chapters(volume)
+      "\\include{vol#{volume + 1}-chapters}"
+    end
+
+    def footer
+      <<'TEMPLATE'
 
 \backmatter
 
@@ -105,7 +117,7 @@ module FimFic2PDF
 
 \end{document}
 TEMPLATE
-      # rubocop:enable Layout/HeredocIndentation
     end
+    # rubocop:enable Layout/HeredocIndentation
   end
 end
