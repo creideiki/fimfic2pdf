@@ -59,9 +59,8 @@ module FimFic2PDF
           'url' => @url,
           'epub' => @filename,
           'metadata' => @dir + File::SEPARATOR + 'title.html',
-          'chapters' => chapters.map do |file|
-            { 'html' => file }
-          end
+          'chapters' => (chapters.map { |file| { 'html' => file } }).
+              each_with_index { |chapter, index| chapter['number'] = index + 1 }
         }
       }
     end

@@ -41,7 +41,7 @@ module FimFic2PDF
         @logger.debug "Not already parsed, reading from file #{chapter['html']}"
         doc = File.open(chapter['html']) { |f| Nokogiri::HTML(f) }
         chapter['title'] = doc.at_xpath('/html/head/title').text
-        @logger.debug "Chapter read: #{chapter['title']}"
+        @logger.debug "Chapter read: #{chapter['number']} - #{chapter['title']}"
       end
     end
 
@@ -287,7 +287,7 @@ module FimFic2PDF
 
       File.open(@dir + File::SEPARATOR + 'chapters.tex', 'wb') do |chapters|
         @conf['story']['chapters'].each do |chapter|
-          @logger.debug "Transforming chapter: #{chapter['title']}"
+          @logger.debug "Transforming chapter: #{chapter['number']} - #{chapter['title']}"
           doc = File.open(chapter['html']) { |f| Nokogiri::HTML(f) }
           chapter['tex'] ||= @dir + File::SEPARATOR +
                              File.basename(chapter['html'], '.html') + '.tex'
