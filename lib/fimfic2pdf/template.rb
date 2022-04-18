@@ -45,6 +45,9 @@ module FimFic2PDF
 % page number and chapter name on left side of footer for even pages
 \lfoot[\small{\thepage}]
 
+% Interpret underscores literally, not as subscript
+\usepackage{underscore}
+
 % Fonts
 \usepackage{xltxtra}  % Enable OpenType fonts
 \setmainfont{Linux Libertine}  % Hopefully a reasonable and widely available default serif font
