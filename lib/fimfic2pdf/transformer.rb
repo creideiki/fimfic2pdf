@@ -146,7 +146,7 @@ module FimFic2PDF
             opening += '\underline{\sout{'
             ending = '}}' + ending
           end
-        when /^color:#([[:digit:]]+)$/
+        when /^color:#([[:xdigit:]]+)$/
           colour = Regexp.last_match(1)
           case colour.size
           when 6
