@@ -55,9 +55,9 @@ module FimFic2PDF
                  sort_by { |f| File.basename(f).split('-')[1].to_i }
       @conf = {
         'story' => {
-          'id' => @story_id,
-          'url' => @url,
-          'epub' => @filename,
+          'id'       => @story_id,
+          'url'      => @url,
+          'epub'     => @filename,
           'metadata' => @dir + File::SEPARATOR + 'title.html',
           'chapters' => (chapters.map { |file| { 'html' => file } }).
               each_with_index { |chapter, index| chapter['number'] = index + 1 }

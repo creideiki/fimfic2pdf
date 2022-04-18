@@ -60,3 +60,6 @@ Style/StringConcatenation:
 
 Layout/DotPosition:
   EnforcedStyle: trailing
+
+Layout/HashAlignment:
+  EnforcedHashRocketStyle: table

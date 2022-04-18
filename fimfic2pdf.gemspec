@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.summary = 'Formats FimFiction stories as PDF.'
 
   s.metadata = {
-    'homepage_uri' => 'https://github.com/creideiki/fimfic2pdf/',
+    'homepage_uri'    => 'https://github.com/creideiki/fimfic2pdf/',
     'source_code_uri' => 'https://github.com/creideiki/fimfic2pdf/',
     'bug_tracker_uri' => 'https://github.com/creideiki/fimfic2pdf/issues'
   }
