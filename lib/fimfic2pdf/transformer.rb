@@ -117,7 +117,7 @@ module FimFic2PDF
         when 'font-size:1.5em'
           opening += '\begin{Large}'
           ending = '\end{Large}' + ending
-        when 'font-size:0.875em'
+        when 'font-size:0.875em', 'font-size:0.8125em'
           opening += '\begin{small}'
           ending = '\end{small}' + ending
         when 'font-size:0.75em'
