@@ -19,7 +19,7 @@ gem install ./fimfic2pdf-*.gem
 
 ## Basic usage
 
-Find the story ID, which is the numbers in the URL after `https://www.fimfiction.net/story/`. Then, run `fimfic2pdf -i ID`. The PDF will be saved as `ID/book.pdf`.
+Find the story ID, which is the numbers in the URL after `https://www.fimfiction.net/story/`. Then, run `fimfic2pdf -i ID`. The PDF will be saved as `ID/vol1.pdf`.
 
 The default format uses 6x9" paper and includes a table of contents.
 
@@ -35,7 +35,15 @@ When run multiple times:
 * To re-parse the HTML and re-transform to LaTeX, losing any manual changes, use the "-t" flag.
 * To re-download the EPUB file and start over, remove the ./<ID>/ directory.
 
+By default, produces a single PDF with all chapters. For splitting into mutiple volumes,
+give the range of chapters for each volume, e.g.:
+   --volumes 1-10,11-20
+yields two volumes, containing chapters 1-10 and 11-20, respectively.
+Each chapter must be used in exactly one volume.
+To change the volume split, "-t" must be specified, which loses any manual changes.
+
     -i, --id ID                      story ID
+    -v, --volumes CHAPTERS,CHAPTERS  split story into multiple volumes
     -t, --retransform                force re-parsing of the HTML and transforming to LaTeX
 
     -V, --version                    display version information
