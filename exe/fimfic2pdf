@@ -29,6 +29,22 @@ give the range of chapters for each volume, e.g.:
 yields two volumes, containing chapters 1-10 and 11-20, respectively.
 Each chapter must be used in exactly one volume.
 To change the volume split, "-t" must be specified, which loses any manual changes.
+
+Section breaks (represented as a horizontal line in EPUB and lines
+with asterisks on the web) have a few different renderings.
+To choose a style, use:
+   --hr-style [asterism,fleuron,scrollwork]
+where "asterism" is the default.
+
+Asterism is three asterisks in a triangle.
+
+Fleuron (centered, roughly square symbol) and scrollwork (horizontally
+extended line with flourishes) take a number specifying which symbol
+to use. See the "pgfornament" documentation at
+https://ctan.org/pkg/pgfornament for the complete list. 80-89 are
+recommended for scrollwork and the rest for fleurons. The default is a
+horse for fleurons (symbol 108) and a line with a center embellishment
+for scrollwork (symbol 82).
 '
 parser.separator ''
 
@@ -36,6 +52,8 @@ parser.separator ''
 parser.on('-i ID', '--id ID', 'story ID', Integer) { |id| options[:id] = id }
 parser.on('-v CHAPTERS,CHAPTERS', '--volumes CHAPTERS,CHAPTERS', 'split story into multiple volumes', Array) { |volumes| options[:volumes] = volumes }
 parser.on('-t', '--retransform', 'force re-parsing of the HTML and transforming to LaTeX') { |f| options[:force_retransform] = f }
+parser.on('-s', '--hr-style STYLE', [:asterism, :fleuron, :scrollwork], 'style of <hr> section breaks, asterism (default), fleuron, or scrollwork') { |s| options[:hr_style] = s }
+parser.on('-y', '--hr-symbol SYMBOL', Integer, 'symbol number for scrollwork or fleuron') { |y| options[:hr_symbol] = y }
 # rubocop:enable Layout/LineLength
 
 parser.on_tail
@@ -61,6 +79,12 @@ unless options.include? :id
   abort parser.to_s
 end
 
+options[:hr_style] = :asterism unless options.include? :hr_style
+unless options.include? :hr_symbol
+  options[:hr_symbol] = 82  if options[:hr_style] == :scrollwork
+  options[:hr_symbol] = 108 if options[:hr_style] == :fleuron
+end
+
 if File.directory? options[:id].to_s
   logger.info "Working directory #{options[:id]} already exists, not downloading EPUB"
 else
@@ -73,7 +97,7 @@ end
 
 if options[:force_retransform] or options[:transform]
   logger.info 'Forcing reparse and retransform from HTML to LaTeX due to "-t" flag' if options[:force_retransform]
-  transformer = FimFic2PDF::Transformer.new(options[:id], options[:volumes])
+  transformer = FimFic2PDF::Transformer.new(options[:id], options[:volumes], options[:hr_style], options[:hr_symbol])
   transformer.validate_volumes
   transformer.parse_metadata
   transformer.transform

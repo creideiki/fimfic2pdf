@@ -12,7 +12,7 @@ module FimFic2PDF
   class Transformer
     attr_accessor :conf
 
-    def initialize(story_id, volumes) # rubocop:disable Metrics/AbcSize
+    def initialize(story_id, volumes, hr_style, hr_symbol) # rubocop:disable Metrics/AbcSize
       @story_id = story_id
       @logger = Logger.new($stderr, progname: 'Transformer')
       @logger.debug "Preparing to transform story #{@story_id}"
@@ -37,6 +37,9 @@ module FimFic2PDF
       @logger.info "Splitting into #{@volumes.size} volumes:"
       @volumes.each_with_index { |v, n| @logger.info "Volume #{n + 1}: Chapters #{v['first']} - #{v['last']}" }
       @conf['story']['volumes'] = @volumes
+      @hr_style = hr_style
+      @hr_symbol = hr_symbol
+      @logger.debug "Using section break style #{@hr_style} with symbol #{@hr_symbol}"
       @replacements = {}
       @in_blockquote = false
     end
@@ -277,7 +280,7 @@ module FimFic2PDF
     end
 
     def visit_hr(_node, file)
-      file.write "\n", '\par\noindent\rule{\textwidth}{0.5pt}', "\n"
+      file.write "\n", '\hr', "\n"
     end
 
     def visit_blockquote(node, file)
@@ -359,6 +362,7 @@ module FimFic2PDF
       tmpl = FimFic2PDF::Template.new
       File.open(@volumes[num]['filename'], 'wb') do |f|
         f.write tmpl.style
+        f.write tmpl.select_hr(@hr_style, @hr_symbol)
         f.write tmpl.header
         f.write "\n\\setcounter{chapter}{#{@conf['story']['volumes'][num]['first'].to_i - 1}}\n"
         f.write tmpl.chapters(num)

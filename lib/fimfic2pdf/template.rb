@@ -4,6 +4,23 @@ module FimFic2PDF
   # The top-level book LaTeX template
   class Template
     # rubocop:disable Layout/HeredocIndentation
+    def select_hr(style, symbol)
+      s = "\n\\newcommand{\\hr}{"
+      case style
+      when :asterism
+        s += '\\asterism'
+      when :fleuron
+        raise "Invalid symbol #{symbol}" if symbol > 193
+
+        s += "\\fleuron{#{symbol}}"
+      when :scrollwork
+        raise "Invalid symbol #{symbol}" if symbol > 193
+
+        s += "\\scrollwork{#{symbol}}"
+      end
+      s + "}\n\n"
+    end
+
     def style
       <<'TEMPLATE'
 % https://amyrhoda.wordpress.com/2012/05/25/latex-to-lulu-the-making-of-aosa-geometry-and-headers-and-footers/
@@ -47,6 +64,47 @@ module FimFic2PDF
 
 % Interpret underscores literally, not as subscript
 \usepackage{underscore}
+
+% Section breaks, replacing <hr />. The command "\hr" will be defined
+% later to use one of these alternatives.
+
+\usepackage[object=vectorian]{pgfornament}
+
+% Scrollwork lines
+% https://tex.stackexchange.com/a/76555
+% Choose a line style between 80 and 89 from pgfornament:
+% https://ctan.org/pkg/pgfornament
+
+\newcommand{\scrollwork}[1]{%
+  \nointerlineskip \vspace{1\baselineskip}\hspace{\fill}
+  {
+    \resizebox{0.5\linewidth}{1ex}
+    {{%
+    {\begin{tikzpicture}
+    \node  (C) at (0,0) {};
+    \node (D) at (9,0) {};
+    \path (C) to [ornament=#1] (D);
+    \end{tikzpicture}}}}}%
+    \hspace{\fill}
+    \par\nointerlineskip \vspace{1\baselineskip}
+  }
+
+% Asterism
+% https://tex.stackexchange.com/a/364110
+
+\newcommand{\asterism}{%
+  \vspace{2.5ex}\par\noindent%
+  \parbox{\textwidth}{\centering{*}\\[-4pt]{*}\enspace{*}\vspace{2ex}}\par%
+}
+
+% Fleuron
+% https://tex.stackexchange.com/a/160343
+% Choose a symbol from pgfornament:
+% https://ctan.org/pkg/pgfornament
+
+\newcommand{\fleuron}[1]{%
+  \par\bigskip\noindent\hfill\pgfornament[width=17pt,anchor=south]{#1}\hfill\null\par\bigskip
+}
 
 % Fonts
 \usepackage{xltxtra}  % Enable OpenType fonts
