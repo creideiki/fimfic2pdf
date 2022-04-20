@@ -42,9 +42,27 @@ yields two volumes, containing chapters 1-10 and 11-20, respectively.
 Each chapter must be used in exactly one volume.
 To change the volume split, "-t" must be specified, which loses any manual changes.
 
+Section breaks (represented as a horizontal line in EPUB and lines
+with asterisks on the web) have a few different renderings.
+To choose a style, use:
+   --hr-style [asterism,fleuron,scrollwork]
+where "asterism" is the default.
+
+Asterism is three asterisks in a triangle.
+
+Fleuron (centered, roughly square symbol) and scrollwork (horizontally
+extended line with flourishes) take a number specifying which symbol
+to use. See the "pgfornament" documentation at
+https://ctan.org/pkg/pgfornament for the complete list. 80-89 are
+recommended for scrollwork and the rest for fleurons. The default is a
+horse for fleurons (symbol 108) and a line with a center embellishment
+for scrollwork (symbol 82).
+
     -i, --id ID                      story ID
     -v, --volumes CHAPTERS,CHAPTERS  split story into multiple volumes
     -t, --retransform                force re-parsing of the HTML and transforming to LaTeX
+    -s, --hr-style STYLE             style of <hr> section breaks, asterism (default), fleuron, or scrollwork
+    -y, --hr-symbol SYMBOL           symbol number for scrollwork or fleuron
 
     -V, --version                    display version information
     -h, --help                       display usage information
