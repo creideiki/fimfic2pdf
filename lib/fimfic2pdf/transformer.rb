@@ -122,21 +122,23 @@ module FimFic2PDF
       node.children[3..].map { |c| visit(c, file) }
     end
 
+    def latex_escape(string)
+      string.
+        gsub(/#/, '\#').
+        gsub('“', '``').
+        gsub('”', "''").
+        gsub('‘', '`').
+        gsub('’', "'").
+        gsub('…', '...').
+        gsub('%', '\%').
+        gsub('&', '\\\&')
+    end
+
     def visit_text(node, file)
       if /^-+$/.match node.text
         file.write '\vspace{2ex}\hrule\vspace{2ex}'
       else
-        file.write(
-          node.text.
-            gsub(/#/, '\#').
-            gsub('“', '``').
-            gsub('”', "''").
-            gsub('‘', '`').
-            gsub('’', "'").
-            gsub('…', '...').
-            gsub('%', '\%').
-            gsub('&', '\\\&')
-        )
+        file.write latex_escape(node.text)
       end
     end
 
@@ -337,7 +339,7 @@ module FimFic2PDF
           chapter['tex'] ||= @dir + File::SEPARATOR +
                              File.basename(chapter['html'], '.html') + '.tex'
           File.open(chapter['tex'], 'wb') do |tex|
-            tex.write("\\chapter{#{chapter['title']}}\n\n")
+            tex.write("\\chapter{#{latex_escape(chapter['title'])}}\n\n")
             build = StringIO.new
             visit_body(doc.xpath('/html/body'), build)
             @replacements.each do |src, dst|
