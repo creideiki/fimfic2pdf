@@ -69,3 +69,6 @@ Layout/HashAlignment:
 
 Layout/CommentIndentation:
   AllowForAlignment: true
+
+Gemspec/RequireMFA:
+  Enabled: false
