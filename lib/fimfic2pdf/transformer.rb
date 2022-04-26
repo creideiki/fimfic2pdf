@@ -381,9 +381,7 @@ module FimFic2PDF
 
     def write_config
       @logger.debug 'Writing configuration from transformer'
-      File.open(@dir + File::SEPARATOR + 'config.yaml', 'wb') do |f|
-        f.write YAML.dump @conf
-      end
+      File.binwrite(@dir + File::SEPARATOR + 'config.yaml', YAML.dump(@conf))
     end
   end
 end

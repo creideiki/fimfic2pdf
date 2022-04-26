@@ -34,9 +34,7 @@ module FimFic2PDF
 
       @filename = @dir + File::SEPARATOR + name
 
-      File.open(@filename, 'wb') do |f|
-        f.write response.body
-      end
+      File.binwrite(@filename, response.body)
     end
 
     def unpack
@@ -44,9 +42,8 @@ module FimFic2PDF
       epub = Zip::File.new(@filename)
       epub.glob('*.html').each do |entry|
         @logger.debug "Extracting #{entry.name}"
-        File.open(@dir + File::SEPARATOR + entry.name, 'wb') do |f|
-          f.write entry.get_input_stream.read
-        end
+        File.binwrite(@dir + File::SEPARATOR + entry.name,
+                      entry.get_input_stream.read)
       end
     end
 
@@ -68,9 +65,7 @@ module FimFic2PDF
     def write_config
       @logger.debug 'Writing configuration from downloader'
       generate_config if not @conf
-      File.open(@dir + File::SEPARATOR + 'config.yaml', 'wb') do |f|
-        f.write YAML.dump @conf
-      end
+      File.binwrite(@dir + File::SEPARATOR + 'config.yaml', YAML.dump(@conf))
     end
   end
 end
