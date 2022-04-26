@@ -3,7 +3,49 @@
 module FimFic2PDF
   # The top-level book LaTeX template
   class Template
-    # rubocop:disable Layout/HeredocIndentation
+    def romanize(number)
+      reductions = {
+        1000 => 'M',
+        900  => 'CM',
+        500  => 'D',
+        400  => 'CD',
+        100  => 'C',
+        90   => 'XC',
+        50   => 'L',
+        40   => 'XL',
+        10   => 'X',
+        9    => 'IX',
+        5    => 'V',
+        4    => 'IV',
+        1    => 'I'
+      }
+
+      result = String.new
+
+      while number.positive?
+        reductions.each do |n, subst|
+          next unless number / n >= 1 # if number contains at least one of n
+
+          result << subst  # push corresponding symbol to result
+          number -= n
+          break            # break from each and start it anew so that
+                           # the largest numbers are checked first
+                           # again.
+        end
+      end
+
+      result
+    end
+
+    def volume_title(volnum)
+      s = "\n\n"
+      s += "% Title of table of contents\n"
+      s += '\renewcommand{\contentsname}{\hfill Volume '
+      s += romanize volnum
+      s += ' \hfill}'
+      s + "\n\n"
+    end
+
     def select_hr(style, symbol)
       s = "\n\\newcommand{\\hr}{"
       case style
@@ -21,6 +63,7 @@ module FimFic2PDF
       s + "}\n\n"
     end
 
+    # rubocop:disable Layout/HeredocIndentation
     def style
       <<'TEMPLATE'
 % https://amyrhoda.wordpress.com/2012/05/25/latex-to-lulu-the-making-of-aosa-geometry-and-headers-and-footers/

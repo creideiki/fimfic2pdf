@@ -365,6 +365,7 @@ module FimFic2PDF
       File.open(@volumes[num]['filename'], 'wb') do |f|
         f.write tmpl.style
         f.write tmpl.select_hr(@hr_style, @hr_symbol)
+        f.write tmpl.volume_title(num + 1)
         f.write tmpl.header
         f.write "\n\\setcounter{chapter}{#{@conf['story']['volumes'][num]['first'].to_i - 1}}\n"
         f.write tmpl.chapters(num)
