@@ -66,3 +66,6 @@ Layout/DotPosition:
 
 Layout/HashAlignment:
   EnforcedHashRocketStyle: table
+
+Layout/CommentIndentation:
+  AllowForAlignment: true
