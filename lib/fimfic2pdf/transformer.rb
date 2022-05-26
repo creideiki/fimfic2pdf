@@ -12,16 +12,16 @@ module FimFic2PDF
   class Transformer
     attr_accessor :conf
 
-    def initialize(story_id, volumes, hr_style, hr_symbol) # rubocop:disable Metrics/AbcSize
-      @story_id = story_id
+    def initialize(options) # rubocop:disable Metrics/AbcSize
+      @story_id = options[:id]
       @logger = Logger.new($stderr, progname: 'Transformer')
       @logger.debug "Preparing to transform story #{@story_id}"
-      @dir = story_id.to_s
+      @dir = @story_id.to_s
       @config_file = @dir + File::SEPARATOR + 'config.yaml'
       @conf = YAML.safe_load_file(@config_file)
       @volumes =
-        if volumes
-          volumes.map do |chapters|
+        if options.key? :volumes
+          options[:volumes].map do |chapters|
             first, last = chapters.split '-'
             { 'first' => first.to_i, 'last' => last.to_i }
           end
@@ -37,11 +37,13 @@ module FimFic2PDF
       @logger.info "Splitting into #{@volumes.size} volumes:"
       @volumes.each_with_index { |v, n| @logger.info "Volume #{n + 1}: Chapters #{v['first']} - #{v['last']}" }
       @conf['story']['volumes'] = @volumes
-      @hr_style = hr_style
-      @hr_symbol = hr_symbol
+      @hr_style = options[:hr_style]
+      @hr_symbol = options[:hr_symbol]
       @logger.debug "Using section break style #{@hr_style} with symbol #{@hr_symbol}"
       @replacements = {}
       @in_blockquote = false
+      @chapter_style = options[:chapter_style]
+      @logger.debug("Using chapter style #{@chapter_style || 'default'}")
     end
 
     def validate_volumes
@@ -364,6 +366,7 @@ module FimFic2PDF
       tmpl = FimFic2PDF::Template.new
       File.open(@volumes[num]['filename'], 'wb') do |f|
         f.write tmpl.style
+        f.write tmpl.chapter_style(@chapter_style)
         f.write tmpl.select_hr(@hr_style, @hr_symbol)
         f.write tmpl.volume_title(num + 1)
         f.write tmpl.header

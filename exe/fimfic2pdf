@@ -54,6 +54,7 @@ parser.on('-v CHAPTERS,CHAPTERS', '--volumes CHAPTERS,CHAPTERS', 'split story in
 parser.on('-t', '--retransform', 'force re-parsing of the HTML and transforming to LaTeX') { |f| options[:force_retransform] = f }
 parser.on('-s', '--hr-style STYLE', [:asterism, :fleuron, :scrollwork], 'style of <hr> section breaks, asterism (default), fleuron, or scrollwork') { |s| options[:hr_style] = s }
 parser.on('-y', '--hr-symbol SYMBOL', Integer, 'symbol number for scrollwork or fleuron') { |y| options[:hr_symbol] = y }
+parser.on('-c', '--no-chapter', 'disable "Chapter X" in chapter titles') { options[:chapter_style] = :no_chapter }
 # rubocop:enable Layout/LineLength
 
 parser.on_tail
@@ -97,7 +98,7 @@ end
 
 if options[:force_retransform] or options[:transform]
   logger.info 'Forcing reparse and retransform from HTML to LaTeX due to "-t" flag' if options[:force_retransform]
-  transformer = FimFic2PDF::Transformer.new(options[:id], options[:volumes], options[:hr_style], options[:hr_symbol])
+  transformer = FimFic2PDF::Transformer.new(options)
   transformer.validate_volumes
   transformer.parse_metadata
   transformer.transform

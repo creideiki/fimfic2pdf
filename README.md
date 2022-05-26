@@ -63,6 +63,7 @@ for scrollwork (symbol 82).
     -t, --retransform                force re-parsing of the HTML and transforming to LaTeX
     -s, --hr-style STYLE             style of <hr> section breaks, asterism (default), fleuron, or scrollwork
     -y, --hr-symbol SYMBOL           symbol number for scrollwork or fleuron
+    -c, --no-chapter                 disable "Chapter X" in chapter titles
 
     -V, --version                    display version information
     -h, --help                       display usage information

@@ -63,6 +63,15 @@ module FimFic2PDF
       s + "}\n\n"
     end
 
+    def chapter_style(style)
+      case style
+      when :no_chapter
+        '\titleformat{\chapter}[block]{\centering\bfseries\Huge}{}{0ex}{}[]'
+      else
+        ''
+      end
+    end
+
     # rubocop:disable Layout/HeredocIndentation
     def style
       <<'TEMPLATE'
