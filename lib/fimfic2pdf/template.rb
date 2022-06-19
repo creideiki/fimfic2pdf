@@ -81,6 +81,9 @@ module FimFic2PDF
 \usepackage[includefoot]{geometry}
 %\usepackage[utf8]{inputenc}
 
+% Include pictures
+\usepackage{graphicx}
+
 % define page size and margins etc
 \geometry{
   paperwidth=6in,

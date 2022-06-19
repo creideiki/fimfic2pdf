@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'digest'
 require 'logger'
 require 'nokogiri'
 require 'stringio'
@@ -325,6 +326,39 @@ module FimFic2PDF
       file.write "\n", '\begin{Large}'
       node.children.each.map { |c| visit(c, file) }
       file.write '\end{Large}', "\n"
+    end
+
+    def visit_img(node, file) # rubocop:disable Metrics/AbcSize
+      url = node.attributes['src'].value
+
+      # We need a supported file name extension, or \includegraphics{}
+      # doesn't work. But it doesn't care if the data format matches
+      # the extension, and we don't know the data format until we've
+      # asked the server, which we want to avoid if possible. So just
+      # call everything .png.
+
+      # Also, FimFiction runs all external references through a URL
+      # proxy, making it very difficult to determine the actual file
+      # name. Just use the hex MD5 of the URL and hope there are no
+      # collisions.
+      name = 'img_' + Digest::MD5.hexdigest(url.split('/')[-1]) + '.png' # rubocop:disable Style/StringConcatenation
+      path = @dir + File::SEPARATOR + name
+
+      if File.exist? path
+        @logger.debug "Image #{url} already downloaded"
+      else
+        @logger.info "Fetching image from #{url}"
+        response = HTTParty.get(url,
+                                headers: {
+                                  'User-Agent' => "FimFic2PDF/#{FimFic2PDF::VERSION}"
+                                })
+        raise "Failed to download image #{url}: #{response.code} #{response.message}" unless response.code == 200
+
+        @logger.debug "Saving image as: #{path}"
+        File.binwrite(path, response.body)
+      end
+
+      file.write "\n\\includegraphics[width=\\textwidth]{#{name}}\n"
     end
 
     def transform_volume(num)
