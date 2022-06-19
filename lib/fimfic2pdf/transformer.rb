@@ -117,7 +117,7 @@ module FimFic2PDF
 
       child = node.children[2]
       if child.type != Nokogiri::XML::Node::TEXT_NODE or
-         child.text != "\n\n\n"
+         not (/^[[:space:]]+$/).match(child.text)
         raise "Unknown body format: post-title is #{child.inspect}"
       end
 
