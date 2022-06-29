@@ -362,6 +362,12 @@ module FimFic2PDF
       file.write "\n\\includegraphics[width=\\textwidth]{#{name}}\n"
     end
 
+    def visit_sub(node, file)
+      file.write '\textsubscript{'
+      node.children.each.map { |c| visit(c, file) }
+      file.write '}'
+    end
+
     def transform_volume(num)
       volume = @volumes[num]
       @logger.debug "Transforming volume #{num + 1}, chapters #{volume['first']} - #{volume['last']}"
