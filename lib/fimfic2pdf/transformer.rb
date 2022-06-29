@@ -13,7 +13,7 @@ module FimFic2PDF
   class Transformer
     attr_accessor :conf
 
-    def initialize(options) # rubocop:disable Metrics/AbcSize
+    def initialize(options) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       @story_id = options[:id]
       @logger = Logger.new($stderr, progname: 'Transformer')
       @logger.debug "Preparing to transform story #{@story_id}"
@@ -45,6 +45,7 @@ module FimFic2PDF
       @in_blockquote = false
       @chapter_style = options[:chapter_style]
       @logger.debug("Using chapter style #{@chapter_style || 'default'}")
+      @chapters_with_underline = []
     end
 
     def validate_volumes
@@ -180,7 +181,8 @@ module FimFic2PDF
           opening += '\textbf{'
           ending = '}' + ending
         when 'text-decoration:underline'
-          opening += '\underline{'
+          opening += '\fancyuline{'
+          @chapter_has_underline = true
           ending = '}' + ending
         when 'text-decoration:line-through'
           opening += '\sout{'
@@ -190,7 +192,8 @@ module FimFic2PDF
             opening += '\sout{'
             ending = '}' + ending
           else
-            opening += '\underline{\sout{'
+            opening += '\fancyuline{\sout{'
+            @chapter_has_underline = true
             ending = '}}' + ending
           end
         when /^color:#([[:xdigit:]]+)$/
@@ -235,7 +238,8 @@ module FimFic2PDF
     end
 
     def visit_u(node, file)
-      file.write '\underline{' unless @in_blockquote
+      file.write '\fancyuline{' unless @in_blockquote
+      @chapter_has_underline = true unless @in_blockquote
       node.children.each.map { |c| visit(c, file) }
       file.write '}' unless @in_blockquote
     end
@@ -399,6 +403,7 @@ module FimFic2PDF
 
       File.open(@dir + File::SEPARATOR + vol_str + 'chapters.tex', 'wb') do |chapters|
         @conf['story']['volumes'][num]['first'].upto(@conf['story']['volumes'][num]['last']) do |chapter_num|
+          @chapter_has_underline = false
           chapter = @conf['story']['chapters'][chapter_num - 1]
           @logger.debug "Transforming chapter: #{chapter['number']} - #{chapter['title']}"
           doc = File.open(chapter['html']) { |f| Nokogiri::HTML(f) }
@@ -414,6 +419,10 @@ module FimFic2PDF
             tex.write build.string
           end
           chapters.write "\\input{#{File.basename(chapter['tex'], '.tex')}}\n"
+          if @chapter_has_underline
+            @logger.info "Chapter has underline: #{chapter['number']} - #{chapter['title']}"
+            @chapters_with_underline.append "#{chapter['number']} - #{chapter['title']}"
+          end
         end
       end
     end
@@ -422,6 +431,8 @@ module FimFic2PDF
       @logger.debug 'Transforming story'
 
       @volumes.each_index { |num| transform_volume num }
+
+      @chapters_with_underline
     end
 
     def write_volume(num)

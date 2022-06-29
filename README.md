@@ -58,6 +58,16 @@ recommended for scrollwork and the rest for fleurons. The default is a
 horse for fleurons (symbol 108) and a line with a center embellishment
 for scrollwork (symbol 82).
 
+Underlined text cannot be automatically broken into lines. A list of
+chapters containing underlined text will be printed, so it can be
+checked manually for overruns. To break a line of underlined text, end
+and then restart the \fancyuline{} environment. E.g. change:
+   \fancyuline{This is a long line that should be broken.}
+into
+   \fancyuline{This is a long line} \fancyuline{that should be broken.}
+Then re-run the program without specifying "-t"/"--retransform" to
+re-render the changed LaTeX code.
+
     -i, --id ID                      story ID
     -v, --volumes CHAPTERS,CHAPTERS  split story into multiple volumes
     -t, --retransform                force re-parsing of the HTML and transforming to LaTeX

@@ -198,6 +198,33 @@ module FimFic2PDF
 
 \usepackage[normalem]{ulem}
 
+% Underlines by https://alexwlchan.net/2017/10/latex-underlines/
+
+% Default underline - handles descenders and embedded formatting, but
+% not line breaks.
+
+\usepackage{contour}
+
+% Change \ULdepth only for \uline. \sout also uses \ULdepth, so we
+% can't change it globally.
+\usepackage{xpatch}
+\xpatchcmd{\uline}
+  {\bgroup}
+  {\bgroup\def\ULdepth{1.8pt}}
+  {}{}
+
+\contourlength{1.0pt}
+
+\newcommand{\fancyuline}[1]{%
+  \uline{\phantom{#1}}%
+  \llap{\contour{white}{#1}}%
+}
+
+% Alternative underline - handles line breaks, but not descenders or embedded formatting.
+
+% \usepackage{soul}
+% \newcommand{\fancyuline}[1]{\ul{#1}}
+
 \usepackage{xcolor}
 TEMPLATE
     end

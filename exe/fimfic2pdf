@@ -45,6 +45,16 @@ https://ctan.org/pkg/pgfornament for the complete list. 80-89 are
 recommended for scrollwork and the rest for fleurons. The default is a
 horse for fleurons (symbol 108) and a line with a center embellishment
 for scrollwork (symbol 82).
+
+Underlined text cannot be automatically broken into lines. A list of
+chapters containing underlined text will be printed, so it can be
+checked manually for overruns. To break a line of underlined text, end
+and then restart the \fancyuline{} environment. E.g. change:
+   \fancyuline{This is a long line that should be broken.}
+into
+   \fancyuline{This is a long line} \fancyuline{that should be broken.}
+Then re-run the program without specifying "-t"/"--retransform" to
+re-render the changed LaTeX code.
 '
 parser.separator ''
 
@@ -96,12 +106,14 @@ else
   options[:transform] = true
 end
 
+chapters_with_underline = []
+
 if options[:force_retransform] or options[:transform]
   logger.info 'Forcing reparse and retransform from HTML to LaTeX due to "-t" flag' if options[:force_retransform]
   transformer = FimFic2PDF::Transformer.new(options)
   transformer.validate_volumes
   transformer.parse_metadata
-  transformer.transform
+  chapters_with_underline = transformer.transform
   transformer.write_story
   transformer.write_config
 else
@@ -110,3 +122,8 @@ end
 
 renderer = FimFic2PDF::Renderer.new options[:id]
 renderer.render_story
+
+unless chapters_with_underline.empty?
+  logger.warn 'Underlines present in the following chapters. Please check line breaks manually.'
+  chapters_with_underline.each { |c| logger.warn c }
+end
