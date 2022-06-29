@@ -134,7 +134,8 @@ module FimFic2PDF
         gsub('’', "'").
         gsub('…', '...').
         gsub('%', '\%').
-        gsub('&', '\\\&')
+        gsub('&', '\\\&').
+        gsub('$', '\\$')
     end
 
     def visit_text(node, file)
