@@ -368,6 +368,12 @@ module FimFic2PDF
       file.write '}'
     end
 
+    def visit_s(node, file)
+      file.write '\sout{'
+      node.children.each.map { |c| visit(c, file) }
+      file.write '}'
+    end
+
     def transform_volume(num)
       volume = @volumes[num]
       @logger.debug "Transforming volume #{num + 1}, chapters #{volume['first']} - #{volume['last']}"
