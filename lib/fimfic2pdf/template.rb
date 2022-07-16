@@ -166,16 +166,11 @@ module FimFic2PDF
 \setmainfont{Linux Libertine}  % Hopefully a reasonable and widely available default serif font
 
 % Table of contents
-\usepackage{tocloft}  % to typeset table of contents
+% No extra vertical space between chapters
+% Allow horizontal space for three-digit chapter numbers
+\usepackage{tocbasic}
+\DeclareTOCStyleEntry[dynnumwidth=true,beforeskip=0pt]{tocline}{chapter}
 \usepackage{hyperref} % clickable links
-\setlength{\cftbeforechapskip}{0em}  % No extra space between chapters
-%\renewcommand{\cftchapdotsep}{\cftdotsep}  % Print dotted line between chapter title and page number
-
-%\renewcommand{\cftchapfont}{\sffamily}     % set TOC entries to sserif
-%\renewcommand{\cftchappagefont}{\sffamily} % set TOC page numbers to sserif
-
-% format title of TOC: make sure this matches chapter head format as set below
-%\renewcommand{\cfttoctitlefont}{\hfill\Huge\sffamily}
 
 \setcounter{tocdepth}{0} % sets what level of header is shown in the TOC
 \setcounter{secnumdepth}{1} % sets what level of subsect. are numbered
