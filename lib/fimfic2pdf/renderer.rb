@@ -29,6 +29,10 @@ module FimFic2PDF
       res = system('xelatex', "vol#{num + 1}.tex", :chdir => @dir)
       raise "Error running second render pass: #{$CHILD_STATUS}" unless res
 
+      @logger.debug 'Running third render pass'
+      res = system('xelatex', "vol#{num + 1}.tex", :chdir => @dir)
+      raise "Error running third render pass: #{$CHILD_STATUS}" unless res
+
       @logger.debug 'Rendering completed'
     end
 
