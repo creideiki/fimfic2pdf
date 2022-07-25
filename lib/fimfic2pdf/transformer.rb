@@ -46,6 +46,7 @@ module FimFic2PDF
       @chapter_style = options[:chapter_style]
       @logger.debug("Using chapter style #{@chapter_style || 'default'}")
       @chapters_with_underline = []
+      @include_toc = options[:toc]
     end
 
     def validate_volumes
@@ -445,6 +446,8 @@ module FimFic2PDF
         f.write tmpl.select_hr(@hr_style, @hr_symbol)
         f.write tmpl.volume_title(num + 1)
         f.write tmpl.header
+        f.write tmpl.toc if @include_toc
+        f.write tmpl.body
         f.write "\n\\setcounter{chapter}{#{@conf['story']['volumes'][num]['first'].to_i - 1}}\n"
         f.write tmpl.chapters(num)
         f.write tmpl.footer

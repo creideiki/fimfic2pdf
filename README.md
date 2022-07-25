@@ -74,6 +74,7 @@ re-render the changed LaTeX code.
     -s, --hr-style STYLE             style of <hr> section breaks, asterism (default), fleuron, or scrollwork
     -y, --hr-symbol SYMBOL           symbol number for scrollwork or fleuron
     -c, --no-chapter                 disable "Chapter X" in chapter titles
+    -o, --no-toc                     disable table of contents
 
     -V, --version                    display version information
     -h, --help                       display usage information

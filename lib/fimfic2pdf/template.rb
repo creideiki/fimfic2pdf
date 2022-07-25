@@ -232,11 +232,15 @@ TEMPLATE
 
 \include{introduction}
 
-\tableofcontents
-
-\mainmatter
-
 TEMPLATE
+    end
+
+    def toc
+      '\tableofcontents'
+    end
+
+    def body
+      '\mainmatter'
     end
 
     def chapters(volume)
