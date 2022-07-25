@@ -22,16 +22,13 @@ module FimFic2PDF
       @logger.debug "Rendering volume #{num + 1}"
 
       @logger.debug 'Running first render pass'
-      res = system('xelatex', "vol#{num + 1}.tex", :chdir => @dir)
-      raise "Error running first render pass: #{$CHILD_STATUS}" unless res
+      system('xelatex', "vol#{num + 1}.tex", chdir: @dir, exception: true)
 
       @logger.debug 'Running second render pass'
-      res = system('xelatex', "vol#{num + 1}.tex", :chdir => @dir)
-      raise "Error running second render pass: #{$CHILD_STATUS}" unless res
+      system('xelatex', "vol#{num + 1}.tex", chdir: @dir, exception: true)
 
       @logger.debug 'Running third render pass'
-      res = system('xelatex', "vol#{num + 1}.tex", :chdir => @dir)
-      raise "Error running third render pass: #{$CHILD_STATUS}" unless res
+      system('xelatex', "vol#{num + 1}.tex", chdir: @dir, exception: true)
 
       @logger.debug 'Rendering completed'
     end
