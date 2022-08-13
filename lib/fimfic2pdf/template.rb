@@ -230,8 +230,6 @@ TEMPLATE
 
 \frontmatter
 
-\include{introduction}
-
 TEMPLATE
     end
 
@@ -244,15 +242,13 @@ TEMPLATE
     end
 
     def chapters(volume)
-      "\\include{vol#{volume + 1}-chapters}"
+      "\\input{vol#{volume + 1}-chapters}"
     end
 
     def footer
       <<'TEMPLATE'
 
 \backmatter
-
-\include{colophon}
 
 \end{document}
 TEMPLATE
