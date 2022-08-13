@@ -170,7 +170,6 @@ module FimFic2PDF
 % Allow horizontal space for three-digit chapter numbers
 \usepackage{tocbasic}
 \DeclareTOCStyleEntry[dynnumwidth=true,beforeskip=0pt]{tocline}{chapter}
-\usepackage{hyperref} % clickable links
 
 \setcounter{tocdepth}{0} % sets what level of header is shown in the TOC
 \setcounter{secnumdepth}{1} % sets what level of subsect. are numbered
@@ -221,11 +220,15 @@ module FimFic2PDF
 % \newcommand{\fancyuline}[1]{\ul{#1}}
 
 \usepackage{xcolor}
+
+\usepackage{import}
 TEMPLATE
     end
 
     def header
       <<'TEMPLATE'
+\usepackage{hyperref} % clickable links
+
 \begin{document}
 
 \frontmatter

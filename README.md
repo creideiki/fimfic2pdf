@@ -26,9 +26,12 @@ The default format uses 6x9" paper and includes a table of contents.
 ## Advanced usage
 
 ```
-Usage: fimfic2pdf -i ID [options]
+Usage: fimfic2pdf -i ID[,ID...] [options]
 
 Saves files in a working directory named ./<ID>/.
+
+If multiple IDs specified, writes an anthology in the current working
+directory consisting of the identified stories.
 
 When run multiple times:
 
@@ -77,7 +80,7 @@ re-render the changed LaTeX code.
 
 Main options
 
-    -i, --id ID                      story ID
+    -i, --id ID,ID,...               story ID(s)
     -t, --retransform                re-parse the HTML and re-transform to LaTeX, losing manual changes
 
     -V, --version                    display version information
@@ -94,6 +97,8 @@ Changing these have no effect unless also specifying "-t/--retransform", losing 
 ```
 
 `fimfic2pdf` will create a directory with the story ID as name, download the EPUB version of the story to that directory, unpack it to HTML, parse the HTML, transform it to LaTeX, and run `xelatex` to generate a PDF.
+
+If called with multiple story IDs, it will also write a LaTeX file that collects them into an anthology in the current working directory, and run `xelatex` on it instead.
 
 If you change any formatting options and want to rerun transformation with the new options, use the `-t` flag.
 

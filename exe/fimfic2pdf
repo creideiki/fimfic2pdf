@@ -11,9 +11,12 @@ logger = Logger.new($stderr, progname: 'Driver')
 parser = OptionParser.new
 options = { toc: true }
 
-parser.banner = 'Usage: fimfic2pdf -i ID [options]
+parser.banner = 'Usage: fimfic2pdf -i ID[,ID...] [options]
 
 Saves files in a working directory named ./<ID>/.
+
+If multiple IDs specified, writes an anthology in the current working
+directory consisting of the identified stories.
 
 When run multiple times:
 
@@ -65,7 +68,7 @@ parser.separator ''
 # rubocop:disable Layout/LineLength
 parser.separator 'Main options'
 parser.separator ''
-parser.on('-i ID', '--id ID', 'story ID', Integer) { |id| options[:id] = id }
+parser.on('-i ID,ID,...', '--id ID,ID,...', 'story ID(s)', Array) { |ids| options[:ids] = ids }
 parser.on('-t', '--retransform', 're-parse the HTML and re-transform to LaTeX, losing manual changes') { |f| options[:force_retransform] = f }
 
 parser.separator ''
@@ -98,8 +101,8 @@ rescue OptionParser::ParseError => e
   end
 end
 
-unless options.include? :id
-  puts 'No story ID specified.'
+unless options.include? :ids
+  puts 'No story ID(s) specified.'
   puts ''
   abort parser.to_s
 end
@@ -110,32 +113,52 @@ unless options.include? :hr_symbol
   options[:hr_symbol] = 108 if options[:hr_style] == :fleuron
 end
 
-if File.directory? options[:id].to_s
-  logger.info "Working directory #{options[:id]} already exists, not downloading EPUB"
-else
-  downloader = FimFic2PDF::Downloader.new options[:id]
-  downloader.fetch
-  downloader.unpack
-  downloader.write_config
-  options[:transform] = true
+options[:ids].each do |id|
+  if File.directory? id.to_s
+    logger.info "Working directory #{id} already exists, not downloading EPUB"
+  else
+    downloader = FimFic2PDF::Downloader.new id
+    downloader.fetch
+    downloader.unpack
+    downloader.write_config
+    options[:transform] = true
+  end
 end
 
 chapters_with_underline = []
 
-if options[:force_retransform] or options[:transform]
-  logger.info 'Forcing reparse and retransform from HTML to LaTeX due to "-t" flag' if options[:force_retransform]
-  transformer = FimFic2PDF::Transformer.new(options)
-  transformer.validate_volumes
-  transformer.parse_metadata
-  chapters_with_underline = transformer.transform
-  transformer.write_story
-  transformer.write_config
-else
-  logger.info 'Not transforming, using existing LaTeX code'
+options[:ids].each do |id|
+  options[:id] = id
+
+  if options[:force_retransform] or options[:transform]
+    logger.info 'Forcing reparse and retransform from HTML to LaTeX due to "-t" flag' if options[:force_retransform]
+    transformer = FimFic2PDF::Transformer.new(options)
+    transformer.validate_volumes
+    transformer.parse_metadata
+    chapters_with_underline = transformer.transform
+    transformer.write_story
+    transformer.write_config
+  else
+    logger.info 'Not transforming, using existing LaTeX code'
+  end
 end
 
-renderer = FimFic2PDF::Renderer.new options[:id]
-renderer.render_story
+if options[:ids].size > 1
+  logger.debug 'Writing anthology top level document'
+  anthology = FimFic2PDF::Anthology.new options
+  anthology.write_anthology
+  anthology.write_config
+end
+
+if options[:ids].size > 1
+  logger.debug 'Rendering anthology'
+  renderer = FimFic2PDF::Anthology_Renderer.new
+  renderer.render_anthology
+else
+  logger.debug 'Rendering single story'
+  renderer = FimFic2PDF::Renderer.new options[:id]
+  renderer.render_story
+end
 
 unless chapters_with_underline.empty?
   logger.warn 'Underlines present in the following chapters. Please check line breaks manually.'

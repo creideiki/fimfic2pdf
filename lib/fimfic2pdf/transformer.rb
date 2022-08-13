@@ -440,15 +440,18 @@ module FimFic2PDF
       @logger.debug "Writing LaTeX file for volume #{num + 1}"
 
       tmpl = FimFic2PDF::Template.new
-      File.open(@volumes[num]['filename'], 'wb') do |f|
+      File.open(@dir + File::SEPARATOR + 'template.tex', 'wb') do |f|
         f.write tmpl.style
         f.write tmpl.chapter_style(@chapter_style)
         f.write tmpl.select_hr(@hr_style, @hr_symbol)
+      end
+      File.open(@volumes[num]['filename'], 'wb') do |f|
+        f.write "\\input{template}\n"
         f.write tmpl.volume_title(num + 1)
         f.write tmpl.header
         f.write tmpl.toc if @include_toc
         f.write tmpl.body
-        f.write "\n\\setcounter{chapter}{#{@conf['story']['volumes'][num]['first'].to_i - 1}}\n"
+        f.write "\\setcounter{chapter}{#{@conf['story']['volumes'][num]['first'].to_i - 1}}\n"
         f.write tmpl.chapters(num)
         f.write tmpl.footer
       end
