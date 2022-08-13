@@ -4,10 +4,7 @@
 require 'logger'
 require 'optparse'
 
-require 'fimfic2pdf/downloader'
-require 'fimfic2pdf/renderer'
-require 'fimfic2pdf/transformer'
-require 'fimfic2pdf/version'
+require 'fimfic2pdf'
 
 logger = Logger.new($stderr, progname: 'Driver')
 
