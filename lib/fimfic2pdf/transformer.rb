@@ -47,6 +47,8 @@ module FimFic2PDF
       @logger.debug("Using chapter style #{@chapter_style || 'default'}")
       @chapters_with_underline = []
       @include_toc = options[:toc]
+      @prettify_quotes = options[:prettify_quotes]
+      @outside_double_quotes = true
     end
 
     def validate_volumes
@@ -144,7 +146,14 @@ module FimFic2PDF
       if /^-+$/.match node.text
         file.write '\vspace{2ex}\hrule\vspace{2ex}'
       else
-        file.write latex_escape(node.text)
+        text = latex_escape node.text
+        if @prettify_quotes
+          text.gsub!('"') do |_|
+            @outside_double_quotes = !@outside_double_quotes
+            @outside_double_quotes ? '”' : '“'
+          end
+        end
+        file.write text
       end
     end
 

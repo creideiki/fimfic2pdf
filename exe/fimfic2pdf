@@ -62,6 +62,16 @@ into
    \fancyuline{This is a long line} \fancyuline{that should be broken.}
 Then re-run the program (without specifying "-t/--retransform") to
 re-render the changed LaTeX code.
+
+If the source text contains Unicode open/close quotation marks, they
+will be redered correctly by default. If it only contains ASCII
+straight quotation marks, they will all be rendered as closing
+quotation marks by default. To attempt to automatically change ASCII
+quotation marks to Unicode ones, use the "-q/--prettify-quotes"
+option. This will blindly change every straight double quote to an
+alternating open or close one, which will fail silently if quotes are
+not strictly balanced. It also will not handle single quotes, since
+those are indistinguishable from apostrophes.
 '
 parser.separator ''
 
@@ -85,6 +95,7 @@ parser.separator ''
 
 parser.on('-c', '--no-chapter', 'disable "Chapter X" in chapter titles') { options[:chapter_style] = :no_chapter }
 parser.on('-o', '--no-toc', 'disable table of contents') { options[:toc] = false }
+parser.on('-q', '--prettify-quotes', 'change ASCII quotation marks to Unicode ones') { options[:prettify_quotes] = true }
 parser.on('-s', '--hr-style STYLE', [:asterism, :fleuron, :scrollwork], 'style of <hr> section breaks: asterism (default), fleuron, or scrollwork') { |s| options[:hr_style] = s }
 parser.on('-v CHAPTERS,CHAPTERS', '--volumes START1-END1,...', 'split story into multiple volumes', Array) { |volumes| options[:volumes] = volumes }
 parser.on('-y', '--hr-symbol SYMBOL', Integer, 'symbol number for scrollwork or fleuron') { |y| options[:hr_symbol] = y }

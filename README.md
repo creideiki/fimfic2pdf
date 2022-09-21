@@ -78,6 +78,16 @@ into
 Then re-run the program (without specifying "-t/--retransform") to
 re-render the changed LaTeX code.
 
+If the source text contains Unicode open/close quotation marks, they
+will be redered correctly by default. If it only contains ASCII
+straight quotation marks, they will all be rendered as closing
+quotation marks by default. To attempt to automatically change ASCII
+quotation marks to Unicode ones, use the "-q/--prettify-quotes"
+option. This will blindly change every straight double quote to an
+alternating open or close one, which will fail silently if quotes are
+not strictly balanced. It also will not handle single quotes, since
+those are indistinguishable from apostrophes.
+
 Main options
 
     -i, --id ID,ID,...               story ID(s)
@@ -91,6 +101,7 @@ Changing these have no effect unless also specifying "-t/--retransform", losing 
 
     -c, --no-chapter                 disable "Chapter X" in chapter titles
     -o, --no-toc                     disable table of contents
+    -q, --prettify-quotes            change ASCII quotation marks to Unicode ones
     -s, --hr-style STYLE             style of <hr> section breaks: asterism (default), fleuron, or scrollwork
     -v, --volumes START1-END1,...    split story into multiple volumes
     -y, --hr-symbol SYMBOL           symbol number for scrollwork or fleuron
