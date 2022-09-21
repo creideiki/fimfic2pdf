@@ -140,21 +140,22 @@ module FimFic2PDF
     def latex_escape(string)
       string.
         gsub(/#/, '\#').
-        gsub('“', '``').
-        gsub('”', "''").
-        gsub('‘', '`').
-        gsub('’', "'").
-        gsub('…', '...').
         gsub('%', '\%').
         gsub('&', '\\\&').
         gsub('$', '\\$')
     end
 
+    def unicodify(string)
+      string.
+        gsub('...', '…')
+    end
+
     def visit_text(node, file)
-      if /^-+$/.match node.text
+      text = unicodify node.text
+      if /^-+$/.match text
         file.write '\vspace{2ex}\hrule\vspace{2ex}'
       else
-        text = latex_escape node.text
+        text = latex_escape text
         if @prettify_quotes
           text.gsub!('"') do |_|
             @outside_double_quotes = !@outside_double_quotes
