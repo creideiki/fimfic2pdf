@@ -136,7 +136,7 @@ options[:ids].each do |id|
   end
 end
 
-chapters_with_underline = []
+warnings = {}
 
 options[:ids].each do |id|
   options[:id] = id
@@ -146,7 +146,7 @@ options[:ids].each do |id|
     transformer = FimFic2PDF::Transformer.new(options)
     transformer.validate_volumes
     transformer.parse_metadata
-    chapters_with_underline = transformer.transform
+    warnings = transformer.transform
     transformer.write_story
     transformer.write_config
   else
@@ -171,7 +171,9 @@ else
   renderer.render_story
 end
 
-unless chapters_with_underline.empty?
-  logger.warn 'Underlines present in the following chapters. Please check line breaks manually.'
-  chapters_with_underline.each { |c| logger.warn c }
+warnings.each do |_type, warn|
+  unless warn[:chapters].empty?
+    logger.warn warn[:message]
+    warn[:chapters].each { |c| logger.warn c }
+  end
 end

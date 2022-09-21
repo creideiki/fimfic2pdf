@@ -45,10 +45,18 @@ module FimFic2PDF
       @in_blockquote = false
       @chapter_style = options[:chapter_style]
       @logger.debug("Using chapter style #{@chapter_style || 'default'}")
-      @chapters_with_underline = []
+      @warnings = {
+        underline: {
+          chapters: [],
+          message: 'Underlines present in the following chapters. Please check line breaks manually.'
+        },
+        unbalanced_quotes: {
+          chapters: [],
+          message: 'Unbalanced quotes present in the following chapters. Please check quotation manually, fix balancing in the HTML files, and re-run with "--retransform --prettify-quotes"'
+        }
+      }
       @include_toc = options[:toc]
       @prettify_quotes = options[:prettify_quotes]
-      @outside_double_quotes = true
     end
 
     def validate_volumes
@@ -414,6 +422,7 @@ module FimFic2PDF
       File.open(@dir + File::SEPARATOR + vol_str + 'chapters.tex', 'wb') do |chapters|
         @conf['story']['volumes'][num]['first'].upto(@conf['story']['volumes'][num]['last']) do |chapter_num|
           @chapter_has_underline = false
+          @outside_double_quotes = true
           chapter = @conf['story']['chapters'][chapter_num - 1]
           @logger.debug "Transforming chapter: #{chapter['number']} - #{chapter['title']}"
           doc = File.open(chapter['html']) { |f| Nokogiri::HTML(f) }
@@ -428,10 +437,14 @@ module FimFic2PDF
             end
             tex.write build.string
           end
+          unless @outside_double_quotes
+            @logger.warn "Unbalanced quotation marks in chapter #{chapter['number']} - #{chapter['title']}"
+            @warnings[:unbalanced_quotes][:chapters].append "#{chapter['number']} - #{chapter['title']}"
+          end
           chapters.write "\\input{#{File.basename(chapter['tex'], '.tex')}}\n"
           if @chapter_has_underline
             @logger.info "Chapter has underline: #{chapter['number']} - #{chapter['title']}"
-            @chapters_with_underline.append "#{chapter['number']} - #{chapter['title']}"
+            @warnings[:underline][:chapters].append "#{chapter['number']} - #{chapter['title']}"
           end
         end
       end
@@ -442,7 +455,7 @@ module FimFic2PDF
 
       @volumes.each_index { |num| transform_volume num }
 
-      @chapters_with_underline
+      @warnings
     end
 
     def write_volume(num)
