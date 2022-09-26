@@ -30,6 +30,9 @@ module FimFic2PDF
       @logger.debug 'Running third render pass'
       system('xelatex', "vol#{num + 1}.tex", chdir: @dir, exception: true)
 
+      @logger.debug 'Running fourth render pass'
+      system('xelatex', "vol#{num + 1}.tex", chdir: @dir, exception: true)
+
       @logger.debug 'Rendering completed'
     end
 

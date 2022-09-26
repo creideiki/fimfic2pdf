@@ -28,6 +28,9 @@ module FimFic2PDF
       @logger.debug 'Running third render pass'
       system('xelatex', 'anthology.tex', exception: true)
 
+      @logger.debug 'Running fourth render pass'
+      system('xelatex', 'anthology.tex', exception: true)
+
       @logger.debug 'Rendering completed'
 
       @logger.info 'Finished PDF: anthology.pdf'
