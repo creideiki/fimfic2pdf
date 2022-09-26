@@ -99,6 +99,7 @@ Main options
 Formatting options
 Changing these have no effect unless also specifying "-t/--retransform", losing manual changes
 
+    -b, --barred-blockquotes         put vertical bars in the left margin of block quotes
     -c, --no-chapter                 disable "Chapter X" in chapter titles
     -o, --no-toc                     disable table of contents
     -q, --prettify-quotes            change ASCII quotation marks to Unicode ones

@@ -93,6 +93,7 @@ parser.separator 'Formatting options'
 parser.separator 'Changing these have no effect unless also specifying "-t/--retransform", losing manual changes'
 parser.separator ''
 
+parser.on('-b', '--barred-blockquotes', 'put vertical bars in the left margin of block quotes') { options[:barred_blockquotes] = true }
 parser.on('-c', '--no-chapter', 'disable "Chapter X" in chapter titles') { options[:chapter_style] = :no_chapter }
 parser.on('-o', '--no-toc', 'disable table of contents') { options[:toc] = false }
 parser.on('-q', '--prettify-quotes', 'change ASCII quotation marks to Unicode ones') { options[:prettify_quotes] = true }

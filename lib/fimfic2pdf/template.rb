@@ -222,6 +222,10 @@ module FimFic2PDF
 \usepackage{xcolor}
 
 \usepackage{import}
+
+% Optional vertical bars in the left margin for quotations
+\usepackage[leftbars]{changebar}
+
 TEMPLATE
     end
 

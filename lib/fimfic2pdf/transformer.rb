@@ -57,6 +57,7 @@ module FimFic2PDF
       }
       @include_toc = options[:toc]
       @prettify_quotes = options[:prettify_quotes]
+      @barred_blockquotes = options[:barred_blockquotes]
     end
 
     def validate_volumes
@@ -316,7 +317,9 @@ module FimFic2PDF
       previous_blockquote = @in_blockquote
       @in_blockquote = true
       file.write "\n", '\begin{quotation}', "\n"
+      file.write '\cbstart', "\n" if @barred_blockquotes
       node.children.each.map { |c| visit(c, file) }
+      file.write "\n", '\cbend' if @barred_blockquotes
       file.write "\n", '\end{quotation}', "\n"
       @in_blockquote = previous_blockquote
     end
