@@ -164,7 +164,7 @@ end
 
 if options[:ids].size > 1
   logger.debug 'Rendering anthology'
-  renderer = FimFic2PDF::Anthology_Renderer.new
+  renderer = FimFic2PDF::AnthologyRenderer.new
   renderer.render_anthology
 else
   logger.debug 'Rendering single story'

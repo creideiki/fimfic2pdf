@@ -6,7 +6,7 @@ require 'yaml'
 
 module FimFic2PDF
   # Calls LaTeX to render the story into PDF format.
-  class Anthology_Renderer
+  class AnthologyRenderer
     attr_accessor :conf, :filename, :url
 
     def initialize
