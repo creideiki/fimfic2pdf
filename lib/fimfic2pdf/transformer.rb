@@ -58,6 +58,7 @@ module FimFic2PDF
       @include_toc = options[:toc]
       @prettify_quotes = options[:prettify_quotes]
       @barred_blockquotes = options[:barred_blockquotes]
+      @underline = options[:underline]
     end
 
     def validate_volumes
@@ -470,6 +471,7 @@ module FimFic2PDF
         f.write tmpl.style
         f.write tmpl.chapter_style(@chapter_style)
         f.write tmpl.select_hr(@hr_style, @hr_symbol)
+        f.write tmpl.select_underline(@underline)
       end
       File.open(@volumes[num]['filename'], 'wb') do |f|
         f.write "\\input{template}\n"

@@ -73,6 +73,27 @@ module FimFic2PDF
     end
 
     # rubocop:disable Layout/HeredocIndentation
+    def select_underline(style)
+      case style
+      when :fancy
+        <<'UNDERLINE'
+\newcommand{\fancyuline}[1]{%
+  \uline{\phantom{#1}}%
+  \llap{\contour{white}{#1}}%
+}
+UNDERLINE
+      when :simple
+        <<'UNDERLINE'
+\usepackage{soul}
+\newcommand{\fancyuline}[1]{\ul{#1}}
+UNDERLINE
+      when :italic
+        '\newcommand{\fancyuline}[1]{\textit{#1}}'
+      when :regular
+        '\newcommand{\fancyuline}[1]{#1}'
+      end
+    end
+
     def style
       <<'TEMPLATE'
 % https://amyrhoda.wordpress.com/2012/05/25/latex-to-lulu-the-making-of-aosa-geometry-and-headers-and-footers/
@@ -208,16 +229,6 @@ module FimFic2PDF
   {}{}
 
 \contourlength{1.0pt}
-
-\newcommand{\fancyuline}[1]{%
-  \uline{\phantom{#1}}%
-  \llap{\contour{white}{#1}}%
-}
-
-% Alternative underline - handles line breaks, but not descenders or embedded formatting.
-
-% \usepackage{soul}
-% \newcommand{\fancyuline}[1]{\ul{#1}}
 
 \usepackage{xcolor}
 
