@@ -46,7 +46,7 @@ module FimFic2PDF
       end
 
       @logger.debug "Anthology has #{pages} pages."
-      if pages >= 400
+      if pages >= 400 # rubocop:disable Style/GuardClause
         @logger.info "Anthology has #{pages} pages. Consider splitting it into multiple volumes for printing."
       end
     end

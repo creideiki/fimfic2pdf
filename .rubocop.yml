@@ -30,15 +30,19 @@ Metrics/AbcSize:
   - validate_volumes
   - visit_span
   - visit_body
+  - write_anthology
   - write_footnote
   - write_volume
+
+Metrics/BlockLength:
+  Max: 30
 
 Metrics/ClassLength:
   CountAsOne:
   - array
   - hash
   - heredoc
-  Max: 400
+  Max: 500
 
 Metrics/CyclomaticComplexity:
   IgnoredMethods:
@@ -54,7 +58,7 @@ Metrics/MethodLength:
   - array
   - hash
   - heredoc
-  Max: 30
+  Max: 35
   IgnoredMethods:
   - visit_span
 
@@ -71,4 +75,10 @@ Layout/CommentIndentation:
   AllowForAlignment: true
 
 Gemspec/RequireMFA:
+  Enabled: false
+
+Style/ColonMethodCall:
+  Enabled: false
+
+Lint/AmbiguousRegexpLiteral:
   Enabled: false

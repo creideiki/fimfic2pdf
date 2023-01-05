@@ -13,7 +13,7 @@ module FimFic2PDF
   class Transformer
     attr_accessor :conf
 
-    def initialize(options) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    def initialize(options) # rubocop:disable Metrics/AbcSize
       @story_id = options[:id]
       @logger = Logger.new($stderr, progname: 'Transformer')
       @logger.debug "Preparing to transform story #{@story_id}"
@@ -32,7 +32,7 @@ module FimFic2PDF
         end
       @volumes.each_with_index do |v, n|
         v['number'] = n + 1
-        v['filename'] = @dir + File::SEPARATOR + # rubocop:disable Style/StringConcatenation
+        v['filename'] = @dir + File::SEPARATOR +
                         'vol' + (n + 1).to_s + '.tex'
       end
       @logger.info "Splitting into #{@volumes.size} volumes:"
@@ -52,7 +52,9 @@ module FimFic2PDF
         },
         unbalanced_quotes: {
           chapters: [],
-          message: 'Unbalanced quotes present in the following chapters. Please check quotation manually, fix balancing in the HTML files, and re-run with "--retransform --prettify-quotes"'
+          message: 'Unbalanced quotes present in the following chapters. ' \
+                   'Please check quotation manually, fix balancing in the HTML files, ' \
+                   'and re-run with "--retransform --prettify-quotes"'
         }
       }
       @include_toc = options[:toc]
@@ -132,7 +134,7 @@ module FimFic2PDF
 
       child = node.children[2]
       if child.type != Nokogiri::XML::Node::TEXT_NODE or
-         not (/^[[:space:]]+$/).match(child.text)
+         not /^[[:space:]]+$/.match(child.text)
         raise "Unknown body format: post-title is #{child.inspect}"
       end
 
