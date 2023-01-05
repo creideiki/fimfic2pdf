@@ -78,6 +78,15 @@ into
 Then re-run the program (without specifying "-t/--retransform") to
 re-render the changed LaTeX code.
 
+To avoid this problem with the default underlines, alternative styles
+may be used instead of underlining. Use the "-u/--underline" option to
+specify which style to use:
+
+   fancy: default, leaves gaps around descenders, no line breaks
+   simple: handles line breaks but no additional formatting
+   italic: render underlined text as italics instead
+   regular: render underlined text as regular text
+
 If the source text contains Unicode open/close quotation marks, they
 will be redered correctly by default. If it only contains ASCII
 straight quotation marks, they will all be rendered as closing
@@ -104,6 +113,7 @@ Changing these have no effect unless also specifying "-t/--retransform", losing 
     -o, --no-toc                     disable table of contents
     -q, --prettify-quotes            change ASCII quotation marks to Unicode ones
     -s, --hr-style STYLE             style of <hr> section breaks: asterism (default), fleuron, or scrollwork
+    -u, --underline STYLE            how to render underlined text: fancy (default), simple, italic, or regular
     -v, --volumes START1-END1,...    split story into multiple volumes
     -y, --hr-symbol SYMBOL           symbol number for scrollwork or fleuron
 ```

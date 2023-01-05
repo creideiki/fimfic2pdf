@@ -63,6 +63,15 @@ into
 Then re-run the program (without specifying "-t/--retransform") to
 re-render the changed LaTeX code.
 
+To avoid this problem with the default underlines, alternative styles
+may be used instead of underlining. Use the "-u/--underline" option to
+specify which style to use:
+
+   fancy: default, leaves gaps around descenders, no line breaks
+   simple: handles line breaks but no additional formatting
+   italic: render underlined text as italics instead
+   regular: render underlined text as regular text
+
 If the source text contains Unicode open/close quotation marks, they
 will be redered correctly by default. If it only contains ASCII
 straight quotation marks, they will all be rendered as closing
