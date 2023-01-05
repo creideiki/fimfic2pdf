@@ -82,3 +82,6 @@ Style/ColonMethodCall:
 
 Lint/AmbiguousRegexpLiteral:
   Enabled: false
+
+Style/OpenStructUse:
+  Enabled: false

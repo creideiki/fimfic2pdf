@@ -14,15 +14,15 @@ module FimFic2PDF
     attr_accessor :conf
 
     def initialize(options) # rubocop:disable Metrics/AbcSize
-      @story_id = options[:id]
+      @options = options
       @logger = Logger.new($stderr, progname: 'Transformer')
-      @logger.debug "Preparing to transform story #{@story_id}"
-      @dir = @story_id.to_s
+      @logger.debug "Preparing to transform story #{@options.id}"
+      @dir = @options.id.to_s
       @config_file = @dir + File::SEPARATOR + 'config.yaml'
       @conf = YAML.safe_load_file(@config_file)
       @volumes =
-        if options.key? :volumes
-          options[:volumes].map do |chapters|
+        if options.volumes
+          options.volumes.map do |chapters|
             first, last = chapters.split '-'
             { 'first' => first.to_i, 'last' => last.to_i }
           end
@@ -38,13 +38,10 @@ module FimFic2PDF
       @logger.info "Splitting into #{@volumes.size} volumes:"
       @volumes.each_with_index { |v, n| @logger.info "Volume #{n + 1}: Chapters #{v['first']} - #{v['last']}" }
       @conf['story']['volumes'] = @volumes
-      @hr_style = options[:hr_style]
-      @hr_symbol = options[:hr_symbol]
-      @logger.debug "Using section break style #{@hr_style} with symbol #{@hr_symbol}"
+      @logger.debug "Using section break style #{@options.hr_style} with symbol #{@options.hr_symbol}"
       @replacements = {}
       @in_blockquote = false
-      @chapter_style = options[:chapter_style]
-      @logger.debug("Using chapter style #{@chapter_style || 'default'}")
+      @logger.debug("Using chapter style #{@options.chapter_style || 'default'}")
       @warnings = {
         underline: {
           chapters: [],
@@ -57,10 +54,6 @@ module FimFic2PDF
                    'and re-run with "--retransform --prettify-quotes"'
         }
       }
-      @include_toc = options[:toc]
-      @prettify_quotes = options[:prettify_quotes]
-      @barred_blockquotes = options[:barred_blockquotes]
-      @underline = options[:underline]
     end
 
     def validate_volumes
@@ -160,7 +153,7 @@ module FimFic2PDF
         file.write '\vspace{2ex}\hrule\vspace{2ex}'
       else
         text = latex_escape text
-        if @prettify_quotes
+        if @options.prettify_quotes
           text.gsub!('"') do |_|
             @outside_double_quotes = !@outside_double_quotes
             @outside_double_quotes ? '”' : '“'
@@ -320,9 +313,9 @@ module FimFic2PDF
       previous_blockquote = @in_blockquote
       @in_blockquote = true
       file.write "\n", '\begin{quotation}', "\n"
-      file.write '\cbstart', "\n" if @barred_blockquotes
+      file.write '\cbstart', "\n" if @options.barred_blockquotes
       node.children.each.map { |c| visit(c, file) }
-      file.write "\n", '\cbend' if @barred_blockquotes
+      file.write "\n", '\cbend' if @options.barred_blockquotes
       file.write "\n", '\end{quotation}', "\n"
       @in_blockquote = previous_blockquote
     end
@@ -471,15 +464,15 @@ module FimFic2PDF
       tmpl = FimFic2PDF::Template.new
       File.open(@dir + File::SEPARATOR + 'template.tex', 'wb') do |f|
         f.write tmpl.style
-        f.write tmpl.chapter_style(@chapter_style)
-        f.write tmpl.select_hr(@hr_style, @hr_symbol)
-        f.write tmpl.select_underline(@underline)
+        f.write tmpl.chapter_style(@options.chapter_style)
+        f.write tmpl.select_hr(@options.hr_style, @options.hr_symbol)
+        f.write tmpl.select_underline(@options.underline)
       end
       File.open(@volumes[num]['filename'], 'wb') do |f|
         f.write "\\input{template}\n"
         f.write tmpl.volume_title(num + 1)
         f.write tmpl.header
-        f.write tmpl.toc if @include_toc
+        f.write tmpl.toc if @options.toc
         f.write tmpl.body
         f.write "\\setcounter{chapter}{#{@conf['story']['volumes'][num]['first'].to_i - 1}}\n"
         f.write tmpl.chapters(num)

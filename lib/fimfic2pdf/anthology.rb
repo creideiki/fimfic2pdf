@@ -16,7 +16,7 @@ module FimFic2PDF
       @logger = Logger.new($stderr, progname: 'Anthology')
       @logger.debug 'Preparing to compile anthology'
       @conf = []
-      @options[:ids].each do |id|
+      @options.ids.each do |id|
         story_conf = YAML.safe_load_file(id.to_s + File::SEPARATOR + 'config.yaml')['story']
         story = {
           'id'        => id,
@@ -33,13 +33,14 @@ module FimFic2PDF
       tmpl = FimFic2PDF::Template.new
       File.open('template.tex', 'wb') do |f|
         f.write tmpl.style
-        f.write tmpl.chapter_style(@chapter_style)
-        f.write tmpl.select_hr(@hr_style, @hr_symbol)
+        f.write tmpl.chapter_style(@options.chapter_style)
+        f.write tmpl.select_hr(@options.hr_style, @options.hr_symbol)
+        f.write tmpl.select_underline(@options.underline)
       end
       File.open('anthology.tex', 'wb') do |f|
         f.write "\\input{template}\n"
         f.write tmpl.header
-        f.write tmpl.toc if @options[:toc]
+        f.write tmpl.toc if @options.toc
         f.write tmpl.body
         @conf.each do |story|
           f.write "\n\n\\part{#{story['title']}}"

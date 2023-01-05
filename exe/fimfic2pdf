@@ -3,13 +3,18 @@
 
 require 'logger'
 require 'optparse'
+require 'ostruct'
 
 require 'fimfic2pdf'
 
 logger = Logger.new($stderr, progname: 'Driver')
 
 parser = OptionParser.new
-options = { toc: true }
+options = OpenStruct.new({
+                           hr_style: :asterism,
+                           toc: true,
+                           underline: :fancy
+                         })
 
 parser.banner = 'Usage: fimfic2pdf -i ID[,ID...] [options]
 
@@ -87,8 +92,8 @@ parser.separator ''
 # rubocop:disable Layout/LineLength
 parser.separator 'Main options'
 parser.separator ''
-parser.on('-i ID,ID,...', '--id ID,ID,...', 'story ID(s)', Array) { |ids| options[:ids] = ids }
-parser.on('-t', '--retransform', 're-parse the HTML and re-transform to LaTeX, losing manual changes') { |f| options[:force_retransform] = f }
+parser.on('-i ID,ID,...', '--id ID,ID,...', 'story ID(s)', Array) { |ids| options.ids = ids }
+parser.on('-t', '--retransform', 're-parse the HTML and re-transform to LaTeX, losing manual changes') { |f| options.force_retransform = f }
 
 parser.separator ''
 parser.on('-V', '--version', 'display version information') do
@@ -102,14 +107,14 @@ parser.separator 'Formatting options'
 parser.separator 'Changing these have no effect unless also specifying "-t/--retransform", losing manual changes'
 parser.separator ''
 
-parser.on('-b', '--barred-blockquotes', 'put vertical bars in the left margin of block quotes') { options[:barred_blockquotes] = true }
-parser.on('-c', '--no-chapter', 'disable "Chapter X" in chapter titles') { options[:chapter_style] = :no_chapter }
-parser.on('-o', '--no-toc', 'disable table of contents') { options[:toc] = false }
-parser.on('-q', '--prettify-quotes', 'change ASCII quotation marks to Unicode ones') { options[:prettify_quotes] = true }
-parser.on('-s', '--hr-style STYLE', [:asterism, :fleuron, :scrollwork], 'style of <hr> section breaks: asterism (default), fleuron, or scrollwork') { |s| options[:hr_style] = s }
-parser.on('-u', '--underline STYLE', [:fancy, :simple, :italic, :regular], 'how to render underlined text: fancy (default), simple, italic, or regular') { |s| options[:underline] = s }
-parser.on('-v CHAPTERS,CHAPTERS', '--volumes START1-END1,...', 'split story into multiple volumes', Array) { |volumes| options[:volumes] = volumes }
-parser.on('-y', '--hr-symbol SYMBOL', Integer, 'symbol number for scrollwork or fleuron') { |y| options[:hr_symbol] = y }
+parser.on('-b', '--barred-blockquotes', 'put vertical bars in the left margin of block quotes') { options.barred_blockquotes = true }
+parser.on('-c', '--no-chapter', 'disable "Chapter X" in chapter titles') { options.chapter_style = :no_chapter }
+parser.on('-o', '--no-toc', 'disable table of contents') { options.toc = false }
+parser.on('-q', '--prettify-quotes', 'change ASCII quotation marks to Unicode ones') { options.prettify_quotes = true }
+parser.on('-s', '--hr-style STYLE', [:asterism, :fleuron, :scrollwork], 'style of <hr> section breaks: asterism (default), fleuron, or scrollwork') { |s| options.hr_style = s }
+parser.on('-u', '--underline STYLE', [:fancy, :simple, :italic, :regular], 'how to render underlined text: fancy (default), simple, italic, or regular') { |s| options.underline = s }
+parser.on('-v CHAPTERS,CHAPTERS', '--volumes START1-END1,...', 'split story into multiple volumes', Array) { |volumes| options.volumes = volumes }
+parser.on('-y', '--hr-symbol SYMBOL', Integer, 'symbol number for scrollwork or fleuron') { |y| options.hr_symbol = y }
 # rubocop:enable Layout/LineLength
 
 begin
@@ -122,21 +127,18 @@ rescue OptionParser::ParseError => e
   end
 end
 
-unless options.include? :ids
+unless options.ids
   puts 'No story ID(s) specified.'
   puts ''
   abort parser.to_s
 end
 
-options[:hr_style] = :asterism unless options.include? :hr_style
-unless options.include? :hr_symbol
-  options[:hr_symbol] = 82  if options[:hr_style] == :scrollwork
-  options[:hr_symbol] = 108 if options[:hr_style] == :fleuron
+unless options.hr_symbol
+  options.hr_symbol = 82  if options.hr_style == :scrollwork
+  options.hr_symbol = 108 if options.hr_style == :fleuron
 end
 
-options[:underline] = :fancy unless options.include? :underline
-
-options[:ids].each do |id|
+options.ids.each do |id|
   if File.directory? id.to_s
     logger.info "Working directory #{id} already exists, not downloading EPUB"
   else
@@ -144,18 +146,18 @@ options[:ids].each do |id|
     downloader.fetch
     downloader.unpack
     downloader.write_config
-    options[:transform] = true
+    options.transform = true
   end
 end
 
 warnings = {}
 
-options[:ids].each do |id|
-  options[:id] = id
+options.ids.each do |id|
+  options.id = id
 
-  if options[:force_retransform] or options[:transform]
-    logger.info 'Forcing reparse and retransform from HTML to LaTeX due to "-t" flag' if options[:force_retransform]
-    transformer = FimFic2PDF::Transformer.new(options)
+  if options.force_retransform or options.transform
+    logger.info 'Forcing reparse and retransform from HTML to LaTeX due to "-t" flag' if options.force_retransform
+    transformer = FimFic2PDF::Transformer.new options
     transformer.validate_volumes
     transformer.parse_metadata
     warnings = transformer.transform
@@ -166,20 +168,20 @@ options[:ids].each do |id|
   end
 end
 
-if options[:ids].size > 1
+if options.ids.size > 1
   logger.debug 'Writing anthology top level document'
   anthology = FimFic2PDF::Anthology.new options
   anthology.write_anthology
   anthology.write_config
 end
 
-if options[:ids].size > 1
+if options.ids.size > 1
   logger.debug 'Rendering anthology'
   renderer = FimFic2PDF::AnthologyRenderer.new
   renderer.render_anthology
 else
   logger.debug 'Rendering single story'
-  renderer = FimFic2PDF::Renderer.new options[:id]
+  renderer = FimFic2PDF::Renderer.new options.id
   renderer.render_story
 end
 
