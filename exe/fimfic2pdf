@@ -12,6 +12,7 @@ logger = Logger.new($stderr, progname: 'Driver')
 parser = OptionParser.new
 options = OpenStruct.new({
                            hr_style: :asterism,
+                           ids: [],
                            toc: true,
                            underline: :fancy
                          })
@@ -92,7 +93,12 @@ parser.separator ''
 # rubocop:disable Layout/LineLength
 parser.separator 'Main options'
 parser.separator ''
-parser.on('-i ID,ID,...', '--id ID,ID,...', 'story ID(s)', Array) { |ids| options.ids = ids }
+parser.on('-i ID,ID,...', '--id ID,ID,...', 'story ID(s)', Array) do |ids|
+  ids.each do |id|
+    m = /(?<id>[[:digit:]]+)/.match id
+    options.ids << m['id'] if m
+  end
+end
 parser.on('-t', '--retransform', 're-parse the HTML and re-transform to LaTeX, losing manual changes') { |f| options.force_retransform = f }
 
 parser.separator ''
@@ -127,7 +133,7 @@ rescue OptionParser::ParseError => e
   end
 end
 
-unless options.ids
+unless options.ids.size.positive?
   puts 'No story ID(s) specified.'
   puts ''
   abort parser.to_s
