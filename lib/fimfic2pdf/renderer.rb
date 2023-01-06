@@ -13,8 +13,7 @@ module FimFic2PDF
       @story_id = story_id
       @logger = Logger.new($stderr, progname: 'Renderer')
       @logger.debug "Preparing to render story #{@story_id}"
-      @dir = story_id.to_s
-      @config_file = @dir + File::SEPARATOR + 'config.yaml'
+      @config_file = @story_id + File::SEPARATOR + 'config.yaml'
       @conf = YAML.safe_load_file(@config_file)
     end
 
@@ -22,16 +21,16 @@ module FimFic2PDF
       @logger.debug "Rendering volume #{num + 1}"
 
       @logger.debug 'Running first render pass'
-      system('xelatex', "vol#{num + 1}.tex", chdir: @dir, exception: true)
+      system('xelatex', "vol#{num + 1}.tex", chdir: @story_id, exception: true)
 
       @logger.debug 'Running second render pass'
-      system('xelatex', "vol#{num + 1}.tex", chdir: @dir, exception: true)
+      system('xelatex', "vol#{num + 1}.tex", chdir: @story_id, exception: true)
 
       @logger.debug 'Running third render pass'
-      system('xelatex', "vol#{num + 1}.tex", chdir: @dir, exception: true)
+      system('xelatex', "vol#{num + 1}.tex", chdir: @story_id, exception: true)
 
       @logger.debug 'Running fourth render pass'
-      system('xelatex', "vol#{num + 1}.tex", chdir: @dir, exception: true)
+      system('xelatex', "vol#{num + 1}.tex", chdir: @story_id, exception: true)
 
       @logger.debug 'Rendering completed'
     end
@@ -41,12 +40,12 @@ module FimFic2PDF
       @conf['story']['volumes'].each_index { |num| render_volume num }
 
       @conf['story']['volumes'].each_index do |num|
-        @logger.info "Finished PDF: #{@dir}#{File::SEPARATOR}vol#{num + 1}.pdf"
+        @logger.info "Finished PDF: #{@story_id}#{File::SEPARATOR}vol#{num + 1}.pdf"
       end
 
       @conf['story']['volumes'].each_index do |num|
         pages = 0
-        File.open(@dir + File::SEPARATOR + "vol#{num + 1}.aux") do |f|
+        File.open(@story_id + File::SEPARATOR + "vol#{num + 1}.aux") do |f|
           page_number_regexp = /abspage@last\{(?<pages>[[:digit:]]+)}$/
           f.each_line do |line|
             page_number_regexp.match(line) do |m|

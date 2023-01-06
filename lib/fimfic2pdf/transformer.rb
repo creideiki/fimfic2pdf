@@ -17,8 +17,7 @@ module FimFic2PDF
       @options = options
       @logger = Logger.new($stderr, progname: 'Transformer')
       @logger.debug "Preparing to transform story #{@options.id}"
-      @dir = @options.id.to_s
-      @config_file = @dir + File::SEPARATOR + 'config.yaml'
+      @config_file = @options.id + File::SEPARATOR + 'config.yaml'
       @conf = YAML.safe_load_file(@config_file)
       @volumes =
         if options.volumes
@@ -32,7 +31,7 @@ module FimFic2PDF
         end
       @volumes.each_with_index do |v, n|
         v['number'] = n + 1
-        v['filename'] = @dir + File::SEPARATOR +
+        v['filename'] = @options.id + File::SEPARATOR +
                         'vol' + (n + 1).to_s + '.tex'
       end
       @logger.info "Splitting into #{@volumes.size} volumes:"
@@ -365,7 +364,7 @@ module FimFic2PDF
       # name. Just use the hex MD5 of the URL and hope there are no
       # collisions.
       name = 'img_' + Digest::MD5.hexdigest(url.split('/')[-1]) + '.png' # rubocop:disable Style/StringConcatenation
-      path = @dir + File::SEPARATOR + name
+      path = @options.id + File::SEPARATOR + name
 
       if File.exist? path
         @logger.debug "Image #{url} already downloaded"
@@ -419,14 +418,14 @@ module FimFic2PDF
 
       vol_str = 'vol' + (num + 1).to_s + '-' # rubocop:disable Style/StringConcatenation
 
-      File.open(@dir + File::SEPARATOR + vol_str + 'chapters.tex', 'wb') do |chapters|
+      File.open(@options.id + File::SEPARATOR + vol_str + 'chapters.tex', 'wb') do |chapters|
         @conf['story']['volumes'][num]['first'].upto(@conf['story']['volumes'][num]['last']) do |chapter_num|
           @chapter_has_underline = false
           @outside_double_quotes = true
           chapter = @conf['story']['chapters'][chapter_num - 1]
           @logger.debug "Transforming chapter: #{chapter['number']} - #{chapter['title']}"
           doc = File.open(chapter['html']) { |f| Nokogiri::HTML(f) }
-          chapter['tex'] ||= @dir + File::SEPARATOR +
+          chapter['tex'] ||= @options.id + File::SEPARATOR +
                              File.basename(chapter['html'], '.html') + '.tex'
           File.open(chapter['tex'], 'wb') do |tex|
             tex.write("\\chapter{#{latex_escape(chapter['title'])}}\n\n")
@@ -462,7 +461,7 @@ module FimFic2PDF
       @logger.debug "Writing LaTeX file for volume #{num + 1}"
 
       tmpl = FimFic2PDF::Template.new
-      File.open(@dir + File::SEPARATOR + 'template.tex', 'wb') do |f|
+      File.open(@options.id + File::SEPARATOR + 'template.tex', 'wb') do |f|
         f.write tmpl.style
         f.write tmpl.chapter_style(@options.chapter_style)
         f.write tmpl.select_hr(@options.hr_style, @options.hr_symbol)
@@ -488,7 +487,7 @@ module FimFic2PDF
 
     def write_config
       @logger.debug 'Writing configuration from transformer'
-      File.binwrite(@dir + File::SEPARATOR + 'config.yaml', YAML.dump(@conf))
+      File.binwrite(@options.id + File::SEPARATOR + 'config.yaml', YAML.dump(@conf))
     end
   end
 end

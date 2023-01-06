@@ -139,7 +139,7 @@ unless options.hr_symbol
 end
 
 options.ids.each do |id|
-  if File.directory? id.to_s
+  if File.directory? id
     logger.info "Working directory #{id} already exists, not downloading EPUB"
   else
     downloader = FimFic2PDF::Downloader.new id

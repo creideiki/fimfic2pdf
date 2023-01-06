@@ -17,7 +17,7 @@ module FimFic2PDF
       @logger.debug 'Preparing to compile anthology'
       @conf = []
       @options.ids.each do |id|
-        story_conf = YAML.safe_load_file(id.to_s + File::SEPARATOR + 'config.yaml')['story']
+        story_conf = YAML.safe_load_file(id + File::SEPARATOR + 'config.yaml')['story']
         story = {
           'id'        => id,
           'title'     => story_conf['title'],
