@@ -309,6 +309,15 @@ module FimFic2PDF
     end
 
     def visit_blockquote(node, file)
+      case node.attributes['class'].value
+      when 'afterward'
+        visit_authors_notes(node, file)
+      else
+        visit_plain_blockquote(node, file)
+      end
+    end
+
+    def visit_plain_blockquote(node, file)
       previous_blockquote = @in_blockquote
       @in_blockquote = true
       file.write "\n", '\begin{quotation}', "\n"
@@ -317,6 +326,15 @@ module FimFic2PDF
       file.write "\n", '\cbend' if @options.barred_blockquotes
       file.write "\n", '\end{quotation}', "\n"
       @in_blockquote = previous_blockquote
+    end
+
+    def visit_authors_notes(node, file)
+      case @options.authors_notes
+      when :remove
+        return # rubocop:disable Style/RedundantReturn
+      when :plain
+        visit_plain_blockquote(node, file)
+      end
     end
 
     # rubocop:disable Style/StringConcatenation

@@ -106,6 +106,10 @@ alternating open or close one, which will fail silently if quotes are
 not strictly balanced. It also will not handle single quotes, since
 those are indistinguishable from apostrophes.
 
+Author's note sections at the end of each chapter are removed by
+default. To include them, use the "-a/--authors-notes" option to
+specify their style.
+
 Main options
 
     -i, --id ID,ID,...               story ID(s)

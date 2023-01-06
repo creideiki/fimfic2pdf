@@ -11,6 +11,7 @@ logger = Logger.new($stderr, progname: 'Driver')
 
 parser = OptionParser.new
 options = OpenStruct.new({
+                           authors_notes: :remove,
                            hr_style: :asterism,
                            ids: [],
                            toc: true,
@@ -87,6 +88,10 @@ option. This will blindly change every straight double quote to an
 alternating open or close one, which will fail silently if quotes are
 not strictly balanced. It also will not handle single quotes, since
 those are indistinguishable from apostrophes.
+
+Author\'s note sections at the end of each chapter are removed by
+default. To include them, use the "-a/--authors-notes" option to
+specify their style.
 '
 parser.separator ''
 
@@ -113,6 +118,7 @@ parser.separator 'Formatting options'
 parser.separator 'Changing these have no effect unless also specifying "-t/--retransform", losing manual changes'
 parser.separator ''
 
+parser.on('-a', '--authors-notes STYLE', [:remove, :plain], 'handle author\'s notes: remove (default), plain') { |s| options.authors_notes = s }
 parser.on('-b', '--barred-blockquotes', 'put vertical bars in the left margin of block quotes') { options.barred_blockquotes = true }
 parser.on('-c', '--no-chapter', 'disable "Chapter X" in chapter titles') { options.chapter_style = :no_chapter }
 parser.on('-o', '--no-toc', 'disable table of contents') { options.toc = false }
