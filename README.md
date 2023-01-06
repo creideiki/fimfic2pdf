@@ -121,6 +121,7 @@ Main options
 Formatting options
 Changing these have no effect unless also specifying "-t/--retransform", losing manual changes
 
+    -a, --authors-notes STYLE        handle author's notes: remove (default), plain
     -b, --barred-blockquotes         put vertical bars in the left margin of block quotes
     -c, --no-chapter                 disable "Chapter X" in chapter titles
     -o, --no-toc                     disable table of contents
