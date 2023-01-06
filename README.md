@@ -1,6 +1,6 @@
 # FimFic2PDF
 
-Renders stories from [FimFiction](https://www.fimfiction.net/) as PDF.
+Renders stories from [FiMFiction](https://www.fimfiction.net/) as PDF.
 
 ## Requirements
 
@@ -19,7 +19,16 @@ gem install ./fimfic2pdf-*.gem
 
 ## Basic usage
 
-Find the story ID, which is the numbers in the URL after `https://www.fimfiction.net/story/`. Then, run `fimfic2pdf -i ID`. The PDF will be saved as `ID/vol1.pdf`.
+Run `fimfic2pdf -i LINK`, where `LINK` is a link to the story's page
+on FiMFiction.
+
+A whole lot of output will be generated, which you don't need to care
+about unless something goes wrong.
+
+The second to last line printed will tell you that the PDF was saved
+as `ID/vol1.pdf`, where `ID` is the numbers in the URL after
+`https://www.fimfiction.net/story/`. You can also use just this ID
+when running the program instead of the entire link.
 
 The default format uses 6x9" paper and includes a table of contents.
 
