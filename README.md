@@ -97,7 +97,7 @@ specify which style to use:
    regular: render underlined text as regular text
 
 If the source text contains Unicode open/close quotation marks, they
-will be redered correctly by default. If it only contains ASCII
+will be rendered correctly by default. If it only contains ASCII
 straight quotation marks, they will all be rendered as closing
 quotation marks by default. To attempt to automatically change ASCII
 quotation marks to Unicode ones, use the "-q/--prettify-quotes"
