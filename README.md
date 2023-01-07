@@ -110,6 +110,14 @@ Author's note sections at the end of each chapter are removed by
 default. To include them, use the "-a/--authors-notes" option to
 specify their style.
 
+If the source text contains Unicode en and em dashes, they will be
+rendered correctly. If it only contains ASCII hyphens, they will be
+rendered as hyphens, which is probably not the intended outcome. Since
+the intended character cannot be automatically determined, you will
+have to fix this manually. If you cannot write Unicode dashes
+directly, you can edit the LaTeX code and write "--" for an en dash
+(–) and "---" for an em dash (—).
+
 Main options
 
     -i, --id ID,ID,...               story ID(s)
