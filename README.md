@@ -37,6 +37,27 @@ The default format uses 6x9" paper and includes a table of contents.
 ```
 Usage: fimfic2pdf -i ID[,ID...] [options]
 
+Main options
+
+    -i, --id ID,ID,...               story ID(s)
+    -t, --retransform                re-parse the HTML and re-transform to LaTeX, losing manual changes
+
+    -V, --version                    display version information
+    -h, --help                       display usage information
+
+Formatting options
+Changing these have no effect unless also specifying "-t/--retransform", losing manual changes
+
+    -a, --authors-notes STYLE        handle author's notes: remove (default), plain
+    -b, --barred-blockquotes         put vertical bars in the left margin of block quotes
+    -c, --no-chapter                 disable "Chapter X" in chapter titles
+    -o, --no-toc                     disable table of contents
+    -q, --prettify-quotes            change ASCII quotation marks to Unicode ones
+    -s, --hr-style STYLE             style of <hr> section breaks: asterism (default), fleuron, or scrollwork
+    -u, --underline STYLE            how to render underlined text: fancy (default), simple, italic, or regular
+    -v, --volumes START1-END1,...    split story into multiple volumes
+    -y, --hr-symbol SYMBOL           symbol number for scrollwork or fleuron
+
 Saves files in a working directory named ./<ID>/.
 
 If multiple IDs specified, writes an anthology in the current working
@@ -117,27 +138,6 @@ the intended character cannot be automatically determined, you will
 have to fix this manually. If you cannot write Unicode dashes
 directly, you can edit the LaTeX code and write "--" for an en dash
 (–) and "---" for an em dash (—).
-
-Main options
-
-    -i, --id ID,ID,...               story ID(s)
-    -t, --retransform                re-parse the HTML and re-transform to LaTeX, losing manual changes
-
-    -V, --version                    display version information
-    -h, --help                       display usage information
-
-Formatting options
-Changing these have no effect unless also specifying "-t/--retransform", losing manual changes
-
-    -a, --authors-notes STYLE        handle author's notes: remove (default), plain
-    -b, --barred-blockquotes         put vertical bars in the left margin of block quotes
-    -c, --no-chapter                 disable "Chapter X" in chapter titles
-    -o, --no-toc                     disable table of contents
-    -q, --prettify-quotes            change ASCII quotation marks to Unicode ones
-    -s, --hr-style STYLE             style of <hr> section breaks: asterism (default), fleuron, or scrollwork
-    -u, --underline STYLE            how to render underlined text: fancy (default), simple, italic, or regular
-    -v, --volumes START1-END1,...    split story into multiple volumes
-    -y, --hr-symbol SYMBOL           symbol number for scrollwork or fleuron
 ```
 
 `fimfic2pdf` will create a directory with the story ID as name, download the EPUB version of the story to that directory, unpack it to HTML, parse the HTML, transform it to LaTeX, and run `xelatex` to generate a PDF.
