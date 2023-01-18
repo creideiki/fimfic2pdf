@@ -309,7 +309,7 @@ module FimFic2PDF
     end
 
     def visit_blockquote(node, file)
-      case node.attributes['class'].value
+      case node.attributes['class']&.value
       when 'afterward'
         visit_authors_notes(node, file)
       else
