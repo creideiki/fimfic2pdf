@@ -18,8 +18,9 @@ options = OpenStruct.new({
                            underline: :fancy
                          })
 
-parser.banner = 'Usage: fimfic2pdf -i ID[,ID...] [options]
+parser.banner = 'Usage: fimfic2pdf -i ID[,ID...] [options]'
 
+description = '
 Saves files in a working directory named ./<ID>/.
 
 If multiple IDs specified, writes an anthology in the current working
@@ -99,8 +100,7 @@ rendered as hyphens, which is probably not the intended outcome. Since
 the intended character cannot be automatically determined, you will
 have to fix this manually. If you cannot write Unicode dashes
 directly, you can edit the LaTeX code and write "--" for an en dash
-(–) and "---" for an em dash (—).
-'
+(–) and "---" for an em dash (—).'
 
 parser.separator ''
 
@@ -120,7 +120,7 @@ parser.on('-V', '--version', 'display version information') do
   puts "FimFic2PDF #{FimFic2PDF::VERSION}"
   exit 0
 end
-parser.on('-h', '--help', 'display usage information') { abort parser.to_s }
+parser.on('-h', '--help', 'display usage information') { abort(parser.to_s + description) }
 
 parser.separator ''
 parser.separator 'Formatting options'
