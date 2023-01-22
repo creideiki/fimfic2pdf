@@ -153,10 +153,21 @@ module FimFic2PDF
       else
         text = latex_escape text
         if @options.prettify_quotes
-          text.gsub!('"') do |_|
-            @outside_double_quotes = !@outside_double_quotes
-            @outside_double_quotes ? '”' : '“'
-          end
+          text = text.chars.map do |char|
+            case char
+            when '“'
+              @outside_double_quotes = false
+              '“'
+            when '”'
+              @outside_double_quotes = true
+              '”'
+            when '"'
+              @outside_double_quotes = !@outside_double_quotes
+              @outside_double_quotes ? '”' : '“'
+            else
+              char
+            end
+          end.join
         end
         file.write text
       end
