@@ -37,6 +37,9 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   Max: 30
 
+Metrics/BlockNesting:
+  Max: 4
+
 Metrics/ClassLength:
   CountAsOne:
   - array
@@ -48,6 +51,7 @@ Metrics/CyclomaticComplexity:
   IgnoredMethods:
   - visit_span
   - visit_body
+  - visit_text
 
 Metrics/PerceivedComplexity:
   IgnoredMethods:
