@@ -149,7 +149,7 @@ module FimFic2PDF
     def visit_text(node, file)
       text = unicodify node.text
       if /^-+$/.match text
-        file.write '\vspace{2ex}\hrule\vspace{2ex}'
+        visit_hr(node, file)
       else
         text = latex_escape text
         if @options.prettify_quotes
