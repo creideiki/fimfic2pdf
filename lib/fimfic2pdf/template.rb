@@ -198,6 +198,10 @@ UNDERLINE
 \usepackage[center]{titlesec} % to format chapter title pages
 \assignpagestyle{\chapter}{fancy} % use the same footer on title pages as on body pages
 
+% Print author for each part in an anthology
+\DeclareTOCStyleEntry[dynnumwidth=true,numwidth=0pt]{tocline}{part}
+\usepackage{tocdata}
+
 \usepackage{microtype}
 
 % introduce penalty for widows and orphans (can increase to 10 000, although

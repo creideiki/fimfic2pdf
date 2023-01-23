@@ -43,7 +43,11 @@ module FimFic2PDF
         f.write tmpl.toc if @options.toc
         f.write tmpl.body
         @conf.each do |story|
-          f.write "\n\n\\part{#{story['title']}}"
+          if @conf.all? { |story| story['author'] == @conf[0]['author'] }
+            f.write "\n\n\\part{#{story['title']}}"
+          else
+            f.write "\n\n\\partauthor[#{story['title']}]{#{story['title']}}[]{#{story['author']}}{}[]"
+          end
           f.write "\n\\setcounter{chapter}{0}"
           story['filenames'].each do |file|
             f.write "\n\\subimport{#{File::dirname file}}{#{(File::basename file).sub('.tex', '-chapters')}}"
