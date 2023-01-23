@@ -53,7 +53,7 @@ Changing these have no effect unless also specifying "-t/--retransform", losing 
     -c, --no-chapter                 disable "Chapter X" in chapter titles
     -o, --no-toc                     disable table of contents
     -q, --prettify-quotes            change ASCII quotation marks to Unicode ones
-    -s, --hr-style STYLE             style of <hr> section breaks: asterism (default), fleuron, or scrollwork
+    -s, --hr-style STYLE             style of <hr> section breaks: asterism (default), fleuron, line, or scrollwork
     -u, --underline STYLE            how to render underlined text: fancy (default), simple, italic, or regular
     -v, --volumes START1-END1,...    split story into multiple volumes
     -y, --hr-symbol SYMBOL           symbol number for scrollwork or fleuron
@@ -85,10 +85,11 @@ Each chapter must be used in exactly one volume.
 Section breaks (represented as a horizontal line in EPUB and lines
 with asterisks on the web) have a few different renderings. To choose
 a style, use:
-   --hr-style [asterism,fleuron,scrollwork]
+   --hr-style [asterism,fleuron,line,scrollwork]
 where "asterism" is the default.
 
-Asterism is three asterisks in a triangle.
+Asterism is three asterisks in a triangle. Line is a plain horizontal
+line.
 
 Fleuron (centered, roughly square symbol) and scrollwork (horizontally
 extended line with flourishes) take a number specifying which symbol
