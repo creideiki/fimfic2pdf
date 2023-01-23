@@ -48,10 +48,11 @@ Each chapter must be used in exactly one volume.
 Section breaks (represented as a horizontal line in EPUB and lines
 with asterisks on the web) have a few different renderings. To choose
 a style, use:
-   --hr-style [asterism,fleuron,scrollwork]
+   --hr-style [asterism,fleuron,line,scrollwork]
 where "asterism" is the default.
 
-Asterism is three asterisks in a triangle.
+Asterism is three asterisks in a triangle. Line is a plain horizontal
+line.
 
 Fleuron (centered, roughly square symbol) and scrollwork (horizontally
 extended line with flourishes) take a number specifying which symbol
@@ -132,7 +133,7 @@ parser.on('-b', '--barred-blockquotes', 'put vertical bars in the left margin of
 parser.on('-c', '--no-chapter', 'disable "Chapter X" in chapter titles') { options.chapter_style = :no_chapter }
 parser.on('-o', '--no-toc', 'disable table of contents') { options.toc = false }
 parser.on('-q', '--prettify-quotes', 'change ASCII quotation marks to Unicode ones') { options.prettify_quotes = true }
-parser.on('-s', '--hr-style STYLE', [:asterism, :fleuron, :scrollwork], 'style of <hr> section breaks: asterism (default), fleuron, or scrollwork') { |s| options.hr_style = s }
+parser.on('-s', '--hr-style STYLE', [:asterism, :fleuron, :line, :scrollwork], 'style of <hr> section breaks: asterism (default), fleuron, line, or scrollwork') { |s| options.hr_style = s }
 parser.on('-u', '--underline STYLE', [:fancy, :simple, :italic, :regular], 'how to render underlined text: fancy (default), simple, italic, or regular') { |s| options.underline = s }
 parser.on('-v CHAPTERS,CHAPTERS', '--volumes START1-END1,...', 'split story into multiple volumes', Array) { |volumes| options.volumes = volumes }
 parser.on('-y', '--hr-symbol SYMBOL', Integer, 'symbol number for scrollwork or fleuron') { |y| options.hr_symbol = y }

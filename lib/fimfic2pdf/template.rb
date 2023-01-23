@@ -55,6 +55,8 @@ module FimFic2PDF
         raise "Invalid symbol #{symbol}" if symbol > 193
 
         s += "\\fleuron{#{symbol}}"
+      when :line
+        s += '\vspace{3ex}\hrule\vspace{3ex}'
       when :scrollwork
         raise "Invalid symbol #{symbol}" if symbol > 193
 
