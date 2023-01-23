@@ -48,7 +48,6 @@ module FimFic2PDF
           else
             f.write "\n\n\\partauthor[#{story['title']}]{#{story['title']}}[]{#{story['author']}}{}[]"
           end
-          f.write "\n\\setcounter{chapter}{0}"
           story['filenames'].each do |file|
             f.write "\n\\subimport{#{File::dirname file}}{#{(File::basename file).sub('.tex', '-chapters')}}"
           end

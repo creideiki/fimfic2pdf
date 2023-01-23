@@ -248,6 +248,10 @@ TEMPLATE
       <<'TEMPLATE'
 \usepackage{hyperref} % clickable links
 
+\makeatletter
+\@addtoreset{chapter}{part}
+\makeatother
+
 \begin{document}
 
 \frontmatter
