@@ -39,7 +39,10 @@ module FimFic2PDF
       end
       File.open('anthology.tex', 'wb') do |f|
         f.write "\\input{template}\n"
-        f.write tmpl.header
+        titles = @conf.map { |story| story['title'] }.join ', '
+        authors = @conf.map { |story| story['author'] }.uniq.join ', '
+        f.write tmpl.header({ 'title' => titles,
+                              'author' => authors })
         f.write tmpl.toc if @options.toc
         f.write tmpl.body
         @conf.each do |story|

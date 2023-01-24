@@ -135,7 +135,7 @@ module FimFic2PDF
 
     def latex_escape(string)
       string.
-        gsub(/#/, '\#').
+        gsub('#', '\#').
         gsub('%', '\%').
         gsub('&', '\\\&').
         gsub('$', '\\$')
@@ -499,7 +499,7 @@ module FimFic2PDF
       File.open(@volumes[num]['filename'], 'wb') do |f|
         f.write "\\input{template}\n"
         f.write tmpl.volume_title(num + 1)
-        f.write tmpl.header
+        f.write tmpl.header @conf['story']
         f.write tmpl.toc if @options.toc
         f.write tmpl.body
         f.write "\\setcounter{chapter}{#{@conf['story']['volumes'][num]['first'].to_i - 1}}\n"

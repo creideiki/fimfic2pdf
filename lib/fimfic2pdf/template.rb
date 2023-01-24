@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'fimfic2pdf/version'
+
 module FimFic2PDF
   # The top-level book LaTeX template
   class Template
@@ -246,10 +248,24 @@ UNDERLINE
 TEMPLATE
     end
 
-    def header
-      <<'TEMPLATE'
-\usepackage{hyperref} % clickable links
+    def latex_escape_argument(string)
+      string.
+        gsub('#', '\#').
+        gsub('%', '\%').
+        gsub('&', '\\\&').
+        gsub('$', '\\$').
+        gsub(' ', '\ ').
+        gsub(',', '{,}').
+        gsub('=', '{=}')
+    end
 
+    def header(pdfinfo)
+      s = <<TEMPLATE
+% Clickable table of contents
+\\usepackage[hidelinks,pdftitle=#{latex_escape_argument pdfinfo['title']},pdfauthor=#{latex_escape_argument pdfinfo['author']},addtopdfcreator=FiMFic2PDF\\ #{FimFic2PDF::VERSION}]{hyperref}
+TEMPLATE
+
+      s += <<'TEMPLATE'
 \makeatletter
 \@addtoreset{chapter}{part}
 \makeatother
@@ -259,6 +275,7 @@ TEMPLATE
 \frontmatter
 
 TEMPLATE
+      s
     end
 
     def toc
