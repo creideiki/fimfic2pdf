@@ -5,19 +5,19 @@ AllCops:
   NewCops: enable
   TargetRubyVersion: 3.0
 
-Style/HashSyntax:
-  EnforcedStyle: no_mixed_keys
-
-Style/SymbolArray:
-  EnforcedStyle: brackets
-
-Style/AndOr:
+Gemspec/RequireMFA:
   Enabled: false
 
-Style/Not:
-  Enabled: false
+Layout/CommentIndentation:
+  AllowForAlignment: true
 
-Style/NegatedIf:
+Layout/DotPosition:
+  EnforcedStyle: trailing
+
+Layout/HashAlignment:
+  EnforcedHashRocketStyle: table
+
+Lint/AmbiguousRegexpLiteral:
   Enabled: false
 
 Metrics/AbcSize:
@@ -53,10 +53,6 @@ Metrics/CyclomaticComplexity:
   - visit_body
   - visit_text
 
-Metrics/PerceivedComplexity:
-  IgnoredMethods:
-  - visit_span
-
 Metrics/MethodLength:
   CountAsOne:
   - array
@@ -66,26 +62,30 @@ Metrics/MethodLength:
   IgnoredMethods:
   - visit_span
 
-Style/StringConcatenation:
-  Mode: conservative
+Metrics/PerceivedComplexity:
+  IgnoredMethods:
+  - visit_span
 
-Layout/DotPosition:
-  EnforcedStyle: trailing
-
-Layout/HashAlignment:
-  EnforcedHashRocketStyle: table
-
-Layout/CommentIndentation:
-  AllowForAlignment: true
-
-Gemspec/RequireMFA:
+Style/AndOr:
   Enabled: false
 
 Style/ColonMethodCall:
   Enabled: false
 
-Lint/AmbiguousRegexpLiteral:
+Style/HashSyntax:
+  EnforcedStyle: no_mixed_keys
+
+Style/NegatedIf:
+  Enabled: false
+
+Style/Not:
   Enabled: false
 
 Style/OpenStructUse:
   Enabled: false
+
+Style/StringConcatenation:
+  Mode: conservative
+
+Style/SymbolArray:
+  EnforcedStyle: brackets
