@@ -473,7 +473,7 @@ module FimFic2PDF
           File.open(chapter['tex'], 'wb') do |tex|
             tex.write("\\chapter{#{latex_escape(chapter['title'])}}\n\n")
             build = StringIO.new
-            visit_body(doc.xpath('/html/body'), build)
+            visit_body(doc.at_xpath('/html/body'), build)
             @replacements.each do |src, dst|
               build.string.gsub!(src, dst)
             end
