@@ -148,7 +148,7 @@ module FimFic2PDF
 
     def visit_text(node, file)
       text = unicodify node.text
-      if /^-+$/.match text
+      if /^ *-+ *$/.match text
         visit_hr(node, file)
       else
         text = latex_escape text
