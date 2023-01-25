@@ -2,6 +2,14 @@
 
 Renders stories from [FiMFiction](https://www.fimfiction.net/) as PDF.
 
+Also has some experimental support for [Archive Of Our
+Own](https://archiveofourown.org/). Formatting on AO3 is much less
+uniform than on FiMFiction, so each story will probably require some
+individual changes.
+
+To try it anyway, follow the instructions below but run the `ao32pdf`
+program instead of `fimfic2pdf`.
+
 ## Requirements
 
 * [Ruby 3](https://www.ruby-lang.org/en/)
