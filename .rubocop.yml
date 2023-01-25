@@ -17,6 +17,9 @@ Layout/DotPosition:
 Layout/HashAlignment:
   EnforcedHashRocketStyle: table
 
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented_relative_to_receiver
+
 Lint/AmbiguousRegexpLiteral:
   Enabled: false
 
@@ -24,8 +27,11 @@ Metrics/AbcSize:
   CountRepeatedAttributes: false
   Max: 20
   IgnoredMethods:
+  - generate_config
   - parse_metadata
+  - read_title_and_author
   - render
+  - transform
   - transform_volume
   - validate_volumes
   - visit_span
@@ -52,6 +58,7 @@ Metrics/CyclomaticComplexity:
   - visit_span
   - visit_body
   - visit_text
+  - write_anthology
 
 Metrics/MethodLength:
   CountAsOne:
@@ -65,6 +72,7 @@ Metrics/MethodLength:
 Metrics/PerceivedComplexity:
   IgnoredMethods:
   - visit_span
+  - write_anthology
 
 Style/AndOr:
   Enabled: false
@@ -88,4 +96,7 @@ Style/StringConcatenation:
   Mode: conservative
 
 Style/SymbolArray:
+  EnforcedStyle: brackets
+
+Style/WordArray:
   EnforcedStyle: brackets

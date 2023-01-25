@@ -75,24 +75,23 @@ module FimFic2PDF
       exit 1 if do_abort
     end
 
+    def read_title_and_author() end
+
+    def read_chapters() end
+
     def parse_metadata
       @logger.debug 'Reading story metadata'
-      unless @conf['story']['title'] and @conf['story']['author']
-        @logger.debug "Not already parsed, reading from file #{@conf['story']['metadata']}"
-        doc = File.open(@conf['story']['metadata']) { |f| Nokogiri::HTML(f) }
-        @conf['story']['title'] = doc.at_xpath('/html/body/h1').text
-        @conf['story']['author'] = doc.at_xpath('/html/body/p[1]/a[1]').text
-      end
+
+      read_title_and_author
+
       @logger.debug "Title: #{@conf['story']['title']}"
       @logger.debug "Author: #{@conf['story']['author']}"
 
       @logger.debug 'Reading chapter metadata'
-      @conf['story']['chapters'].each do |chapter|
-        next if chapter['title']
 
-        @logger.debug "Not already parsed, reading from file #{chapter['html']}"
-        doc = File.open(chapter['html']) { |f| Nokogiri::HTML(f) }
-        chapter['title'] = doc.at_xpath('/html/head/title').text
+      read_chapters
+
+      @conf['story']['chapters'].each do |chapter|
         @logger.debug "Chapter read: #{chapter['number']} - #{chapter['title']}"
       end
     end
@@ -111,27 +110,7 @@ module FimFic2PDF
       end
     end
 
-    def visit_body(node, file)
-      child = node.children[0]
-      if child.type != Nokogiri::XML::Node::TEXT_NODE or
-         child.text != "\n\t\t"
-        raise "Unknown body format: pre-title is #{child.inspect}"
-      end
-
-      child = node.children[1]
-      if child.type != Nokogiri::XML::Node::ELEMENT_NODE or
-         child.name != 'h1'
-        raise "Unknown body format: title is #{child.inspect}"
-      end
-
-      child = node.children[2]
-      if child.type != Nokogiri::XML::Node::TEXT_NODE or
-         not /^[[:space:]]+$/.match(child.text)
-        raise "Unknown body format: post-title is #{child.inspect}"
-      end
-
-      node.children[3..].map { |c| visit(c, file) }
-    end
+    def visit_body(node, file) end
 
     def latex_escape(string)
       string.

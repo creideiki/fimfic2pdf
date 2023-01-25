@@ -41,7 +41,7 @@ module FimFic2PDF
         f.write "\\input{template}\n"
         titles = @conf.map { |story| story['title'] }.join ', '
         authors = @conf.map { |story| story['author'] }.uniq.join ', '
-        f.write tmpl.header({ 'title' => titles,
+        f.write tmpl.header({ 'title'  => titles,
                               'author' => authors })
         f.write tmpl.toc if @options.toc
         f.write tmpl.body
