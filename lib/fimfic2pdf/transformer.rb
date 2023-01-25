@@ -467,7 +467,7 @@ module FimFic2PDF
           @outside_double_quotes = true
           chapter = @conf['story']['chapters'][chapter_num - 1]
           @logger.debug "Transforming chapter: #{chapter['number']} - #{chapter['title']}"
-          doc = File.open(chapter['html']) { |f| Nokogiri::HTML(f) }
+          doc = Nokogiri::HTML(File.open(chapter['html']))
           chapter['tex'] ||= @options.id + File::SEPARATOR +
                              File.basename(chapter['html'], '.html') + '.tex'
           File.open(chapter['tex'], 'wb') do |tex|
