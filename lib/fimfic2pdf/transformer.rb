@@ -153,6 +153,10 @@ module FimFic2PDF
     end
 
     def visit_p(node, file)
+      return if node.children.size == 1 and
+                node.children[0].type == Nokogiri::XML::Node::TEXT_NODE and
+                /^[[:blank:]]*$/.match(node.children[0].text)
+
       file.write "\n"
       node.children.each.map { |c| visit(c, file) }
       file.write "\n"
