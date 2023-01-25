@@ -352,13 +352,15 @@ module FimFic2PDF
     def visit_div(node, file)
       opening = ''
       ending = ''
-      node.attributes['style'].value.split(';').each do |style|
-        case style
-        when 'text-align:center'
-          opening += '\begin{center}'
-          ending = '\end{center}' + ending
-        else
-          raise "Unsupported div style #{style}"
+      if node.attributes.include? 'style'
+        node.attributes['style'].value.split(';').each do |style|
+          case style
+          when 'text-align:center'
+            opening += '\begin{center}'
+            ending = '\end{center}' + ending
+          else
+            raise "Unsupported div style #{style}"
+          end
         end
       end
       file.write opening
