@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir.glob('{lib}/**/*', File::FNM_DOTMATCH)
   s.bindir = 'exe'
-  s.executables = ['fimfic2pdf']
+  s.executables = ['fimfic2pdf', 'ao32pdf']
   s.extra_rdoc_files = ['COPYING']
   s.homepage = 'https://github.com/creideiki/fimfic2pdf/'
   s.licenses = ['GPL-3.0']
