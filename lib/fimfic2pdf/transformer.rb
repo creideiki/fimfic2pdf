@@ -443,6 +443,18 @@ module FimFic2PDF
       node.children.each.map { |c| visit(c, file) }
     end
 
+    def visit_em(node, file)
+      file.write '\textit{'
+      node.children.each.map { |c| visit(c, file) }
+      file.write '}'
+    end
+
+    def visit_strike(node, file)
+      file.write '\sout{'
+      node.children.each.map { |c| visit(c, file) }
+      file.write '}'
+    end
+
     def transform_volume(num)
       volume = @volumes[num]
       @logger.debug "Transforming volume #{num + 1}, chapters #{volume['first']} - #{volume['last']}"
