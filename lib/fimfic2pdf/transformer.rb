@@ -438,6 +438,28 @@ module FimFic2PDF
       file.write '}'
     end
 
+    def visit_pre(node, file)
+      if node.children.size == 1 and
+         node.children[0].name == 'code'
+        visit(node.children[0], file)
+      else
+        file.write "\n", '\begin{verbatim}', "\n"
+        node.children.each.map { |c| visit(c, file) }
+        file.write "\n", '\end{verbatim}', "\n"
+      end
+    end
+
+    def visit_code(node, file)
+      case node.attributes['class'].value
+      when 'math'
+        file.write '\['
+        node.children.each.map { |c| visit(c, file) }
+        file.write '\]'
+      else
+        raise "Unsupported code class #{node.attributes['class'].value}"
+      end
+    end
+
     def transform_volume(num)
       volume = @volumes[num]
       @logger.debug "Transforming volume #{num + 1}, chapters #{volume['first']} - #{volume['last']}"
