@@ -166,7 +166,7 @@ module FimFic2PDF
     def visit_span(node, file)
       opening = ''
       ending = ''
-      node.attributes['style']&.value&.split(';')&.each do |style|
+      node.attributes['style']&.value&.split(';')&.sort&.each do |style|
         case style
         when 'font-size:2em'
           opening += '\begin{LARGE}'
