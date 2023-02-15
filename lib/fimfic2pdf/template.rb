@@ -102,7 +102,8 @@ UNDERLINE
       <<'TEMPLATE'
 % https://amyrhoda.wordpress.com/2012/05/25/latex-to-lulu-the-making-of-aosa-geometry-and-headers-and-footers/
 
-\documentclass{book}
+\documentclass[10pt]{book}
+\usepackage{extsizes}
 \usepackage[includefoot]{geometry}
 %\usepackage[utf8]{inputenc}
 
