@@ -29,6 +29,10 @@ module FiMFic2PDF
       end
     end
 
+    # Return LaTeX code for drawing an interstitial page before each
+    # story.
+    # def interstitial(title, author = nil) end
+
     def write_anthology
       @logger.debug 'Writing LaTeX files for anthology'
       tmpl = @mod::Template.new
@@ -48,9 +52,9 @@ module FiMFic2PDF
         f.write tmpl.body
         @conf.each do |story|
           if @conf.all? { |story| story['author'] == @conf[0]['author'] }
-            f.write "\n\n\\part{#{story['title']}}"
+            f.write interstitial(story['title'])
           else
-            f.write "\n\n\\partauthor[#{story['title']}]{#{story['title']}}[]{#{story['author']}}{}[]"
+            f.write interstitial(story['title'], story['author'])
           end
           story['filenames'].each do |file|
             f.write "\n\\subimport{#{File::dirname file}}{#{(File::basename file).sub('.tex', '-chapters')}}"

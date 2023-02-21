@@ -71,6 +71,9 @@ Metrics/MethodLength:
   IgnoredMethods:
   - visit_span
 
+Metrics/ModuleLength:
+  Max: 150
+
 Metrics/PerceivedComplexity:
   IgnoredMethods:
   - visit_span
