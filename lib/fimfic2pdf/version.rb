@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-module FimFic2PDF
-  VERSION = '0.9.4'
+module FiMFic2PDF
+  VERSION = '0.10.0-dev'
 end
