@@ -54,9 +54,13 @@ module FiMFic2PDF
       def visit_plain_blockquote(node, file)
         previous_blockquote = @in_blockquote
         @in_blockquote = true
-        file.write "\n", '\vspace{\nbs}', "\n", '{\centering', "\n"
+        file.write "\n"
+        file.write('\vspace{\nbs}', "\n") if node&.previous&.name != 'hr'
+        file.write '\begin{adjustwidth}{3em}{3em}', "\n"
         node.children.each.map { |c| visit(c, file) }
-        file.write "\n", '}', "\n", '\vspace{\nbs}'
+        file.write "\n", '\end{adjustwidth}'
+        file.write("\n", '\vspace{\nbs}') if node&.next&.name != 'hr'
+        file.write "\n"
         @in_blockquote = previous_blockquote
       end
 
