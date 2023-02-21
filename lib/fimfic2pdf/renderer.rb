@@ -4,10 +4,16 @@ require 'English'
 require 'logger'
 require 'yaml'
 
-module FimFic2PDF
+module FiMFic2PDF
   # Calls LaTeX to render the story into PDF format.
   class Renderer
     attr_accessor :conf, :filename, :url
+
+    # Return the name of the LaTeX interpreter to use.
+    # def tex_program() end
+
+    # Return the number of LaTeX passes to run.
+    # def num_passes() end
 
     def initialize(story_id)
       @story_id = story_id
@@ -20,17 +26,10 @@ module FimFic2PDF
     def render_volume(num)
       @logger.debug "Rendering volume #{num + 1}"
 
-      @logger.debug 'Running first render pass'
-      system('xelatex', "vol#{num + 1}.tex", chdir: @story_id, exception: true)
-
-      @logger.debug 'Running second render pass'
-      system('xelatex', "vol#{num + 1}.tex", chdir: @story_id, exception: true)
-
-      @logger.debug 'Running third render pass'
-      system('xelatex', "vol#{num + 1}.tex", chdir: @story_id, exception: true)
-
-      @logger.debug 'Running fourth render pass'
-      system('xelatex', "vol#{num + 1}.tex", chdir: @story_id, exception: true)
+      num_passes.times do |pass|
+        @logger.debug "Running render pass #{pass + 1}"
+        system(tex_program, "vol#{num + 1}.tex", chdir: @story_id, exception: true)
+      end
 
       @logger.debug 'Rendering completed'
     end

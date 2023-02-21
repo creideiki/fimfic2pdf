@@ -5,10 +5,10 @@ require 'uri'
 
 require 'fimfic2pdf/downloader'
 
-module FimFic2PDF
+module FiMFic2PDF
   module AO3
     # Fetches and unpacks EPUB archives from AO3
-    class Downloader < FimFic2PDF::Downloader
+    class Downloader < FiMFic2PDF::Downloader
       def initialize(story_id)
         super
         @story_url = "https://archiveofourown.org/works/#{@story_id}/"
@@ -18,7 +18,7 @@ module FimFic2PDF
         @logger.debug "Fetching story from #{@story_url}"
         response = HTTParty.get(@story_url,
                                 headers: {
-                                  'User-Agent' => "FimFic2PDF/#{FimFic2PDF::VERSION}"
+                                  'User-Agent' => "FiMFic2PDF/#{FiMFic2PDF::VERSION}"
                                 })
         raise "Failed to download #{@url}: #{response.code} #{response.message}" unless response.code == 200
 

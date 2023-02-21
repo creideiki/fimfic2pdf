@@ -5,7 +5,7 @@ require 'logger'
 require 'yaml'
 require 'zip'
 
-module FimFic2PDF
+module FiMFic2PDF
   # Fetches EPUB archives from fimfiction.net
   class Downloader
     attr_accessor :conf, :filename, :url
@@ -22,7 +22,7 @@ module FimFic2PDF
       @logger.debug "Fetching EPUB from #{@epub_url}"
       response = HTTParty.get(@epub_url,
                               headers: {
-                                'User-Agent' => "FimFic2PDF/#{FimFic2PDF::VERSION}"
+                                'User-Agent' => "FiMFic2PDF/#{FiMFic2PDF::VERSION}"
                               })
       raise "Failed to download #{@epub_url}: #{response.code} #{response.message}" unless response.code == 200
 
@@ -47,9 +47,12 @@ module FimFic2PDF
       end
     end
 
-    def unpack() end
+    # Unpack HTML files and any required metadata files from the
+    # downloaded epub file.
+    # def unpack() end
 
-    def generate_config(parser) end
+    # Generate configuration in the @conf variable.
+    # def generate_config(parser) end
 
     def write_config
       @logger.debug 'Writing configuration from downloader'

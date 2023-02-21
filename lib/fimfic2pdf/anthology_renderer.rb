@@ -4,7 +4,7 @@ require 'English'
 require 'logger'
 require 'yaml'
 
-module FimFic2PDF
+module FiMFic2PDF
   # Calls LaTeX to render the story into PDF format.
   class AnthologyRenderer
     attr_accessor :conf, :filename, :url
@@ -16,22 +16,21 @@ module FimFic2PDF
       @conf = YAML.safe_load_file(@config_file)
     end
 
+    def tex_program
+      'lualatex'
+    end
+
+    def num_passes
+      2
+    end
+
     def render_anthology
       @logger.debug 'Rendering anthology'
 
-      @logger.debug 'Running first render pass'
-      system('xelatex', 'anthology.tex', exception: true)
-
-      @logger.debug 'Running second render pass'
-      system('xelatex', 'anthology.tex', exception: true)
-
-      @logger.debug 'Running third render pass'
-      system('xelatex', 'anthology.tex', exception: true)
-
-      @logger.debug 'Running fourth render pass'
-      system('xelatex', 'anthology.tex', exception: true)
-
-      @logger.debug 'Rendering completed'
+      num_passes.times do |pass|
+        @logger.debug "Running render pass #{pass + 1}"
+        system(tex_program, 'anthology.tex', exception: true)
+      end
 
       @logger.info 'Finished PDF: anthology.pdf'
 

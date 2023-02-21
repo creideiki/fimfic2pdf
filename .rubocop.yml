@@ -55,6 +55,8 @@ Metrics/ClassLength:
 
 Metrics/CyclomaticComplexity:
   IgnoredMethods:
+  - span_close
+  - span_open
   - visit_span
   - visit_body
   - visit_text

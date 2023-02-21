@@ -2,10 +2,10 @@
 
 require 'fimfic2pdf/transformer'
 
-module FimFic2PDF
+module FiMFic2PDF
   module AO3
     # Transforms AO3 XHTML documents to LaTeX
-    class Transformer < FimFic2PDF::Transformer
+    module Transformer
       def read_title_and_author
         unless @conf['story']['title'] and @conf['story']['author']  # rubocop:disable Style/GuardClause
           @logger.debug "Not already parsed, reading from file #{@conf['story']['metadata']}"
@@ -15,6 +15,8 @@ module FimFic2PDF
           @conf['story']['author'] = doc.at_xpath('/package/metadata/creator').text
         end
       end
+
+      def read_chapters() end
 
       def visit_body(node, file)
         userstuff = node.at_xpath('.//div[@class="userstuff2"]')

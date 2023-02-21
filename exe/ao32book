@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'ao32book'
+
+driver = FiMFic2PDF::Book::Driver.new(__FILE__, FiMFic2PDF::AO32Book)
+
+driver.run

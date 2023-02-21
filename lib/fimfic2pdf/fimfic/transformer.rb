@@ -2,10 +2,10 @@
 
 require 'fimfic2pdf/transformer'
 
-module FimFic2PDF
+module FiMFic2PDF
   module FiMFic
     # Transforms FiMFiction HTML documents to LaTeX
-    class Transformer < FimFic2PDF::Transformer
+    module Transformer
       def read_title_and_author
         return if @conf['story']['title'] and @conf['story']['author']
 

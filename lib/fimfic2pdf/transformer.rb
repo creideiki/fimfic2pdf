@@ -6,9 +6,7 @@ require 'nokogiri'
 require 'stringio'
 require 'yaml'
 
-require 'fimfic2pdf/template'
-
-module FimFic2PDF
+module FiMFic2PDF
   # Transforms HTML documents to LaTeX
   class Transformer
     attr_accessor :conf
@@ -75,9 +73,13 @@ module FimFic2PDF
       exit 1 if do_abort
     end
 
-    def read_title_and_author() end
+    # Read story title and author from metadata files, storing the
+    # result in @conf['story']['title'] and @conf['story']['author'].
+    # def read_title_and_author() end
 
-    def read_chapters() end
+    # Read chapter titles from HTML files, storing the result in
+    # @conf['story']['chapters'].
+    # def read_chapters() end
 
     def parse_metadata
       @logger.debug 'Reading story metadata'
@@ -110,7 +112,9 @@ module FimFic2PDF
       end
     end
 
-    def visit_body(node, file) end
+    # Top-level interface to the HTML transformer. Skip any preamble
+    # (e.g. titles) and call visit() on the remaining nodes.
+    # def visit_body(node, file) end
 
     def latex_escape(string)
       string.
@@ -162,73 +166,68 @@ module FimFic2PDF
       file.write "\n"
     end
 
-    # rubocop:disable Style/StringConcatenation, Metrics/BlockLength
+    # rubocop:disable Style/StringConcatenation, Lint/DuplicateBranch
+    def span_open(style)
+      case style
+      when 'font-style:italic'
+        '\textit{'
+      when 'font-weight:bold'
+        '\textbf{'
+      when 'text-decoration:underline'
+        @chapter_has_underline = true
+        '\fancyuline{'
+      when /^color:#([[:xdigit:]]+)$/
+        colour = Regexp.last_match(1)
+        case colour.size
+        when 6
+        # Already in the correct format
+        when 3
+          colour = colour.chars.map { |c| c * 2 }.join
+        else
+          raise "Unsupported colour format: #{colour}"
+        end
+        '\textcolor[HTML]{' + colour + '}{'
+      when 'font-variant-caps:small-caps'
+        '\textsc{'
+      else # rubocop:disable Style/EmptyElse
+        nil
+      end
+    end
+
+    def span_close(style)
+      case style
+      when 'font-style:italic'
+        '}'
+      when 'font-weight:bold'
+        '}'
+      when 'text-decoration:underline'
+        '}'
+      when /^color:#([[:xdigit:]]+)$/
+        '}'
+      when 'font-variant-caps:small-caps'
+        '}'
+      else # rubocop:disable Style/EmptyElse
+        nil
+      end
+    end
+    # rubocop:enable Style/StringConcatenation, Lint/DuplicateBranch
+
     def visit_span(node, file)
       opening = ''
-      ending = ''
+      closing = ''
       node.attributes['style']&.value&.split(';')&.sort&.each do |style|
-        case style
-        when 'font-size:2em'
-          opening += '\begin{LARGE}'
-          ending = '\end{LARGE}' + ending
-        when 'font-size:1.5em'
-          opening += '\begin{Large}'
-          ending = '\end{Large}' + ending
-        when 'font-size:0.875em', 'font-size:0.8125em'
-          opening += '\begin{small}'
-          ending = '\end{small}' + ending
-        when 'font-size:0.75em'
-          opening += '\begin{footnotesize}'
-          ending = '\end{footnotesize}' + ending
-        when 'font-size:0.5em'
-          opening += '\begin{scriptsize}'
-          ending = '\end{scriptsize}' + ending
-        when 'font-style:italic'
-          opening += '\textit{'
-          ending = '}' + ending
-        when 'font-weight:bold'
-          opening += '\textbf{'
-          ending = '}' + ending
-        when 'text-decoration:underline'
-          opening += '\fancyuline{'
-          @chapter_has_underline = true
-          ending = '}' + ending
-        when 'text-decoration:line-through'
-          opening += '\sout{'
-          ending = '}' + ending
-        when 'text-decoration:underline line-through'
-          if @in_blockquote
-            opening += '\sout{'
-            ending = '}' + ending
-          else
-            opening += '\fancyuline{\sout{'
-            @chapter_has_underline = true
-            ending = '}}' + ending
-          end
-        when /^color:#([[:xdigit:]]+)$/
-          colour = Regexp.last_match(1)
-          case colour.size
-          when 6
-            # Already in the correct format
-          when 3
-            colour = colour.chars.map { |c| c * 2 }.join
-          else
-            raise "Unsupported colour format: #{colour}"
-          end
-          opening += '\textcolor[HTML]{' + colour + '}{'
-          ending += '}'
-        when 'font-variant-caps:small-caps'
-          opening += '\textsc{'
-          ending = '}' + ending
-        else
-          raise "Unsupported span style #{style}"
-        end
+        this_open = span_open style
+        this_close = span_close style
+
+        raise "Unsupported span style #{style}" unless this_open and this_close
+
+        opening += this_open
+        closing = this_close + closing
       end
       file.write opening
       node.children.each.map { |c| visit(c, file) }
-      file.write ending
+      file.write closing
     end
-    # rubocop:enable Style/StringConcatenation, Metrics/BlockLength
 
     def visit_i(node, file)
       file.write '\textit{'
@@ -311,17 +310,6 @@ module FimFic2PDF
       end
     end
 
-    def visit_plain_blockquote(node, file)
-      previous_blockquote = @in_blockquote
-      @in_blockquote = true
-      file.write "\n", '\begin{quotation}', "\n"
-      file.write '\cbstart', "\n" if @options.barred_blockquotes
-      node.children.each.map { |c| visit(c, file) }
-      file.write "\n", '\cbend' if @options.barred_blockquotes
-      file.write "\n", '\end{quotation}', "\n"
-      @in_blockquote = previous_blockquote
-    end
-
     def visit_authors_notes(node, file)
       case @options.authors_notes
       when :remove
@@ -352,18 +340,6 @@ module FimFic2PDF
     end
     # rubocop:enable Style/StringConcatenation
 
-    def visit_h1(node, file)
-      file.write "\n", '\begin{LARGE}'
-      node.children.each.map { |c| visit(c, file) }
-      file.write '\end{LARGE}', "\n"
-    end
-
-    def visit_h2(node, file)
-      file.write "\n", '\begin{Large}'
-      node.children.each.map { |c| visit(c, file) }
-      file.write '\end{Large}', "\n"
-    end
-
     def visit_img(node, file) # rubocop:disable Metrics/AbcSize
       url = node.attributes['src'].value
 
@@ -373,7 +349,7 @@ module FimFic2PDF
       # asked the server, which we want to avoid if possible. So just
       # call everything .png.
 
-      # Also, FimFiction runs all external references through a URL
+      # Also, FiMFiction runs all external references through a URL
       # proxy, making it very difficult to determine the actual file
       # name. Just use the hex MD5 of the URL and hope there are no
       # collisions.
@@ -386,7 +362,7 @@ module FimFic2PDF
         @logger.info "Fetching image from #{url}"
         response = HTTParty.get(url,
                                 headers: {
-                                  'User-Agent' => "FimFic2PDF/#{FimFic2PDF::VERSION}"
+                                  'User-Agent' => "FiMFic2PDF/#{FiMFic2PDF::VERSION}"
                                 })
         raise "Failed to download image #{url}: #{response.code} #{response.message}" unless response.code == 200
 
@@ -432,12 +408,6 @@ module FimFic2PDF
       file.write '}'
     end
 
-    def visit_strike(node, file)
-      file.write '\sout{'
-      node.children.each.map { |c| visit(c, file) }
-      file.write '}'
-    end
-
     def visit_pre(node, file)
       if node.children.size == 1 and
          node.children[0].name == 'code'
@@ -460,6 +430,53 @@ module FimFic2PDF
       end
     end
 
+    def line_break(str, chars)
+      words = str.split
+      lines = []
+      cur_line = ''
+      until words.empty?
+        if cur_line.size < chars
+          cur_line += ' ' unless cur_line == ''
+          cur_line += words.shift
+        else
+          lines << cur_line
+          cur_line = ''
+        end
+      end
+      lines << cur_line
+      lines
+    end
+
+    # Return LaTeX code for the beginning of a chapter.
+    def begin_chapter(title) end
+
+    def transform_chapter(chapter_num) # rubocop:disable Metrics/AbcSize
+      @chapter_has_underline = false
+      @outside_double_quotes = true
+      chapter = @conf['story']['chapters'][chapter_num - 1]
+      @logger.debug "Transforming chapter: #{chapter['number']} - #{chapter['title']}"
+      doc = Nokogiri::HTML(File.open(chapter['html']))
+      chapter['tex'] ||= @options.id + File::SEPARATOR +
+                         File.basename(chapter['html'], '.html') + '.tex'
+      File.open(chapter['tex'], 'wb') do |tex|
+        tex.write(begin_chapter(latex_escape(chapter['title'])))
+        build = StringIO.new
+        visit_body(doc.at_xpath('/html/body'), build)
+        @replacements.each do |src, dst|
+          build.string.gsub!(src, dst)
+        end
+        tex.write build.string
+      end
+      unless @outside_double_quotes
+        @logger.warn "Unbalanced quotation marks in chapter #{chapter['number']} - #{chapter['title']}"
+        @warnings[:unbalanced_quotes][:chapters].append "#{chapter['number']} - #{chapter['title']}"
+      end
+      if @chapter_has_underline # rubocop:disable Style/GuardClause
+        @logger.info "Chapter has underline: #{chapter['number']} - #{chapter['title']}"
+        @warnings[:underline][:chapters].append "#{chapter['number']} - #{chapter['title']}"
+      end
+    end
+
     def transform_volume(num)
       volume = @volumes[num]
       @logger.debug "Transforming volume #{num + 1}, chapters #{volume['first']} - #{volume['last']}"
@@ -468,31 +485,9 @@ module FimFic2PDF
 
       File.open(@options.id + File::SEPARATOR + vol_str + 'chapters.tex', 'wb') do |chapters|
         @conf['story']['volumes'][num]['first'].upto(@conf['story']['volumes'][num]['last']) do |chapter_num|
-          @chapter_has_underline = false
-          @outside_double_quotes = true
+          transform_chapter chapter_num
           chapter = @conf['story']['chapters'][chapter_num - 1]
-          @logger.debug "Transforming chapter: #{chapter['number']} - #{chapter['title']}"
-          doc = Nokogiri::HTML(File.open(chapter['html']))
-          chapter['tex'] ||= @options.id + File::SEPARATOR +
-                             File.basename(chapter['html'], '.html') + '.tex'
-          File.open(chapter['tex'], 'wb') do |tex|
-            tex.write("\\chapter{#{latex_escape(chapter['title'])}}\n\n")
-            build = StringIO.new
-            visit_body(doc.at_xpath('/html/body'), build)
-            @replacements.each do |src, dst|
-              build.string.gsub!(src, dst)
-            end
-            tex.write build.string
-          end
-          unless @outside_double_quotes
-            @logger.warn "Unbalanced quotation marks in chapter #{chapter['number']} - #{chapter['title']}"
-            @warnings[:unbalanced_quotes][:chapters].append "#{chapter['number']} - #{chapter['title']}"
-          end
           chapters.write "\\input{#{File.basename(chapter['tex'], '.tex')}}\n"
-          if @chapter_has_underline
-            @logger.info "Chapter has underline: #{chapter['number']} - #{chapter['title']}"
-            @warnings[:underline][:chapters].append "#{chapter['number']} - #{chapter['title']}"
-          end
         end
       end
     end
@@ -508,7 +503,7 @@ module FimFic2PDF
     def write_volume(num)
       @logger.debug "Writing LaTeX file for volume #{num + 1}"
 
-      tmpl = FimFic2PDF::Template.new
+      tmpl = @options.template.new
       File.open(@options.id + File::SEPARATOR + 'template.tex', 'wb') do |f|
         f.write tmpl.style
         f.write tmpl.chapter_style(@options.chapter_style)
@@ -517,11 +512,10 @@ module FimFic2PDF
       end
       File.open(@volumes[num]['filename'], 'wb') do |f|
         f.write "\\input{template}\n"
-        f.write tmpl.volume_title(num + 1)
+        f.write tmpl.volume_title(num + 1, @conf['story']['volumes'][num]['first'].to_i)
         f.write tmpl.header @conf['story']
         f.write tmpl.toc if @options.toc
         f.write tmpl.body
-        f.write "\\setcounter{chapter}{#{@conf['story']['volumes'][num]['first'].to_i - 1}}\n"
         f.write tmpl.chapters(num)
         f.write tmpl.footer
       end

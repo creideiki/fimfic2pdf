@@ -6,12 +6,13 @@ require 'yaml'
 
 require 'fimfic2pdf/template'
 
-module FimFic2PDF
+module FiMFic2PDF
   # Writes LaTex boilerplate for an anthology
   class Anthology
     attr_accessor :conf
 
-    def initialize(options)
+    def initialize(options, mod)
+      @mod = mod
       @options = options
       @logger = Logger.new($stderr, progname: 'Anthology')
       @logger.debug 'Preparing to compile anthology'
@@ -30,7 +31,7 @@ module FimFic2PDF
 
     def write_anthology
       @logger.debug 'Writing LaTeX files for anthology'
-      tmpl = FimFic2PDF::Template.new
+      tmpl = @mod::Template.new
       File.open('template.tex', 'wb') do |f|
         f.write tmpl.style
         f.write tmpl.chapter_style(@options.chapter_style)

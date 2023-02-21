@@ -2,10 +2,10 @@
 
 require 'fimfic2pdf/downloader'
 
-module FimFic2PDF
+module FiMFic2PDF
   module FiMFic
     # Fetches and unpacks EPUB archives from FiMFiction
-    class Downloader < FimFic2PDF::Downloader
+    class Downloader < FiMFic2PDF::Downloader
       def initialize(story_id)
         super
         @story_url = "https://www.fimfiction.net/story/#{@story_id}/"
