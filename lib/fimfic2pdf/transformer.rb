@@ -379,12 +379,6 @@ module FiMFic2PDF
       file.write '}'
     end
 
-    def visit_s(node, file)
-      file.write '\sout{'
-      node.children.each.map { |c| visit(c, file) }
-      file.write '}'
-    end
-
     def visit_ul(node, file)
       file.write "\n", '\begin{itemize}'
       node.children.each.map { |c| visit(c, file) }

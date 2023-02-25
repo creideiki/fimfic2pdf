@@ -68,6 +68,12 @@ module FiMFic2PDF
         @in_blockquote = previous_blockquote
       end
 
+      def visit_s(node, file)
+        file.write '\sout{'
+        node.children.each.map { |c| visit(c, file) }
+        file.write '}'
+      end
+
       def visit_strike(node, file)
         file.write '\sout{'
         node.children.each.map { |c| visit(c, file) }

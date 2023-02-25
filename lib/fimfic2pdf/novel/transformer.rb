@@ -27,7 +27,7 @@ module FiMFic2PDF
             '\strikeThrough{'
           else
             @chapter_has_underline = true
-            '\fancyuline{\sout{'
+            '\fancyuline{\strikeThrough{'
           end
         else
           super
@@ -64,6 +64,18 @@ module FiMFic2PDF
         @in_blockquote = previous_blockquote
       end
 
+      def visit_s(node, file)
+        file.write '\strikeThrough{'
+        node.children.each.map { |c| visit(c, file) }
+        file.write '}'
+      end
+
+      def visit_strike(node, file)
+        file.write '\strikeThrough{'
+        node.children.each.map { |c| visit(c, file) }
+        file.write '}'
+      end
+
       def visit_h1(node, file)
         file.write "\n", '\charscale[2.0]{'
         node.children.each.map { |c| visit(c, file) }
@@ -74,12 +86,6 @@ module FiMFic2PDF
         file.write "\n", '\charscale[1.5]{'
         node.children.each.map { |c| visit(c, file) }
         file.write '}', "\n"
-      end
-
-      def visit_strike(node, file)
-        file.write '\strikeThrough{'
-        node.children.each.map { |c| visit(c, file) }
-        file.write '}'
       end
 
       def line_break(str, chars)
