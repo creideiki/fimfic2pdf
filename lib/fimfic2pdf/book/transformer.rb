@@ -57,6 +57,13 @@ module FiMFic2PDF
         end
       end
 
+      def visit_u(node, file)
+        file.write '\fancyuline{' unless @in_blockquote
+        @chapter_has_underline = true unless @in_blockquote
+        node.children.each.map { |c| visit(c, file) }
+        file.write '}' unless @in_blockquote
+      end
+
       def visit_plain_blockquote(node, file)
         previous_blockquote = @in_blockquote
         @in_blockquote = true

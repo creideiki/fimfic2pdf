@@ -23,12 +23,8 @@ module FiMFic2PDF
         when 'text-decoration:line-through'
           '\strikeThrough{'
         when 'text-decoration:underline line-through'
-          if @in_blockquote
-            '\strikeThrough{'
-          else
-            @chapter_has_underline = true
-            '\fancyuline{\strikeThrough{'
-          end
+          @chapter_has_underline = true
+          '\fancyuline{\strikeThrough{'
         else
           super
         end
@@ -41,14 +37,17 @@ module FiMFic2PDF
         when 'text-decoration:line-through' # rubocop:disable Lint/DuplicateBranch
           '}'
         when 'text-decoration:underline line-through'
-          if @in_blockquote
-            '}'
-          else
-            '}}'
-          end
+          '}}'
         else
           super
         end
+      end
+
+      def visit_u(node, file)
+        file.write '\fancyuline{'
+        @chapter_has_underline = true
+        node.children.each.map { |c| visit(c, file) }
+        file.write '}'
       end
 
       def visit_plain_blockquote(node, file)

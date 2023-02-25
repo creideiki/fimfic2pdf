@@ -245,13 +245,6 @@ module FiMFic2PDF
       file.write "\n\n"
     end
 
-    def visit_u(node, file)
-      file.write '\fancyuline{' unless @in_blockquote
-      @chapter_has_underline = true unless @in_blockquote
-      node.children.each.map { |c| visit(c, file) }
-      file.write '}' unless @in_blockquote
-    end
-
     def write_footnote(node, file)
       footnote = StringIO.new
       footnote.write '\footnote{'
