@@ -78,12 +78,13 @@ TEMPLATE
 \\SetTitle{#{latex_escape_argument pdfinfo['title']}}
 \\SetAuthor{#{latex_escape_argument pdfinfo['author']}}
 \\SetApplication{FiMFic2PDF #{FiMFic2PDF::VERSION}}
+
+\\begin{document}
+
 TEMPLATE
       end
 
-      def body
-        "\n\\begin{document}\n"
-      end
+      def body() end
 
       def footer
         "\n\\end{document}\n"
