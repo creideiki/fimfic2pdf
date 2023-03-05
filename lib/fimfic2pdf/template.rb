@@ -5,6 +5,10 @@ require 'fimfic2pdf/version'
 module FiMFic2PDF
   # The top-level book LaTeX template
   class Template
+    def initialize
+      @logger = Logger.new($stderr, progname: 'Template')
+    end
+
     # Make a roman numeral from a decimal number.
     def romanize(number)
       reductions = {
