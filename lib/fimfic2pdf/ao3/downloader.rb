@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'date'
 require 'nokogiri'
 require 'uri'
 
@@ -39,10 +40,16 @@ module FiMFic2PDF
         chapters = toc.xpath('//navPoint').sort_by { |p| p['playOrder'].to_i }
         # First segment is tags and summary, last segment is author's notes
         chapters = chapters[1..-2]
+
+        opf = Nokogiri::XML(File.open(@story_id + File::SEPARATOR + 'content.opf'))
+        opf.remove_namespaces!
+        date = DateTime.parse opf.at_xpath('/package/metadata/date').text
+
         p = URI::Parser.new
 
         @conf = {
           'story' => {
+            'year'     => date.year,
             'id'       => @story_id,
             'url'      => @story_url,
             'epub'     => @filename,
