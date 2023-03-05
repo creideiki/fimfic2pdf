@@ -12,6 +12,7 @@ module FiMFic2PDF
         @options = OpenStruct.new({
                                     authors_notes: :remove,
                                     barred_blockquotes: false,
+                                    frontmatter: false,
                                     hr_style: :scenestars,
                                     ids: [],
                                     toc: false,
@@ -102,6 +103,11 @@ output:
 to
    \begin{parascale}[2]This is \textit{SHOUTING}\end{parascale}
 '
+
+        @parser.on('-f', '--frontmatter',
+                   'include front matter pages (title, copyright, dedication, etc.)') do
+          @options.front_matter = true
+        end
 
         @parser.on('-q', '--prettify-quotes',
                    'change ASCII quotation marks to Unicode ones') do
