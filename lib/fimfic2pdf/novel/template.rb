@@ -85,6 +85,99 @@ TEMPLATE
       end
 
       def front_matter(story, volume)
+        <<~TEMPLATE
+          \\frontmatter % Sets page number to i.
+
+          % Half-Title Page
+          \\thispagestyle{empty}
+          \\null
+          \\vspace*{7\\nbs}
+          \\begin{adjustwidth}{3em}{3em}
+          \\begin{center}
+          \\begin{parascale}[2.0]
+          #{story['title']}
+          \\end{parascale}
+          \\end{center}
+          \\end{adjustwidth}
+          \\clearpage
+
+          % List of books, or blank
+          \\thispagestyle{empty}
+          \\null
+          \\vspace*{3\\nbs}
+          \\begin{center}
+          Other stories by #{story['author']}
+          \\end{center}
+          \\clearpage
+
+          % Title Page.
+          \\thispagestyle{empty}
+          \\vspace*{7\\nbs}
+          \\begin{center}
+          \\begin{parascale}[2.0]
+          #{story['title']}
+          \\end{parascale}
+          \\vspace{2\\nbs}
+          \\begin{parascale}[1.5]
+          Volume #{romanize(volume)}
+          \\end{parascale}
+          \\vspace{4\\nbs}
+          \\begin{parascale}[2.0]
+          #{story['author']}
+          \\end{parascale}
+          % \\vfill
+          % Publisher\\par
+          \\end{center}
+          \\clearpage
+
+          % Copyright Page.
+          \\thispagestyle{empty}
+          \\null
+          \\vfill
+          \\begin{adjustwidth}{1em}{1em}
+          \\begin{center}
+          \\begin{parascale}[0.75]
+          This is a work of fiction. Names, characters, business,
+          events and incidents are the products of the author’s
+          imagination. Any resemblance to actual persons, living or
+          dead, or actual events is purely coincidental.
+
+          \\vspace{1\\nbs}
+
+          This fan work uses characters and locations that are
+          copyright and trademarks of BLANK. The author makes no
+          claim on BLANK's copyright or trademarks.
+
+          \\vspace{1\\nbs}
+
+          \\textsc{#{story['title']}}
+
+          \\vspace{1\\nbs}
+
+          Copyright © #{story['year']} by #{story['author']}
+          \\end{parascale}
+          \\end{center}
+          \\end{adjustwidth}
+          \\clearpage
+
+          % Dedication or Epigraph or TOC or Acknowledgements or Author's Note or Map.
+          % Alternatively, repeat the Half-Title.
+          \\thispagestyle{empty}
+          \\vspace*{7\\nbs}
+          \\begin{center}
+          \\begin{parascale}[1.25]
+          Dedication
+          \\end{parascale}
+          \\end{center}
+          \\clearpage
+
+          \\thispagestyle{empty}
+          \\null % Necessary for blank page.
+          % Alternatively, Epigraph if it does not detract from facing page.
+          \\clearpage
+
+          \\mainmatter % Sets page number to 1 for following material.
+        TEMPLATE
       end
 
       def body() end
