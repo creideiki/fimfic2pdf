@@ -88,6 +88,7 @@ Formatting options for the "book" class:
 
 Formatting options for the "novel" class:
 ```
+    -f, --frontmatter                include front matter pages (title, copyright, dedication, etc.)
     -q, --prettify-quotes            change ASCII quotation marks to Unicode ones
     -s, --hr-style STYLE             style of <hr> section breaks: asterism, scenebreak,
                                      sceneline, or scenestars (default)
