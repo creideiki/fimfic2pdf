@@ -501,6 +501,7 @@ module FiMFic2PDF
         f.write "\\input{template}\n"
         f.write tmpl.volume_title(num + 1, @conf['story']['volumes'][num]['first'].to_i)
         f.write tmpl.header @conf['story']
+        f.write tmpl.front_matter(@conf['story'], num + 1) if @options.front_matter
         f.write tmpl.toc if @options.toc
         f.write tmpl.body
         f.write tmpl.chapters(num)

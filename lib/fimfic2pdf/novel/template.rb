@@ -84,6 +84,9 @@ TEMPLATE
 TEMPLATE
       end
 
+      def front_matter(story, volume)
+      end
+
       def body() end
 
       def footer

@@ -235,10 +235,14 @@ TEMPLATE
 
 \begin{document}
 
-\frontmatter
-
 TEMPLATE
         s
+      end
+
+      def front_matter(_story, _volume)
+        <<-TEMPLATE
+          \frontmatter
+        TEMPLATE
       end
 
       def toc

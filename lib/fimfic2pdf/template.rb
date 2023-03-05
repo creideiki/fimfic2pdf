@@ -84,6 +84,11 @@ module FiMFic2PDF
     # file has been included. This should include \begin{document}.
     # def header(pdfinfo) end
 
+    # Return LaTeX code for writing the front matter (title page,
+    # copyright page, dedication, etc.). Will be inserted in each
+    # volume, after the header.
+    # def front_matter(story, volume) end
+
     # Return LaTeX code to insert the table of contents. May or may
     # not be called depending on options.
     # def toc() end
