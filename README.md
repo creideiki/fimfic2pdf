@@ -88,6 +88,7 @@ Formatting options for the "book" class:
 
 Formatting options for the "novel" class:
 ```
+    -a, --anthology-title TITLE      title to use for anthology
     -f, --frontmatter                include front matter pages (title, copyright, dedication, etc.)
     -q, --prettify-quotes            change ASCII quotation marks to Unicode ones
     -s, --hr-style STYLE             style of <hr> section breaks: asterism, scenebreak,
@@ -98,7 +99,8 @@ Formatting options for the "novel" class:
 Saves files in a working directory named `./<ID>/.`
 
 If multiple IDs specified, writes an anthology in the current working
-directory consisting of the identified stories.
+directory consisting of the identified stories. For the "novel" class,
+a title must be supplied.
 
 When run multiple times:
 
