@@ -10,6 +10,7 @@ module FiMFic2PDF
         super
 
         @options = OpenStruct.new({
+                                    anthology_title: nil,
                                     authors_notes: :remove,
                                     barred_blockquotes: false,
                                     frontmatter: false,
@@ -104,6 +105,11 @@ to
    \begin{parascale}[2]This is \textit{SHOUTING}\end{parascale}
 '
 
+        @parser.on('-a', '--anthology-title TITLE', String,
+                   'title to use for anthology') do |t|
+          @options.anthology_title = t
+        end
+
         @parser.on('-f', '--frontmatter',
                    'include front matter pages (title, copyright, dedication, etc.)') do
           @options.front_matter = true
@@ -123,6 +129,16 @@ to
         @parser.on('-v CHAPTERS,CHAPTERS', '--volumes START1-END1,...',
                    'split story into multiple volumes', Array) do |volumes|
           @options.volumes = volumes
+        end
+      end
+
+      def check_arguments
+        super
+
+        if @options.ids.size > 1 and not @options.anthology_title
+          puts 'No anthology title specified.'
+          puts ''
+          abort @parser.to_s
         end
       end
     end

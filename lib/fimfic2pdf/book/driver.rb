@@ -10,6 +10,7 @@ module FiMFic2PDF
         super
 
         @options = OpenStruct.new({
+                                    anthology_title: 'Anthology',
                                     authors_notes: :remove,
                                     barred_blockquotes: false,
                                     hr_style: :asterism,
