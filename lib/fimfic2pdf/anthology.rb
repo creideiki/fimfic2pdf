@@ -11,7 +11,7 @@ module FiMFic2PDF
   class Anthology
     attr_accessor :conf
 
-    def initialize(options, mod)
+    def initialize(options, mod) # rubocop:disable Metrics/AbcSize
       @mod = mod
       @options = options
       @logger = Logger.new($stderr, progname: 'Anthology')

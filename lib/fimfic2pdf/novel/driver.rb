@@ -135,7 +135,7 @@ to
       def check_arguments
         super
 
-        if @options.ids.size > 1 and not @options.anthology_title
+        if @options.ids.size > 1 and not @options.anthology_title # rubocop:disable Style/GuardClause
           puts 'No anthology title specified.'
           puts ''
           abort @parser.to_s
