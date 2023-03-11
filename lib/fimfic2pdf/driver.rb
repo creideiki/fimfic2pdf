@@ -58,6 +58,10 @@ module FiMFic2PDF
         end
       end
 
+      check_arguments
+    end
+
+    def check_arguments
       unless @options.ids.size.positive? # rubocop:disable Style/GuardClause
         puts 'No story ID(s) specified.'
         puts ''
