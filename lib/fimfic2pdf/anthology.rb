@@ -16,7 +16,12 @@ module FiMFic2PDF
       @options = options
       @logger = Logger.new($stderr, progname: 'Anthology')
       @logger.debug 'Preparing to compile anthology'
-      @conf = []
+      @conf = {
+        'anthology' => {
+          'title'   => @options.anthology_title,
+          'stories' => []
+        }
+      }
       @options.ids.each do |id|
         story_conf = YAML.safe_load_file(id + File::SEPARATOR + 'config.yaml')['story']
         story = {
@@ -25,8 +30,9 @@ module FiMFic2PDF
           'author'    => story_conf['author'],
           'filenames' => story_conf['volumes'].map { |v| v['filename'] }
         }
-        @conf << story
+        @conf['anthology']['stories'] << story
       end
+      @conf['anthology']['author'] = @conf['anthology']['stories'].map { |s| s['author'] }.uniq.join ', '
     end
 
     # Return LaTeX code for drawing an interstitial page before each
@@ -44,14 +50,13 @@ module FiMFic2PDF
       end
       File.open('anthology.tex', 'wb') do |f|
         f.write "\\input{template}\n"
-        titles = @conf.map { |story| story['title'] }.join ', '
-        authors = @conf.map { |story| story['author'] }.uniq.join ', '
-        f.write tmpl.header({ 'title'  => titles,
-                              'author' => authors })
+        f.write tmpl.header({ 'title'  => @conf['anthology']['title'],
+                              'author' => @conf['anthology']['author'] })
+        f.write tmpl.front_matter(@conf['anthology'], 1) if @options.front_matter
         f.write tmpl.toc if @options.toc
         f.write tmpl.body
-        @conf.each do |story|
-          if @conf.all? { |story| story['author'] == @conf[0]['author'] }
+        @conf['anthology']['stories'].each do |story|
+          if @conf['anthology']['stories'].all? { |story| story['author'] == @conf['anthology']['author'] }
             f.write interstitial(story['title'])
           else
             f.write interstitial(story['title'], story['author'])
