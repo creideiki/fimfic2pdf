@@ -87,6 +87,12 @@ module FiMFic2PDF
         file.write '}', "\n"
       end
 
+      def visit_img(node, file)
+        url = node.attributes['src'].value
+        filename = download_image url
+        file.write "\n\\FloatImage[ht,0,-\\normalXheight]{#{filename}}\n"
+      end
+
       def line_break(str, chars)
         words = str.split
         lines = []

@@ -99,6 +99,12 @@ module FiMFic2PDF
         file.write '\end{Large}', "\n"
       end
 
+      def visit_img(node, file)
+        url = node.attributes['src'].value
+        filename = download_image url
+        file.write "\n\\includegraphics[width=\\textwidth]{#{filename}}\n"
+      end
+
       def begin_chapter(title)
         "\\chapter{#{title}}\n\n"
       end

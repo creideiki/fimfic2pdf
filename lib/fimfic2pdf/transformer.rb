@@ -333,9 +333,7 @@ module FiMFic2PDF
     end
     # rubocop:enable Style/StringConcatenation
 
-    def visit_img(node, file) # rubocop:disable Metrics/AbcSize
-      url = node.attributes['src'].value
-
+    def download_image(url)
       # We need a supported file name extension, or \includegraphics{}
       # doesn't work. But it doesn't care if the data format matches
       # the extension, and we don't know the data format until we've
@@ -346,8 +344,8 @@ module FiMFic2PDF
       # proxy, making it very difficult to determine the actual file
       # name. Just use the hex MD5 of the URL and hope there are no
       # collisions.
-      name = 'img_' + Digest::MD5.hexdigest(url.split('/')[-1]) + '.png' # rubocop:disable Style/StringConcatenation
-      path = @options.id + File::SEPARATOR + name
+      filename = 'img-' + Digest::MD5.hexdigest(url.split('/')[-1]) + '.png' # rubocop:disable Style/StringConcatenation
+      path = @options.id + File::SEPARATOR + filename
 
       if File.exist? path
         @logger.debug "Image #{url} already downloaded"
@@ -363,7 +361,7 @@ module FiMFic2PDF
         File.binwrite(path, response.body)
       end
 
-      file.write "\n\\includegraphics[width=\\textwidth]{#{name}}\n"
+      filename
     end
 
     def visit_sub(node, file)
