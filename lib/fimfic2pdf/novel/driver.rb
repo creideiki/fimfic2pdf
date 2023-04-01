@@ -103,6 +103,13 @@ output:
    \charscale[2]{This is }\charscale[2]{\textit{SHOUTING}}
 to
    \begin{parascale}[2]This is \textit{SHOUTING}\end{parascale}
+
+The "novel" class has very strict requirements on images to be
+inserted. See section 7.1 in the class documentation. The most
+immediately obvious one is that the image in the file has to be the
+exact size and resolution required for the output - LaTeX will not
+scale the image.
+
 '
 
         @parser.on('-a', '--anthology-title TITLE', String,
