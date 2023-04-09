@@ -11,7 +11,15 @@ module FiMFic2PDF
 
         @warnings[:font_size] = {
           chapters: [],
-          message: 'Font size changes present in the following chapters. Please check formatting manually.'
+          message: 'Font size changes present in the following chapters. ' \
+                   'Please check formatting manually.'
+        }
+
+        @warnings[:list] = {
+          chapters: [],
+          message: 'Lists present in the following chapters. ' \
+                   'The "novel" document class does not handle lists. ' \
+                   'Converted to plain text.'
         }
       end
 
@@ -87,6 +95,39 @@ module FiMFic2PDF
         file.write '}', "\n"
       end
 
+      def visit_ul(node, file)
+        @chapter_has_list = true
+        @list_counters.push :ul
+        file.write "\n"
+        node.children.each.map { |c| visit(c, file) }
+        file.write "\n"
+        @list_counters.pop
+      end
+
+      def visit_ol(node, file)
+        @chapter_has_list = true
+        @list_counters.push 0
+        file.write "\n"
+        node.children.each.map { |c| visit(c, file) }
+        file.write "\n"
+        @list_counters.pop
+      end
+
+      def visit_li(node, file)
+        @chapter_has_list = true
+        counter = @list_counters.pop
+        if counter == :ul
+          @list_counters.push counter
+          file.write "\n", '● '
+        else # integer
+          counter += 1
+          file.write "\n", "#{counter}. "
+          @list_counters.push counter
+        end
+        node.children.each.map { |c| visit(c, file) }
+        file.write "\n"
+      end
+
       def visit_img(node, file)
         url = node.attributes['src'].value
         filename = download_image url
@@ -122,13 +163,21 @@ module FiMFic2PDF
 
       def transform_chapter(chapter_num)
         @chapter_changes_font_size = false
+        @chapter_has_list = false
+        @list_counters = []
 
         super
 
-        if @chapter_changes_font_size # rubocop:disable Style/GuardClause
+        if @chapter_changes_font_size
           chapter = @conf['story']['chapters'][chapter_num - 1]
           @logger.info "Chapter changes font size: #{chapter['number']} - #{chapter['title']}"
           @warnings[:font_size][:chapters].append "#{chapter['number']} - #{chapter['title']}"
+        end
+
+        if @chapter_has_list # rubocop:disable Style/GuardClause
+          chapter = @conf['story']['chapters'][chapter_num - 1]
+          @logger.info "Chapter contains list: #{chapter['number']} - #{chapter['title']}"
+          @warnings[:list][:chapters].append "#{chapter['number']} - #{chapter['title']}"
         end
       end
     end

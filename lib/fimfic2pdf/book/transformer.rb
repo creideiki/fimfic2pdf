@@ -99,6 +99,23 @@ module FiMFic2PDF
         file.write '\end{Large}', "\n"
       end
 
+      def visit_ul(node, file)
+        file.write "\n", '\begin{itemize}'
+        node.children.each.map { |c| visit(c, file) }
+        file.write '\end{itemize}', "\n"
+      end
+
+      def visit_ol(node, file)
+        file.write "\n", '\begin{enumerate}'
+        node.children.each.map { |c| visit(c, file) }
+        file.write '\end{enumerate}', "\n"
+      end
+
+      def visit_li(node, file)
+        file.write "\n", '\item '
+        node.children.each.map { |c| visit(c, file) }
+      end
+
       def visit_img(node, file)
         url = node.attributes['src'].value
         filename = download_image url
