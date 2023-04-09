@@ -107,7 +107,7 @@ When run multiple times:
 * By default, only re-renders the PDF, including any manual changes
   made to the generated LaTeX code.
 * To re-parse the HTML and re-transform to LaTeX, losing any manual
-  changes, use the "-t/--retransform" flag.
+  changes, use the `-t/--retransform` flag.
 * To re-download the EPUB file and start over, remove the `./<ID>/`
   directory.
 
@@ -157,11 +157,11 @@ into
 ```latex
    \fancyuline{This is a long line} \fancyuline{that should be broken.}
 ```
-Then re-run the program (without specifying "-t/--retransform") to
+Then re-run the program (without specifying `-t/--retransform`) to
 re-render the changed LaTeX code.
 
 To avoid this problem with the default underlines, alternative styles
-may be used instead of underlining. Use the "-u/--underline" option to
+may be used instead of underlining. Use the `-u/--underline` option to
 specify which style to use:
 
 * fancy: default, leaves gaps around descenders, no line breaks
@@ -173,14 +173,14 @@ If the source text contains Unicode open/close quotation marks, they
 will be rendered correctly by default. If it only contains ASCII
 straight quotation marks, they will all be rendered as closing
 quotation marks by default. To attempt to automatically change ASCII
-quotation marks to Unicode ones, use the "-q/--prettify-quotes"
+quotation marks to Unicode ones, use the `-q/--prettify-quotes`
 option. This will blindly change every straight double quote to an
 alternating open or close one, which will fail silently if quotes are
 not strictly balanced. It also will not handle single quotes, since
 those are indistinguishable from apostrophes.
 
 Author's note sections at the end of each chapter are removed by
-default. To include them, use the "-n/--authors-notes" option to
+default. To include them, use the `-n/--authors-notes` option to
 specify their style.
 
 If the source text contains Unicode en and em dashes, they will be
