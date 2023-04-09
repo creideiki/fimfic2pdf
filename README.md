@@ -75,9 +75,9 @@ unless also specifying `-t/--retransform`, losing manual changes.
 
 Formatting options for the "book" class:
 ```
-    -a, --authors-notes STYLE        handle author's notes: remove (default), plain
     -b, --barred-blockquotes         put vertical bars in the left margin of block quotes
     -c, --no-chapter                 disable "Chapter X" in chapter titles
+    -n, --authors-notes STYLE        handle author's notes: remove (default), plain
     -o, --no-toc                     disable table of contents
     -q, --prettify-quotes            change ASCII quotation marks to Unicode ones
     -s, --hr-style STYLE             style of <hr> section breaks: asterism (default), fleuron, line, or scrollwork
@@ -180,7 +180,7 @@ not strictly balanced. It also will not handle single quotes, since
 those are indistinguishable from apostrophes.
 
 Author's note sections at the end of each chapter are removed by
-default. To include them, use the "-a/--authors-notes" option to
+default. To include them, use the "-n/--authors-notes" option to
 specify their style.
 
 If the source text contains Unicode en and em dashes, they will be

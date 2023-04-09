@@ -97,7 +97,7 @@ not strictly balanced. It also will not handle single quotes, since
 those are indistinguishable from apostrophes.
 
 Author\'s note sections at the end of each chapter are removed by
-default. To include them, use the "-a/--authors-notes" option to
+default. To include them, use the "-n/--authors-notes" option to
 specify their style.
 
 If the source text contains Unicode en and em dashes, they will be
@@ -108,12 +108,6 @@ have to fix this manually. If you cannot write Unicode dashes
 directly, you can edit the LaTeX code and write "--" for an en dash
 (–) and "---" for an em dash (—).'
 
-        @parser.on('-a', '--authors-notes STYLE',
-                   [:remove, :plain],
-                   'handle author\'s notes: remove (default), plain') do |s|
-          @options.authors_notes = s
-        end
-
         @parser.on('-b', '--barred-blockquotes',
                    'put vertical bars in the left margin of block quotes') do
           @options.barred_blockquotes = true
@@ -122,6 +116,12 @@ directly, you can edit the LaTeX code and write "--" for an en dash
         @parser.on('-c', '--no-chapter',
                    'disable "Chapter X" in chapter titles') do
           @options.chapter_style = :no_chapter
+        end
+
+        @parser.on('-n', '--authors-notes STYLE',
+                   [:remove, :plain],
+                   'handle author\'s notes: remove (default), plain') do |s|
+          @options.authors_notes = s
         end
 
         @parser.on('-o', '--no-toc',
