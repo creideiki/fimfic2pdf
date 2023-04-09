@@ -222,3 +222,7 @@ inserted. See section 7.1 in the class documentation. The most
 immediately obvious one is that the image in the file has to be the
 exact size and resolution required for the output - LaTeX will not
 scale the image.
+
+The "novel" class does not allow lists at all. See section 8 in the
+class documentation. Lists will be converted to plain text and a
+warning issued.
