@@ -32,6 +32,7 @@ Metrics/AbcSize:
   - read_title_and_author
   - render
   - transform
+  - transform_chapter
   - transform_volume
   - validate_volumes
   - visit_span
@@ -72,7 +73,7 @@ Metrics/MethodLength:
   - visit_span
 
 Metrics/ModuleLength:
-  Max: 150
+  Max: 200
 
 Metrics/PerceivedComplexity:
   IgnoredMethods:
