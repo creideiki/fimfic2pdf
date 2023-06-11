@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module FiMFic2PDF
-  VERSION = '0.10.3'
+  VERSION = '0.10.4'
 end
