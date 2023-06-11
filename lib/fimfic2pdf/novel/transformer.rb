@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'fimfic2pdf/novel/template'
-
 module FiMFic2PDF
   module Novel
     # Transforms HTML documents to LaTeX for the Novel class
