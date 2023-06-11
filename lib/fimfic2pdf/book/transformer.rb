@@ -2,7 +2,7 @@
 
 module FiMFic2PDF
   module Book
-    # Transforms HTML documents to LaTeX for the Novel class
+    # Transforms HTML documents to LaTeX for the Book class
     module Transformer
       def span_open(style)
         case style
