@@ -322,6 +322,9 @@ module FiMFic2PDF
           when 'text-align:center'
             opening += '\begin{center}'
             ending = '\end{center}' + ending
+          when 'text-align:right'
+            opening += '\begin{flushright}'
+            ending = '\end{flushright}' + ending
           else
             raise "Unsupported div style #{style}"
           end
