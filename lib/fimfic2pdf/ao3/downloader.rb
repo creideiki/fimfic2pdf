@@ -24,9 +24,16 @@ module FiMFic2PDF
         raise "Failed to download #{@url}: #{response.code} #{response.message}" unless response.code == 200
 
         doc = Nokogiri::HTML(response.body)
-        @epub_url = 'https://archiveofourown.org' + # rubocop:disable Style/StringConcatenation
-                    doc.at_xpath('//a[contains(@href, ".epub?")]')['href']
-
+        epub_link = doc.at_xpath('//a[contains(@href, ".epub?")]')
+        if epub_link
+          @epub_url = 'https://archiveofourown.org' + # rubocop:disable Style/StringConcatenation
+                      epub_link['href']
+        else
+          @logger.error "No EPUB download link found at #{@story_url}"
+          @logger.info 'If reading the story requires you to log in, use a web browser to download the ' \
+                       "EPUB file and save it as #{@story_id + File::SEPARATOR + @story_id}.epub"
+          exit 2
+        end
         super
       end
 
