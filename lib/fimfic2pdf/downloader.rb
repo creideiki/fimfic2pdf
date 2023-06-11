@@ -18,6 +18,19 @@ module FiMFic2PDF
       Dir.mkdir @story_id unless File.directory? @story_id
     end
 
+    def manually_downloaded?
+      manual_filename = @story_id + File::SEPARATOR + @story_id + '.epub'
+      @logger.debug "Checking if EPUB has been downloaded manually to #{manual_filename}"
+      if File.readable? manual_filename
+        @filename = manual_filename
+        @logger.debug 'Manual download found'
+        true
+      else
+        @logger.debug 'Not found, will download'
+        false
+      end
+    end
+
     def fetch
       @logger.debug "Fetching EPUB from #{@epub_url}"
       response = HTTParty.get(@epub_url,

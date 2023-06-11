@@ -71,11 +71,11 @@ module FiMFic2PDF
 
     def download
       @options.ids.each do |id|
-        if File.directory? id
-          @logger.info "Working directory #{id} already exists, not downloading EPUB"
+        if File.readable? id + File::SEPARATOR + 'config.yaml'
+          @logger.info "Configuration file #{id + File::SEPARATOR + 'config.yaml'} already exists, not downloading EPUB"
         else
           downloader = @mod::Downloader.new id
-          downloader.fetch
+          downloader.fetch if not downloader.manually_downloaded?
           downloader.unpack
           downloader.write_config
           @options.transform = true
