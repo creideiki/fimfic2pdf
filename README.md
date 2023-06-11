@@ -96,7 +96,11 @@ Formatting options for the "novel" class:
     -v, --volumes START1-END1,...    split story into multiple volumes
 ```
 
-Saves files in a working directory named `./<ID>/.`
+Saves files in a working directory named `./<ID>/`.
+
+If the story is inaccessible to an anonymous guest, because it can
+only be read when logged in, you can download the epub file manually
+through your web browser and save it as `./<ID>/<ID>.epub`.
 
 If multiple IDs specified, writes an anthology in the current working
 directory consisting of the identified stories. For the "novel" class,
@@ -108,8 +112,8 @@ When run multiple times:
   made to the generated LaTeX code.
 * To re-parse the HTML and re-transform to LaTeX, losing any manual
   changes, use the `-t/--retransform` flag.
-* To re-download the EPUB file and start over, remove the `./<ID>/`
-  directory.
+* To re-unpack the EPUB file and start over, remove the file
+  `./<ID>/config.yaml`.
 
 To change any formatting options, `-t/--retransform` must be
 specified, which loses any manual changes.
