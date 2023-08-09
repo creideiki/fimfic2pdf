@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="BookId" version="2.0">
+	<metadata xmlns:dc="http://purl.org/dc/elements/1.1/"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:opf="http://www.idpf.org/2007/opf"
+		xmlns:dcterms="http://purl.org/dc/terms/">
+		<dc:title>FiMFic2PDF Example Document</dc:title>
+		<dc:language>en</dc:language>
+		<dc:description>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</dc:description>
+		<dc:publisher>FiMFic2PDF</dc:publisher>
+		<dc:relation>https://www.fimfiction.net</dc:relation>
+		<dc:creator opf:file-as="Creideiki" opf:role="aut">Creideiki</dc:creator>
+		<dc:date>2023-08-09T00:00:00.000000+00:00</dc:date>
+		<dc:source>https://github.com/creideiki/fimfic2pdf/</dc:source>
+	</metadata>
+
+	<manifest>
+		<item id="chapter1" href="title.html" media-type="application/xhtml+xml" />
+		<item id="chapter2" href="toc.html" media-type="application/xhtml+xml" />
+		<item id="chapter3" href="chapter-1.html" media-type="application/xhtml+xml" />
+		<item id="chapter4" href="chapter-2.html" media-type="application/xhtml+xml" />
+	</manifest>
+
+	<spine toc="ncx">
+		<itemref idref="chapter1" />
+		<itemref idref="chapter2" />
+		<itemref idref="chapter3" />
+		<itemref idref="chapter4" />
+	</spine>
+</package>
