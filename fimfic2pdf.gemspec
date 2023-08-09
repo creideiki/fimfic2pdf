@@ -10,8 +10,9 @@ Gem::Specification.new do |s|
   s.authors = ['Karl-Johan Karlsson']
   s.email = ['creideiki@ferretporn.se']
   s.description = <<-DESCRIPTION
-    FiMFic2PDF converts stories from FiMFiction.net into PDF format,
-    for reading on screen or print-on-demand publication.
+    FiMFic2PDF converts stories from FiMFiction.net or
+    ArchiveOfOurOwn.org into PDF format, for reading on screen or
+    print-on-demand publication.
   DESCRIPTION
 
   s.files = Dir.glob('{lib}/**/*', File::FNM_DOTMATCH)
