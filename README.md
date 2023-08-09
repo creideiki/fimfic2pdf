@@ -4,7 +4,7 @@ Renders fan fiction stories as PDF.
 
 Supported archives:
 * [FiMFiction](https://www.fimfiction.net/)
-* [Archive Of Our Own](https://archiveofourown.org/) (experimental)
+* [Archive Of Our Own](https://archiveofourown.org/)
 
 Formatting on AO3 is much less uniform than on FiMFiction, so each
 story will probably require some individual changes.
