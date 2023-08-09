@@ -50,9 +50,9 @@ A whole lot of output will be generated, which you don't need to care
 about unless something goes wrong.
 
 The second to last line printed will tell you that the PDF was saved
-as `ID/vol1.pdf`, where `ID` is the numbers in the URL, after
-`/story/` or `/works/`. You can also use just this ID when running the
-program instead of the entire link.
+as `ID/author-title-volume.pdf`, where `ID` is the numbers in the URL,
+after `/story/` or `/works/`. You can also use just this ID when
+running the program instead of the entire link.
 
 ## Advanced usage
 
