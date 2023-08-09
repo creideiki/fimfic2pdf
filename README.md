@@ -2,6 +2,12 @@
 
 Renders fan fiction stories as PDF.
 
+Examples:
+| Novel class | Book class |
+| ----------- | ---------- |
+| ![](examples/novel.png) | ![](examples/book.png) |
+| [Complete PDF](examples/novel.pdf) | [Complete PDF](examples/book.pdf) |
+
 Supported archives:
 * [FiMFiction](https://www.fimfiction.net/)
 * [Archive Of Our Own](https://archiveofourown.org/)
