@@ -28,7 +28,7 @@ module FiMFic2PDF
           'id'        => id,
           'title'     => story_conf['title'],
           'author'    => story_conf['author'],
-          'filenames' => story_conf['volumes'].map { |v| v['filename'] }
+          'tex_files' => story_conf['volumes'].map { |v| v['tex_file'] }
         }
         @conf['anthology']['stories'] << story
       end
@@ -61,8 +61,8 @@ module FiMFic2PDF
           else
             f.write interstitial(story['title'], story['author'])
           end
-          story['filenames'].each do |file|
-            f.write "\n\\subimport{#{File::dirname file}}{#{(File::basename file).sub('.tex', '-chapters')}}"
+          story['tex_files'].each do |file|
+            f.write "\n\\subimport{#{File::dirname file}}{vol1-chapters}"
           end
         end
         f.write tmpl.footer

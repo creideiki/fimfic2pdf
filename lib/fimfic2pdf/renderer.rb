@@ -28,23 +28,23 @@ module FiMFic2PDF
 
       num_passes.times do |pass|
         @logger.debug "Running render pass #{pass + 1}"
-        system(tex_program, "vol#{num + 1}.tex", chdir: @story_id, exception: true)
+        system(tex_program, File.basename(@conf['story']['volumes'][num]['tex_file']),
+               chdir: @story_id, exception: true)
       end
 
       @logger.debug 'Rendering completed'
     end
 
-    # rubocop:disable Style/CombinableLoops
     def render_story # rubocop:disable Metrics/AbcSize
       @conf['story']['volumes'].each_index { |num| render_volume num }
 
-      @conf['story']['volumes'].each_index do |num|
-        @logger.info "Finished PDF: #{@story_id}#{File::SEPARATOR}vol#{num + 1}.pdf"
+      @conf['story']['volumes'].each do |vol|
+        @logger.info "Finished PDF: #{vol['pdf_file']}"
       end
 
-      @conf['story']['volumes'].each_index do |num|
+      @conf['story']['volumes'].each_with_index do |vol, num|
         pages = 0
-        File.open(@story_id + File::SEPARATOR + "vol#{num + 1}.aux") do |f|
+        File.open(vol['aux_file']) do |f|
           page_number_regexp = /abspage@last\{(?<pages>[[:digit:]]+)}$/
           f.each_line do |line|
             page_number_regexp.match(line) do |m|
@@ -59,6 +59,5 @@ module FiMFic2PDF
         end
       end
     end
-    # rubocop:enable Style/CombinableLoops
   end
 end

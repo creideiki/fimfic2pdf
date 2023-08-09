@@ -94,8 +94,9 @@ module FiMFic2PDF
             @logger.info 'Forcing reparse and retransform from HTML to LaTeX due to "-t" flag'
           end
           transformer = @mod::Transformer.new @options
-          transformer.validate_volumes
           transformer.parse_metadata
+          transformer.prepare_volumes
+          transformer.validate_volumes
           @warnings = transformer.transform
           transformer.write_story
           transformer.write_config

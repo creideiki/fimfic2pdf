@@ -11,30 +11,22 @@ module FiMFic2PDF
   class Transformer
     attr_accessor :conf
 
-    def initialize(options) # rubocop:disable Metrics/AbcSize
+    def make_filename(author, title)
+      [author.strip, title.strip].join('-').
+        encode(Encoding.find('ASCII'), :invalid => :replace, :undef => :replace, :replace => '').
+        gsub(/[^a-zA-Z0-9\- ]/, '').
+        gsub(/\s+/, ' ').
+        strip.
+        gsub(' ', '_').
+        downcase
+    end
+
+    def initialize(options)
       @options = options
       @logger = Logger.new($stderr, progname: 'Transformer')
       @logger.debug "Preparing to transform story #{@options.id}"
       @config_file = @options.id + File::SEPARATOR + 'config.yaml'
       @conf = YAML.safe_load_file(@config_file)
-      @volumes =
-        if options.volumes
-          options.volumes.map do |chapters|
-            first, last = chapters.split '-'
-            { 'first' => first.to_i, 'last' => last.to_i }
-          end
-        else
-          [{ 'first' => @conf['story']['chapters'][0]['number'],
-             'last'  => @conf['story']['chapters'][-1]['number'] }]
-        end
-      @volumes.each_with_index do |v, n|
-        v['number'] = n + 1
-        v['filename'] = @options.id + File::SEPARATOR +
-                        'vol' + (n + 1).to_s + '.tex'
-      end
-      @logger.info "Splitting into #{@volumes.size} volumes:"
-      @volumes.each_with_index { |v, n| @logger.info "Volume #{n + 1}: Chapters #{v['first']} - #{v['last']}" }
-      @conf['story']['volumes'] = @volumes
       @logger.debug "Using section break style #{@options.hr_style} with symbol #{@options.hr_symbol}"
       @replacements = {}
       @in_blockquote = false
@@ -51,6 +43,31 @@ module FiMFic2PDF
                    'and re-run with "--retransform --prettify-quotes"'
         }
       }
+    end
+
+    def prepare_volumes # rubocop:disable Metrics/AbcSize
+      @volumes =
+        if @options.volumes
+          @options.volumes.map do |chapters|
+            first, last = chapters.split '-'
+            { 'first' => first.to_i, 'last' => last.to_i }
+          end
+        else
+          [{ 'first' => @conf['story']['chapters'][0]['number'],
+             'last'  => @conf['story']['chapters'][-1]['number'] }]
+        end
+      @volumes.each_with_index do |v, n|
+        v['number'] = n + 1
+        file_base = @options.id + File::SEPARATOR +
+                    make_filename(@conf['story']['author'], @conf['story']['title']) +
+                    '-' + (n + 1).to_s
+        v['tex_file'] = file_base + '.tex'
+        v['aux_file'] = file_base + '.aux'
+        v['pdf_file'] = file_base + '.pdf'
+      end
+      @logger.info "Splitting into #{@volumes.size} volumes:"
+      @volumes.each_with_index { |v, n| @logger.info "Volume #{n + 1}: Chapters #{v['first']} - #{v['last']}" }
+      @conf['story']['volumes'] = @volumes
     end
 
     def validate_volumes
@@ -481,7 +498,7 @@ module FiMFic2PDF
         f.write tmpl.select_hr(@options.hr_style, @options.hr_symbol)
         f.write tmpl.select_underline(@options.underline)
       end
-      File.open(@volumes[num]['filename'], 'wb') do |f|
+      File.open(@volumes[num]['tex_file'], 'wb') do |f|
         f.write "\\input{template}\n"
         f.write tmpl.volume_title(num + 1, @conf['story']['volumes'][num]['first'].to_i)
         f.write tmpl.header @conf['story']
