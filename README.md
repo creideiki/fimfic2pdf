@@ -43,7 +43,8 @@ gem install ./fimfic2pdf-*.gem
 
 ## Basic usage
 
-Run `archive2class -i LINK`, where `LINK` is a link to the story's
+Run `archive2class -i LINK`, where `archive2class` is one of the
+executables in the list above, and `LINK` is a link to the story's
 page on the archive.
 
 A whole lot of output will be generated, which you don't need to care
