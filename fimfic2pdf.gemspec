@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = ['COPYING', 'README.md']
   s.homepage = 'https://github.com/creideiki/fimfic2pdf/'
   s.licenses = ['GPL-3.0']
-  s.summary = 'Formats FiMFiction stories as PDF.'
+  s.summary = 'Formats FiMFiction and AO3 stories as PDF.'
 
   s.metadata = {
     'homepage_uri'    => 'https://github.com/creideiki/fimfic2pdf/',
