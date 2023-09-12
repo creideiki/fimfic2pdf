@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.bindir = 'exe'
   s.executables = ['fimfic2book', 'fimfic2novel',
                    'ao32book', 'ao32novel']
-  s.extra_rdoc_files = ['COPYING']
+  s.extra_rdoc_files = ['COPYING', 'README.md']
   s.homepage = 'https://github.com/creideiki/fimfic2pdf/'
   s.licenses = ['GPL-3.0']
   s.summary = 'Formats FiMFiction stories as PDF.'
