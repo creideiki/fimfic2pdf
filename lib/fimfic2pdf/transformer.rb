@@ -135,6 +135,7 @@ module FiMFic2PDF
 
     def latex_escape(string)
       string.
+        gsub('\\', '\\textbackslash{}').
         gsub('#', '\#').
         gsub('%', '\%').
         gsub('&', '\\\&').
