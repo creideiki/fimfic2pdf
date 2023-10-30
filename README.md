@@ -129,6 +129,23 @@ When run multiple times:
 To change any formatting options, `-t/--retransform` must be
 specified, which loses any manual changes.
 
+### Graphical editing
+
+If you wish to use a graphical editor to change the generated LaTeX
+code (instead of using a text editor an re-running this tool),
+[TeXstudio](https://www.texstudio.org/) seems to have the easiest time
+dealing with the generated document structure. You must do two things
+for it to work:
+
+1. Open the file `ID/author-title-volume.tex` first, so TeXstudio
+   knows which file to begin with. From there, use the structure tree
+   view on the left side of the window to open `volX-chapters.tex` and
+   then `chapter-Y.tex`.
+
+2. If you are using the "novel" class, go to Options → Configure
+   TeXstudio → Build → Default Compiler and change the compiler to
+   LuaLaTex.
+
 ### Anthologies
 
 If multiple IDs specified, writes an anthology in the current working
