@@ -29,6 +29,7 @@ Metrics/AbcSize:
   IgnoredMethods:
   - generate_config
   - parse_metadata
+  - prettify_single_quotes
   - read_title_and_author
   - render
   - transform
@@ -56,6 +57,7 @@ Metrics/ClassLength:
 
 Metrics/CyclomaticComplexity:
   IgnoredMethods:
+  - prettify_single_quotes
   - span_close
   - span_open
   - visit_span
@@ -77,6 +79,7 @@ Metrics/ModuleLength:
 
 Metrics/PerceivedComplexity:
   IgnoredMethods:
+  - prettify_single_quotes
   - visit_span
   - write_anthology
 
