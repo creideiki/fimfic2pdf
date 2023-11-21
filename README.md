@@ -225,6 +225,14 @@ chapter, this will be detected and a warning printed. It will not
 change ASCII single quotes, since those are indistinguishable from
 apostrophes.
 
+To attempt to automatically change ASCII single quotes to Unicode
+ones, use the `-p/--prettify-single-quotes` option. This will attempt
+to detect and skip those that are apostrophes, but this is brittle and
+not likely to produce a good result on the first pass. You will
+probably need to inspect the PDF output, see where the automatic
+detection first failed, and manually change that ASCII single quote to
+a Unicode one in the HTML source to get the automation back on track.
+
 ### Dashes
 
 If the source text contains Unicode en and em dashes, they will be
