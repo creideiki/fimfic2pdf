@@ -41,6 +41,12 @@ module FiMFic2PDF
           message: 'Unbalanced quotes present in the following chapters. ' \
                    'Please check quotation manually, fix balancing in the HTML files, ' \
                    'and re-run with "--retransform --prettify-quotes"'
+        },
+        unbalanced_single_quotes: {
+          chapters: [],
+          message: 'Unbalanced single quotes present in the following chapters. ' \
+                   'Please check quotation manually, fix balancing in the HTML files, ' \
+                   'and re-run with "--retransform --prettify-single-quotes"'
         }
       }
     end
@@ -147,6 +153,61 @@ module FiMFic2PDF
         gsub('...', '…')
     end
 
+    def prettify_double_quotes(text)
+      text.chars.map do |char|
+        case char
+        when '“'
+          @outside_double_quotes = false
+          '“'
+        when '”'
+          @outside_double_quotes = true
+          '”'
+        when '"'
+          @outside_double_quotes = !@outside_double_quotes
+          @outside_double_quotes ? '”' : '“'
+        else
+          char
+        end
+      end.join
+    end
+
+    def prettify_single_quotes(text)
+      new_text = ''
+      text.chars.each_with_index do |char, index|
+        case char
+        when '‘'
+          @outside_single_quotes = false
+          new_text += '‘'
+        when '’'
+          @outside_single_quotes = true
+          new_text += '’'
+        when '\''
+          # Is this a single quote or an apostrophe?
+          if index.zero?
+            # Starts a text node - assume left single quote
+            new_text += '‘'
+            @outside_single_quotes = false
+          elsif index == text.size - 1
+            # Ends a text node - assume right single quote
+            new_text += '’'
+            @outside_single_quotes = true
+          elsif text[index - 1] =~ /\p{Word}/ and
+                text[index + 1] =~ /\p{Word}/
+            # Between two letters - assume apostrophe
+            new_text += char
+          else
+            # None of the above - assume single quote, alternate
+            # directions
+            @outside_single_quotes = !@outside_single_quotes
+            new_text += (@outside_single_quotes ? '’' : '‘')
+          end
+        else
+          new_text += char
+        end
+      end
+      new_text
+    end
+
     def visit_text(node, file)
       text = unicodify node.text
       text.gsub! /\n/, ' '
@@ -154,23 +215,8 @@ module FiMFic2PDF
         visit_hr(node, file)
       else
         text = latex_escape text
-        if @options.prettify_quotes
-          text = text.chars.map do |char|
-            case char
-            when '“'
-              @outside_double_quotes = false
-              '“'
-            when '”'
-              @outside_double_quotes = true
-              '”'
-            when '"'
-              @outside_double_quotes = !@outside_double_quotes
-              @outside_double_quotes ? '”' : '“'
-            else
-              char
-            end
-          end.join
-        end
+        text = prettify_double_quotes(text) if @options.prettify_quotes
+        text = prettify_single_quotes(text) if @options.prettify_single_quotes
         file.write text
       end
     end
@@ -443,6 +489,7 @@ module FiMFic2PDF
     def transform_chapter(chapter_num)
       @chapter_has_underline = false
       @outside_double_quotes = true
+      @outside_single_quotes = true
       chapter = @conf['story']['chapters'][chapter_num - 1]
       @logger.debug "Transforming chapter: #{chapter['number']} - #{chapter['title']}"
       doc = Nokogiri::HTML(File.open(chapter['html']))
@@ -460,6 +507,10 @@ module FiMFic2PDF
       unless @outside_double_quotes
         @logger.warn "Unbalanced quotation marks in chapter #{chapter['number']} - #{chapter['title']}"
         @warnings[:unbalanced_quotes][:chapters].append "#{chapter['number']} - #{chapter['title']}"
+      end
+      unless @outside_single_quotes
+        @logger.warn "Unbalanced single quotation marks in chapter #{chapter['number']} - #{chapter['title']}"
+        @warnings[:unbalanced_single_quotes][:chapters].append "#{chapter['number']} - #{chapter['title']}"
       end
       if @chapter_has_underline # rubocop:disable Style/GuardClause
         @logger.info "Chapter has underline: #{chapter['number']} - #{chapter['title']}"
