@@ -11,6 +11,6 @@ gem 'rubyzip'
 group :development do
   gem 'bundler'
   gem 'rake'
-  gem 'rubocop'
-  gem 'rubocop-rake'
+  gem 'rubocop', '~> 1.42'
+  gem 'rubocop-rake', '~> 0.6'
 end

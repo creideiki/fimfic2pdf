@@ -33,8 +33,4 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency('httparty', '~> 0.21')
   s.add_runtime_dependency('nokogiri', '~> 1.15')
   s.add_runtime_dependency('rubyzip', '~> 2.3')
-
-  s.add_development_dependency('bundler', '~> 2.4')
-  s.add_development_dependency('rubocop', '~> 1.42')
-  s.add_development_dependency('rubocop-rake', '~> 0.6')
 end
