@@ -143,14 +143,14 @@ directly, you can edit the LaTeX code and write "--" for an en dash
           @options.toc = false
         end
 
-        @parser.on('-q', '--prettify-quotes',
-                   'change ASCII quotation marks to Unicode ones') do
-          @options.prettify_quotes = true
-        end
-
         @parser.on('-p', '--prettify-single-quotes',
                    'change ASCII single quotation marks to Unicode ones') do
           @options.prettify_single_quotes = true
+        end
+
+        @parser.on('-q', '--prettify-quotes',
+                   'change ASCII quotation marks to Unicode ones') do
+          @options.prettify_quotes = true
         end
 
         @parser.on('-s', '--hr-style STYLE',
