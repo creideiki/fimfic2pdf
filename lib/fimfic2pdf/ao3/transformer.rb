@@ -7,7 +7,7 @@ module FiMFic2PDF
     # Transforms AO3 XHTML documents to LaTeX
     module Transformer
       def read_title_and_author
-        unless @conf['story']['title'] and @conf['story']['author']  # rubocop:disable Style/GuardClause
+        unless @conf['story']['title'] and @conf['story']['author'] # rubocop:disable Style/GuardClause
           @logger.debug "Not already parsed, reading from file #{@conf['story']['metadata']}"
           doc = Nokogiri::XML(File.open(@conf['story']['metadata']))
           doc.remove_namespaces!

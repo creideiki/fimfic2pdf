@@ -210,7 +210,7 @@ module FiMFic2PDF
 
     def visit_text(node, file)
       text = unicodify node.text
-      text.gsub! /\n/, ' '
+      text.gsub! "\n", ' '
       if /^ *-{4,} *$/.match text
         visit_hr(node, file)
       else
