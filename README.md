@@ -86,6 +86,7 @@ Formatting options for the "book" class:
     -c, --no-chapter                 disable "Chapter X" in chapter titles
     -n, --authors-notes STYLE        handle author's notes: remove (default), plain
     -o, --no-toc                     disable table of contents
+    -p, --prettify-single-quotes     change ASCII single quotation marks to Unicode ones
     -q, --prettify-quotes            change ASCII quotation marks to Unicode ones
     -s, --hr-style STYLE             style of <hr> section breaks: asterism (default), fleuron, line, or scrollwork
     -u, --underline STYLE            how to render underlined text: fancy (default), simple, italic, or regular
@@ -97,6 +98,7 @@ Formatting options for the "novel" class:
 ```
     -a, --anthology-title TITLE      title to use for anthology
     -f, --frontmatter                include front matter pages (title, copyright, dedication, etc.)
+    -p, --prettify-single-quotes     change ASCII single quotation marks to Unicode ones
     -q, --prettify-quotes            change ASCII quotation marks to Unicode ones
     -s, --hr-style STYLE             style of <hr> section breaks: asterism, scenebreak,
                                      sceneline, or scenestars (default)
