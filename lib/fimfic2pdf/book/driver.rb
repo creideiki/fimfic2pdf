@@ -15,6 +15,8 @@ module FiMFic2PDF
                                     barred_blockquotes: false,
                                     hr_style: :asterism,
                                     ids: [],
+                                    prettify_quotes: false,
+                                    prettify_single_quotes: false,
                                     toc: true,
                                     underline: :fancy
                                   })
@@ -100,6 +102,14 @@ alternating open or close one, which will fail silently if quotes are
 not strictly balanced. It also will not handle single quotes, since
 those are indistinguishable from apostrophes.
 
+To attempt to automatically change ASCII single quotes to Unicode
+ones, use the "-p/--prettify-single-quotes" option. This will attempt
+to detect and skip those that are apostrophes, but this is brittle and
+not likely to produce a good result on the first pass. You will
+probably need to inspect the PDF output, see where the automatic
+detection first failed, and manually change that ASCII single quote to
+a Unicode one in the HTML source to get the automation back on track.
+
 Author\'s note sections at the end of each chapter are removed by
 default. To include them, use the "-n/--authors-notes" option to
 specify their style.
@@ -136,6 +146,11 @@ directly, you can edit the LaTeX code and write "--" for an en dash
         @parser.on('-q', '--prettify-quotes',
                    'change ASCII quotation marks to Unicode ones') do
           @options.prettify_quotes = true
+        end
+
+        @parser.on('-p', '--prettify-single-quotes',
+                   'change ASCII single quotation marks to Unicode ones') do
+          @options.prettify_single_quotes = true
         end
 
         @parser.on('-s', '--hr-style STYLE',

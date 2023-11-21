@@ -16,6 +16,8 @@ module FiMFic2PDF
                                     frontmatter: false,
                                     hr_style: :scenestars,
                                     ids: [],
+                                    prettify_quotes: false,
+                                    prettify_single_quotes: false,
                                     toc: false,
                                     underline: :italic
                                   })
@@ -83,6 +85,14 @@ alternating open or close one, which will fail silently if quotes are
 not strictly balanced. It also will not handle single quotes, since
 those are indistinguishable from apostrophes.
 
+To attempt to automatically change ASCII single quotes to Unicode
+ones, use the "-p/--prettify-single-quotes" option. This will attempt
+to detect and skip those that are apostrophes, but this is brittle and
+not likely to produce a good result on the first pass. You will
+probably need to inspect the PDF output, see where the automatic
+detection first failed, and manually change that ASCII single quote to
+a Unicode one in the HTML source to get the automation back on track.
+
 If the source text contains Unicode en and em dashes, they will be
 rendered correctly. If it only contains ASCII hyphens, they will be
 rendered as hyphens, which is probably not the intended outcome. Since
@@ -133,6 +143,11 @@ warning issued.
         @parser.on('-q', '--prettify-quotes',
                    'change ASCII quotation marks to Unicode ones') do
           @options.prettify_quotes = true
+        end
+
+        @parser.on('-p', '--prettify-single-quotes',
+                   'change ASCII single quotation marks to Unicode ones') do
+          @options.prettify_single_quotes = true
         end
 
         @parser.on('-s', '--hr-style STYLE',
