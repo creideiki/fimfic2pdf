@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
                    'ao32book', 'ao32novel']
   s.extra_rdoc_files = ['COPYING', 'README.md']
   s.homepage = 'https://github.com/creideiki/fimfic2pdf/'
-  s.licenses = ['GPL-3.0']
+  s.licenses = ['GPL-3.0-or-later']
   s.summary = 'Formats FiMFiction and AO3 stories as PDF.'
 
   s.metadata = {
