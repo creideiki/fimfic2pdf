@@ -126,7 +126,7 @@ module FiMFic2PDF
     end
 
     def warn
-      @warnings.each do |_type, warn|
+      @warnings.each_value do |warn|
         unless warn[:chapters].empty?
           @logger.warn warn[:message]
           warn[:chapters].each { |c| @logger.warn c }
