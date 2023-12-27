@@ -219,7 +219,7 @@ TEMPLATE
       end
 
       def latex_escape_argument(string)
-        super string.gsub(' ', '\ ')
+        super(string.gsub(' ', '\ '))
       end
 
       def header(pdfinfo)
