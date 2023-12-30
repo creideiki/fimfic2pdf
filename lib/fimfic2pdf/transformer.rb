@@ -300,11 +300,15 @@ module FiMFic2PDF
       file.write '}'
     end
 
+    alias visit_em visit_i
+
     def visit_b(node, file)
       file.write '\textbf{'
       node.children.each.map { |c| visit(c, file) }
       file.write '}'
     end
+
+    alias visit_strong visit_b
 
     def visit_br(_node, file)
       file.write "\n\n"
@@ -434,12 +438,6 @@ module FiMFic2PDF
 
     def visit_sub(node, file)
       file.write '\textsubscript{'
-      node.children.each.map { |c| visit(c, file) }
-      file.write '}'
-    end
-
-    def visit_em(node, file)
-      file.write '\textit{'
       node.children.each.map { |c| visit(c, file) }
       file.write '}'
     end
