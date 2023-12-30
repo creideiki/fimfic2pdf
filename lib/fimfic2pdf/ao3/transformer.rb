@@ -23,6 +23,12 @@ module FiMFic2PDF
         @logger.error 'No user content in chapter' unless userstuff
         visit(userstuff, file) if userstuff
       end
+
+      def download_image(url)
+        # AO3 includes images in the epub file, so we already have the
+        # file.
+        url
+      end
     end
   end
 end

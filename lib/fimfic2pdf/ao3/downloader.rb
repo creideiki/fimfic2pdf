@@ -38,7 +38,7 @@ module FiMFic2PDF
       end
 
       def unpack
-        unpack_globs ['toc.ncx', 'content.opf', '*.xhtml']
+        unpack_globs ['toc.ncx', 'content.opf', '*.xhtml', '*.png', '*.jpg']
       end
 
       def generate_config
