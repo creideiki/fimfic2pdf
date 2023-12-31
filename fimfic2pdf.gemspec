@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.name = 'fimfic2pdf'
   s.version = FiMFic2PDF::VERSION
   s.platform = Gem::Platform::RUBY
-  s.required_ruby_version = '>= 3.0'
+  s.required_ruby_version = '>= 3.1'
   s.authors = ['Karl-Johan Karlsson']
   s.email = ['creideiki@ferretporn.se']
   s.description = <<-DESCRIPTION
