@@ -9,13 +9,12 @@ rescue Bundler::BundlerError => e
   exit e.status_code
 end
 
-# require 'rspec'
-# require 'rspec/core/rake_task'
-#
-# RSpec::Core::RakeTask.new(:spec)
+desc 'Run RSpec tests'
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new(:spec)
 
 desc 'Run Rubocop'
 require 'rubocop/rake_task'
 RuboCop::RakeTask.new(:rubocop)
 
-task :default => [:rubocop]
+task :default => [:rubocop, :spec]
