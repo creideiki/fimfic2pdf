@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'digest'
 require 'fimfic2pdf/transformer'
 
 module FiMFic2PDF
