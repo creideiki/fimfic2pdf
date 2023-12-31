@@ -8,7 +8,9 @@ require 'yaml'
 module FiMFic2PDF
   # Transforms HTML documents to LaTeX
   class Transformer
-    attr_accessor :conf
+    attr_reader :conf
+    attr_accessor :chapter_has_underline,
+                  :outside_double_quotes, :outside_single_quotes
 
     def make_filename(author, title)
       [author.strip, title.strip].join('-').
