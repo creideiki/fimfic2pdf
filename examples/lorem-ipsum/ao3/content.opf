@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package xmlns="http://www.idpf.org/2007/opf" version="2.0" unique-identifier="uuid_id">
+  <metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:calibre="http://calibre.kovidgoyal.net/2009/metadata">
+    <dc:title>FiMFic2PDF Example Document</dc:title>
+    <meta name="calibre:timestamp" content="2024-01-02T10:00:00.000000+00:00"/>
+    <dc:language>la</dc:language>
+    <dc:creator opf:file-as="creideiki" opf:role="aut">Creideiki</dc:creator>
+    <dc:identifier id="uuid_id" opf:scheme="uuid">13d720e4-dacb-4595-b997-4205c3096398</dc:identifier>
+    <meta name="calibre:title_sort" content="lorem ipsum"/>
+    <dc:description>&lt;p&gt;Lorem ipsum dolor sit amet, consectetuer adipiscing elit.&lt;/p&gt;</dc:description>
+    <dc:publisher>Archive of Our Own</dc:publisher>
+    <meta name="calibre:series" content="Lorem Ipsum"/>
+    <meta name="calibre:series_index" content="1"/>
+    <dc:subject>Fanworks</dc:subject>
+    <dc:subject>General Audiences</dc:subject>
+    <dc:subject>Lorem Ipsum</dc:subject>
+    <dc:subject>Alternate Universe</dc:subject>
+    <dc:subject>Choose Not To Use Archive Warnings</dc:subject>
+    <dc:date>2024-01-01T00:00:00+00:00</dc:date>
+  </metadata>
+  <manifest>
+    <item id="html5" href="Lorem_Ipsum_split_000.xhtml" media-type="application/xhtml+xml"/>
+    <item id="html4" href="Lorem_Ipsum_split_001.xhtml" media-type="application/xhtml+xml"/>
+    <item id="html3" href="Lorem_Ipsum_split_002.xhtml" media-type="application/xhtml+xml"/>
+    <item id="html2" href="Lorem_Ipsum_split_003.xhtml" media-type="application/xhtml+xml"/>
+    <item id="html1" href="Lorem_Ipsum_split_004.xhtml" media-type="application/xhtml+xml"/>
+    <item id="page_css" href="page_styles.css" media-type="text/css"/>
+    <item id="css" href="stylesheet.css" media-type="text/css"/>
+    <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+  </manifest>
+  <spine toc="ncx">
+    <itemref idref="html5"/>
+    <itemref idref="html4"/>
+    <itemref idref="html3"/>
+    <itemref idref="html2"/>
+    <itemref idref="html1"/>
+  </spine>
+</package>
