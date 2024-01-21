@@ -28,7 +28,12 @@ module FiMFic2PDF
       @logger.debug "Preparing to transform story #{@options.id}"
       @config_file = @options.id + File::SEPARATOR + 'config.yaml'
       @conf = YAML.safe_load_file(@config_file)
-      @logger.debug "Using section break style #{@options.hr_style} with symbol #{@options.hr_symbol}"
+      @logger.debug "Using section break style #{@options.hr_style}" +
+                    if @options.hr_symbol
+                      " with symbol #{@options.hr_symbol}"
+                    else
+                      ''
+                    end
       @replacements = {}
       @in_blockquote = false
       @logger.debug("Using chapter style #{@options.chapter_style || 'default'}")
