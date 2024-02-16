@@ -244,6 +244,8 @@ module FiMFic2PDF
         '\textit{'
       when 'font-weight:bold'
         '\textbf{'
+      when 'font-family:monospace'
+        '\texttt{'
       when 'text-decoration:underline'
         @chapter_has_underline = true
         '\fancyuline{'
@@ -270,6 +272,8 @@ module FiMFic2PDF
       when 'font-style:italic'
         '}'
       when 'font-weight:bold'
+        '}'
+      when 'font-family:monospace'
         '}'
       when 'text-decoration:underline'
         '}'
