@@ -151,7 +151,8 @@ module FiMFic2PDF
         gsub('#', '\#').
         gsub('%', '\%').
         gsub('&', '\\\&').
-        gsub('$', '\\$')
+        gsub('$', '\\$').
+        gsub('~', '\\textasciitilde{}')
     end
 
     def unicodify(string)
