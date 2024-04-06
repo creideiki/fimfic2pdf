@@ -40,7 +40,8 @@ module FiMFic2PDF
       @warnings = {
         underline: {
           chapters: [],
-          message: 'Underlines present in the following chapters. Please check line breaks manually.'
+          message: 'Underlines present in the following chapters. Please check line breaks manually, ' \
+                   'make any changes to the LaTeX files, and re-run without "--retransform".'
         },
         unbalanced_quotes: {
           chapters: [],

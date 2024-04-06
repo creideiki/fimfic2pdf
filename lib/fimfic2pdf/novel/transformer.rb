@@ -10,7 +10,8 @@ module FiMFic2PDF
         @warnings[:font_size] = {
           chapters: [],
           message: 'Font size changes present in the following chapters. ' \
-                   'Please check formatting manually.'
+                   'Please check formatting manually, ' \
+                   'make any changes to the LaTeX files, and re-run without "--retransform".'
         }
 
         @warnings[:list] = {
