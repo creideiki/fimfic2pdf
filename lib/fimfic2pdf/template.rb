@@ -48,6 +48,11 @@ module FiMFic2PDF
     # included first in every volume's .tex file.
     # def style() end
 
+    # The same as style(), but for anthologies.
+    def anthology_style
+      style
+    end
+
     # Return LaTeX code defining the rendering of a \chapter according
     # to the user's choice. Will be inserted in the templace TeX file
     # after the main style.

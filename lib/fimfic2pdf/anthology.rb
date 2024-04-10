@@ -43,7 +43,7 @@ module FiMFic2PDF
       @logger.debug 'Writing LaTeX files for anthology'
       tmpl = @mod::Template.new
       File.open('template.tex', 'wb') do |f|
-        f.write tmpl.style
+        f.write tmpl.anthology_style
         f.write tmpl.chapter_style(@options.chapter_style)
         f.write tmpl.select_hr(@options.hr_style, @options.hr_symbol)
         f.write tmpl.select_underline(@options.underline)
