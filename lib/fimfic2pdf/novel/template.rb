@@ -32,11 +32,9 @@ module FiMFic2PDF
       end
 
       # rubocop:disable Layout/HeredocIndentation
-      def style
+      def common_style
         <<'TEMPLATE'
 \documentclass{novel}
-
-\SetHeadFootStyle{2}
 
 % Interpret underscores literally, not as subscript
 \usepackage{underscore}
@@ -57,6 +55,18 @@ module FiMFic2PDF
 
 \setdefaultlanguage{english}
 
+TEMPLATE
+      end
+
+      def style
+        common_style + <<'TEMPLATE'
+\SetHeadFootStyle{2}
+TEMPLATE
+      end
+
+      def anthology_style
+        common_style + <<'TEMPLATE'
+\SetHeadFootStyle{6}
 TEMPLATE
       end
 
