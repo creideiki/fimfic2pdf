@@ -5,22 +5,14 @@ require 'nokogiri'
 require 'stringio'
 require 'yaml'
 
+require 'fimfic2pdf/utility'
+
 module FiMFic2PDF
   # Transforms HTML documents to LaTeX
   class Transformer
     attr_reader :conf
     attr_accessor :chapter_has_underline,
                   :outside_double_quotes, :outside_single_quotes
-
-    def make_filename(author, title)
-      [author.strip, title.strip].join('-').
-        encode(Encoding.find('ASCII'), :invalid => :replace, :undef => :replace, :replace => '').
-        gsub(/[^a-zA-Z0-9\- ]/, '').
-        gsub(/\s+/, ' ').
-        strip.
-        gsub(' ', '_').
-        downcase
-    end
 
     def initialize(options)
       @options = options
@@ -72,7 +64,7 @@ module FiMFic2PDF
       @volumes.each_with_index do |v, n|
         v['number'] = n + 1
         file_base = @options.id + File::SEPARATOR +
-                    make_filename(@conf['story']['author'], @conf['story']['title']) +
+                    Utility.make_filename(@conf['story']['author'], @conf['story']['title']) +
                     '-' + (n + 1).to_s
         v['tex_file'] = file_base + '.tex'
         v['aux_file'] = file_base + '.aux'
