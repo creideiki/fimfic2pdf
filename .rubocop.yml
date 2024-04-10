@@ -32,6 +32,7 @@ Metrics/AbcSize:
   - prettify_single_quotes
   - read_title_and_author
   - render
+  - render_anthology
   - transform
   - transform_chapter
   - transform_volume

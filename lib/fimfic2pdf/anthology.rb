@@ -5,6 +5,7 @@ require 'stringio'
 require 'yaml'
 
 require 'fimfic2pdf/template'
+require 'fimfic2pdf/utility'
 
 module FiMFic2PDF
   # Writes LaTex boilerplate for an anthology
@@ -33,6 +34,10 @@ module FiMFic2PDF
         @conf['anthology']['stories'] << story
       end
       @conf['anthology']['author'] = @conf['anthology']['stories'].map { |s| s['author'] }.uniq.join ', '
+      file_base = Utility.make_filename(@conf['anthology']['author'], @conf['anthology']['title'])
+      @conf['anthology']['tex_file'] = file_base + '.tex'
+      @conf['anthology']['aux_file'] = file_base + '.aux'
+      @conf['anthology']['pdf_file'] = file_base + '.pdf'
     end
 
     # Return LaTeX code for drawing an interstitial page before each
@@ -48,7 +53,7 @@ module FiMFic2PDF
         f.write tmpl.select_hr(@options.hr_style, @options.hr_symbol)
         f.write tmpl.select_underline(@options.underline)
       end
-      File.open('anthology.tex', 'wb') do |f|
+      File.open(@conf['anthology']['tex_file'], 'wb') do |f|
         f.write "\\input{template}\n"
         f.write tmpl.header({ 'title'  => @conf['anthology']['title'],
                               'author' => @conf['anthology']['author'] })

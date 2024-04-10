@@ -29,13 +29,13 @@ module FiMFic2PDF
 
       num_passes.times do |pass|
         @logger.debug "Running render pass #{pass + 1}"
-        system(tex_program, 'anthology.tex', exception: true)
+        system(tex_program, @conf['anthology']['tex_file'], exception: true)
       end
 
-      @logger.info 'Finished PDF: anthology.pdf'
+      @logger.info "Finished PDF: #{@conf['anthology']['pdf_file']}"
 
       pages = 0
-      File.open('anthology.aux') do |f|
+      File.open(@conf['anthology']['aux_file']) do |f|
         page_number_regexp = /abspage@last\{(?<pages>[[:digit:]]+)}$/
         f.each_line do |line|
           page_number_regexp.match(line) do |m|
