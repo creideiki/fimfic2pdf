@@ -5,7 +5,9 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'httparty'
+gem 'logger'
 gem 'nokogiri'
+gem 'ostruct'
 gem 'rubyzip'
 
 group :development do

@@ -31,6 +31,8 @@ Gem::Specification.new do |s|
   }
 
   s.add_dependency('httparty', '~> 0.21')
+  s.add_dependency('logger', '~> 1.6')
   s.add_dependency('nokogiri', '~> 1.15')
+  s.add_dependency('ostruct', '~> 0.6')
   s.add_dependency('rubyzip', '~> 2.3')
 end
