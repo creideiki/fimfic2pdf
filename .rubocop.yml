@@ -102,6 +102,9 @@ Style/Not:
 Style/OpenStructUse:
   Enabled: false
 
+Style/SafeNavigationChainLength:
+  Max: 4
+
 Style/StringConcatenation:
   Mode: conservative
 
