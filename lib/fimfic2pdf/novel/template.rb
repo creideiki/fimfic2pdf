@@ -34,6 +34,8 @@ module FiMFic2PDF
       # rubocop:disable Layout/HeredocIndentation
       def common_style
         <<'TEMPLATE'
+\renewcommand\nofiles{}
+
 \documentclass{novel}
 
 % Interpret underscores literally, not as subscript
