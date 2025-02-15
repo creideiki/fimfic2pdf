@@ -7,6 +7,8 @@ module FiMFic2PDF
       def initialize(options)
         super
 
+        @list_counters = []
+
         @warnings[:font_size] = {
           chapters: [],
           message: 'Font size changes present in the following chapters. ' \
