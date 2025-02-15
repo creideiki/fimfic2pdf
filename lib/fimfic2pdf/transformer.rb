@@ -359,7 +359,7 @@ module FiMFic2PDF
     end
 
     def visit_sup(node, file)
-      file.write '\textsuperscript{\small '
+      file.write '\textsuperscript{'
       node.children.each.map { |c| visit(c, file) }
       file.write '}'
     end
