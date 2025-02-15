@@ -67,6 +67,25 @@ RSpec.shared_examples 'transformer' do # rubocop:disable Metrics/BlockLength
     }.to raise_error(RuntimeError, 'Unsupported HTML element fake')
   end
 
+  it 'tests all known HTML tags' do
+    FileUtils.copy_file("#{SAMPLE_PATH}/all-html-tags.html",
+                        "#{TEST_ID}/all-html-tags.html")
+
+    options = OpenStruct.new(:id => TEST_ID)
+    transformer = described_class::Transformer.new options
+
+    tested_tags = transformer.methods.grep(/^visit_/) - [:visit_body]
+    tested_tags.each do |tag_method|
+      expect(transformer).to receive(tag_method).at_least(:once).and_call_original
+    end
+
+    allow(transformer).to receive(:download_image).and_return('mock_image.jpg')
+
+    doc = Nokogiri::HTML(File.open("#{TEST_ID}/all-html-tags.html"))
+    tex = StringIO.new
+    transformer.visit(doc.at_xpath('/html/body/div'), tex)
+  end
+
   after(:context) do
     Dir.chdir @old_cwd
     FileUtils.rmtree @temp_dir
