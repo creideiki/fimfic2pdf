@@ -16,6 +16,6 @@ group :development do
   gem 'rspec-core'
   gem 'rspec-expectations'
   gem 'rspec_structure_matcher'
-  gem 'rubocop', '~> 1.42'
-  gem 'rubocop-rake', '~> 0.6'
+  gem 'rubocop', '~> 1.72'
+  gem 'rubocop-rake'
 end
