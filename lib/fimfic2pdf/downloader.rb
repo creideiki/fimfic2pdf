@@ -19,11 +19,20 @@ module FiMFic2PDF
     end
 
     def manually_downloaded?
+      @logger.debug 'Checking if EPUB has been downloaded manually'
+
+      epubs = Dir.glob('*.epub', base: @story_id)
+      if epubs.size == 1
+        manual_filename = @story_id + File::SEPARATOR + epubs[0]
+        @logger.debug "Only one file found, using it: #{manual_filename}"
+        @filename = manual_filename
+        return true
+      end
+
       manual_filename = @story_id + File::SEPARATOR + @story_id + '.epub'
-      @logger.debug "Checking if EPUB has been downloaded manually to #{manual_filename}"
       if File.readable? manual_filename
         @filename = manual_filename
-        @logger.debug 'Manual download found'
+        @logger.debug "Using file with standard name #{manual_filename}"
         true
       else
         @logger.debug 'Not found, will download'
