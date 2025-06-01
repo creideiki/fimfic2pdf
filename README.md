@@ -115,7 +115,7 @@ global styles specified in `template.tex`.
 
 If the story is inaccessible to an anonymous guest, because it can
 only be read when logged in, download the epub file manually through
-your web browser and save it as `./<ID>/<ID>.epub`.
+your web browser and save it as `./<ID>/<filename>.epub`.
 
 ### Updating the PDF
 
