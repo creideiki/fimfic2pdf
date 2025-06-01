@@ -61,7 +61,7 @@ module FiMFic2PDF
         f.write tmpl.toc if @options.toc
         f.write tmpl.body
         @conf['anthology']['stories'].each do |story|
-          if @conf['anthology']['stories'].all? { |story| story['author'] == @conf['anthology']['author'] }
+          if @conf['anthology']['stories'].all? { |s| s['author'] == @conf['anthology']['author'] }
             f.write interstitial(story['title'])
           else
             f.write interstitial(story['title'], story['author'])
