@@ -17,7 +17,7 @@ RSpec.shared_examples 'AO32PDF', :order => :defined do # rubocop:disable Metrics
 
     FileUtils.mkdir TEST_ID
     FileUtils.copy_file("#{SAMPLE_PATH}/lorem-ipsum_ao3.epub",
-                        "#{TEST_ID}/#{TEST_ID}.epub")
+                        "#{TEST_ID}/lorem-ipsum_ao3.epub")
   end
 
   example 'downloader handles a pre-placed epub file' do
@@ -29,7 +29,8 @@ RSpec.shared_examples 'AO32PDF', :order => :defined do # rubocop:disable Metrics
     downloader.unpack
 
     files = Dir.children TEST_ID
-    expect(files).to contain_exactly '12345.epub', 'Lorem_Ipsum_split_000.xhtml', 'Lorem_Ipsum_split_001.xhtml',
+    expect(files).to contain_exactly 'lorem-ipsum_ao3.epub',
+                                     'Lorem_Ipsum_split_000.xhtml', 'Lorem_Ipsum_split_001.xhtml',
                                      'Lorem_Ipsum_split_002.xhtml', 'Lorem_Ipsum_split_003.xhtml',
                                      'Lorem_Ipsum_split_004.xhtml', 'content.opf', 'toc.ncx'
 

@@ -17,7 +17,7 @@ RSpec.shared_examples 'FiMFic2PDF', :order => :defined do # rubocop:disable Metr
 
     FileUtils.mkdir TEST_ID
     FileUtils.copy_file("#{SAMPLE_PATH}/lorem-ipsum_fimfic.epub",
-                        "#{TEST_ID}/#{TEST_ID}.epub")
+                        "#{TEST_ID}/lorem-ipsum_fimfic.epub")
   end
 
   example 'downloader handles a pre-placed epub file' do
@@ -29,7 +29,7 @@ RSpec.shared_examples 'FiMFic2PDF', :order => :defined do # rubocop:disable Metr
     downloader.unpack
 
     files = Dir.children TEST_ID
-    expect(files).to contain_exactly '12345.epub', 'chapter-1.html', 'chapter-2.html',
+    expect(files).to contain_exactly 'lorem-ipsum_fimfic.epub', 'chapter-1.html', 'chapter-2.html',
                                      'title.html', 'toc.html', 'book.opf'
 
     downloader.write_config
